@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import {
-    Box,
-    Button,
-    Container,
-    Heading
+    Container
 } from "@chakra-ui/react";
 
 import useNarrative from "../../../hooks/useNarrative";
 
 export default function StoryView(): React.ReactElement {
 
-    const { getActiveFrameElement } = useNarrative();
-    const [ content, setContent ] = useState(null);
-
-    useEffect(() => {
-        getActiveFrameElement().then((element) => {
-            setContent(element);
-        })
-    }, []);
+    const { activeFrame } = useNarrative();
 
     return (
         <Container>
-            {content}
+            {activeFrame}
         </Container>
     );
 }

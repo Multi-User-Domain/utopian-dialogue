@@ -9,11 +9,13 @@ import {
 
 export default function useNarrative() : INarrativeContext {
     const {
-        getActiveFrameElement
+        activeFrame,
+        setFrame
     } = useContext(NarrativeContext);
 
     return {
-        getActiveFrameElement
+        activeFrame,
+        setFrame
     };
 }
   
