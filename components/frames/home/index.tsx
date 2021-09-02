@@ -12,6 +12,7 @@ import {
 
 import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
 import { IStoryFrame } from "../../lib/types";
+import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 
 const SMASH_MS = 5000;
 
@@ -72,39 +73,36 @@ const SmashEffect: React.FC = ({ children }) => {
 };
 
 export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
-    const longPause = 2000;
-    const shortPause = 1000;
-    const slowPace = 100;
 
     return (
         <WindupChildren>
-            <Pace ms={slowPace}>
+            <Pace ms={SLOW_PACE}>
                 <p>Dreaming...</p>
             </Pace>
-            <Pause ms={longPause}/>
+            <Pause ms={LONG_PAUSE}/>
             <p>A bang.</p>
-            <Pause ms={shortPause} />
+            <Pause ms={SHORT_PAUSE} />
             <SmashEffect>
                 <p>A POP!</p>
             </SmashEffect>
-            <Pause ms={longPause} />
-            <Pace ms={slowPace}>
+            <Pause ms={LONG_PAUSE} />
+            <Pace ms={SLOW_PACE}>
                 <p>A long silence…</p>
             </Pace>
-            <Pause ms={longPause} />
+            <Pause ms={LONG_PAUSE} />
             <p>Your eyes open slowly. The light hurts.</p>
             <p>The world seems to flutter.</p>
-            <Pause ms={shortPause} />
+            <Pause ms={SHORT_PAUSE} />
             <br/>
             <p>You have woken up in a park. You're lying down.</p>
             <p>There is a tree branch above you. It crosses your vision.</p>
-            <Pause ms={shortPause} />
+            <Pause ms={SHORT_PAUSE} />
             <p>The tree is covered in a crop of leaves, but autumn is approaching.</p>
             <p>The sky above is clear, it's hot.</p>
             <br/>
-            <Pause ms={shortPause} />
+            <Pause ms={SHORT_PAUSE} />
             <p>You don’t remember who you are.</p>
-            <Pause ms={longPause} />
+            <Pause ms={LONG_PAUSE} />
             <Center marginTop="20px">
                 <Button onClick={() => followLink("whoAmI")}>Who Am I?</Button>
             </Center>
