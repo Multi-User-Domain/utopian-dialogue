@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
+import { IStoryFrame } from "../../lib/types";
 
 const SMASH_MS = 5000;
 
@@ -70,7 +71,7 @@ const SmashEffect: React.FC = ({ children }) => {
   );
 };
 
-export default function HomeFrame(): React.ReactElement {
+export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
     const longPause = 2000;
     const shortPause = 1000;
     const slowPace = 100;
@@ -105,7 +106,7 @@ export default function HomeFrame(): React.ReactElement {
             <p>You don’t remember who you are.</p>
             <Pause ms={longPause} />
             <Center marginTop="20px">
-                <Button>Who Am I?</Button>
+                <Button onClick={() => followLink("whoAmI")}>Who Am I?</Button>
             </Center>
         </WindupChildren>
     );
