@@ -48,6 +48,7 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
             <p>There is an image. (CHOOSE AN IMAGE)</p>
             <p>You feel your face. It feels like the face in the photo.</p>
             <p>This must be me.</p>
+            <GameFeedback theme="success" text="Library Card added to inventory."/>
             <Effect fn={() => callback()}></Effect>
         </WindupChildren>
     );
