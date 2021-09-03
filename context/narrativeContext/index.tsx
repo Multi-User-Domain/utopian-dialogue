@@ -37,6 +37,10 @@ export const NarrativeProvider = ({
         console.error("attempt made to set frame to " + name + " but this key doesn't exist!");
     }
 
+    useEffect(() => {
+        setFrame("whoAmI");
+    }, []);
+
     return(
         <NarrativeContext.Provider
             value={{

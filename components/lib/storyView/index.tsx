@@ -8,11 +8,7 @@ import useNarrative from "../../../hooks/useNarrative";
 
 export default function StoryView(): React.ReactElement {
 
-    const { activeFrame, setFrame } = useNarrative();
-
-    useEffect(() => {
-        setFrame("home");
-    }, []);
+    const { activeFrame } = useNarrative();
 
     return (
         <Container>
