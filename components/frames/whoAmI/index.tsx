@@ -12,8 +12,6 @@ import InvestigationFrame from "../../lib/investigationFrame";
 import GameFeedback from "../../lib/gameFeedback";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 
-// implement InventoryProvider
-
 function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.ReactElement {
     const [pinFin, setPinFin] = useState(false);
 
@@ -29,7 +27,11 @@ function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.
     );
 }
 
-function WhoAmIOptions() : React.ReactElement {
+function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
+
+    const [walletDone, setWalletDone] = useState(false);
+
+    let continueContent = walletDone ? <Center><Button onClick={() => followLink("whereAmI")}>Where Am I?</Button></Center> : null;
 
     return (
         <Container>
@@ -67,6 +69,7 @@ function WhoAmIOptions() : React.ReactElement {
                 <p>There is an image. (CHOOSE AN IMAGE)</p>
                 <p>You feel your face. It feels like the face in the photo.</p>
                 <p>This must be me.</p>
+                <Effect fn={() => setWalletDone(true)}></Effect>
             </InvestigationFrame>
             <InvestigationFrame title="Deck of Cards">
                 <p>The deck cover is unmarked. You open the packet.</p>
@@ -76,6 +79,7 @@ function WhoAmIOptions() : React.ReactElement {
                 <p>You sense great power in these cards.</p>
                 <GameFeedback theme="success" text="Deck of Cards added to inventory." />
             </InvestigationFrame>
+            {continueContent}
         </Container>
     );
 }
@@ -91,7 +95,7 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
             <br/>
             <p>You are lying on the grass.</p>
             <p>In your lap there is a set of keys and a mobile phone. Beside you there is a thin leather wallet and a deck of cards.</p>
-            <WhoAmIOptions />
+            <WhoAmIOptions followLink={followLink}/>
         </WindupChildren>
     );
 }
