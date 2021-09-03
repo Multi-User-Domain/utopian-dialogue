@@ -6,6 +6,8 @@ import {
     Button
 } from "@chakra-ui/react";
 
+import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
+
 export interface IInvestigationFrame {
     title: string,
     children: any
@@ -18,16 +20,18 @@ export default function InvestigationFrame({title, children}: IInvestigationFram
     // boolean marks if the user has selected the button and so resolved the children
     const [discovered, setDiscovered] = useState(false);
 
+    let content = discovered ? children : null;
+
     return (
-        <>
-        <Container display={discovered ? "none" : "block"}>
-            <Center>
-                <Button onClick={() => setDiscovered(true)}>{title}</Button>
-            </Center>
-        </Container>
-        <Container display={discovered ? "block" : "none"}>
-            {children}
-        </Container>
-        </>
+        <WindupChildren>
+            <Container display={discovered ? "none" : "block"}>
+                <Center>
+                    <Button onClick={() => setDiscovered(true)}>{title}</Button>
+                </Center>
+            </Container>
+            <Container>
+                {content}
+            </Container>
+        </WindupChildren>
     );
 }
