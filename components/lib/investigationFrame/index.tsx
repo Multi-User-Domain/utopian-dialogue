@@ -24,7 +24,7 @@ export default function InvestigationFrame({title, children}: IInvestigationFram
 
     return (
         <WindupChildren>
-            <Container display={discovered ? "none" : "block"}>
+            <Container display={discovered ? "none" : "block"} marginTop="5px">
                 <Center>
                     <Button onClick={() => setDiscovered(true)}>{title}</Button>
                 </Center>
