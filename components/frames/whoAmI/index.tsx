@@ -3,7 +3,8 @@ import {
     Button,
     Center,
     Container,
-    Text
+    Text,
+    Input
 } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Effect, Pace } from "windups";
@@ -11,6 +12,7 @@ import { IStoryFrame } from "../../lib/types";
 import InvestigationFrame from "../../lib/investigationFrame";
 import GameFeedback from "../../lib/gameFeedback";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
+import usePlayer from "../../../hooks/usePlayer";
 
 function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.ReactElement {
     const [pinFin, setPinFin] = useState(false);
@@ -27,11 +29,47 @@ function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.
     );
 }
 
+function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
+    const { name, setName } = usePlayer();
+    const [ displayContinue, setDisplayContinue ] = useState(true);
+
+    const submit = () => {
+        if(name.length == 0) setName("Mysterio");
+        setDisplayContinue(false);
+    }
+
+    let continueButton = displayContinue ? (
+    <Center><Button onClick={() => submit()}>Continue</Button></Center>
+    ) : (
+        <WindupChildren>
+            <p>There is an address, but you recognise none of it. The address ends "BIG CITY", like the library's name.</p>
+            <p>You look around. Stretching to the horizon there are buildings, and parks, and high rise flats.</p>
+            <p>This must be Big City.</p>
+            <p>There is an image. (CHOOSE AN IMAGE)</p>
+            <p>You feel your face. It feels like the face in the photo.</p>
+            <p>This must be me.</p>
+            <Effect fn={() => callback()}></Effect>
+        </WindupChildren>
+    );
+
+    return (
+        <Container>
+            <Input
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+            <Text>{name}</Text>
+            {continueButton}
+        </Container>
+    );
+}
+
 function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
 
     const [walletDone, setWalletDone] = useState(false);
 
-    let continueContent = walletDone ? <Center><Button onClick={() => followLink("whereAmI")}>Where Am I?</Button></Center> : null;
+    let continueContent = walletDone ? <Center marginTop="10px"><Button onClick={() => followLink("whereAmI")}>Where Am I?</Button></Center> : null;
 
     return (
         <Container>
@@ -62,14 +100,8 @@ function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
             <InvestigationFrame title="Wallet">
                 <p>The small leather wallet is not designed for storing paper notes but a set of cards.</p>
                 <p>There is only one card in the wallet, it reads "Big City Library Card".</p>
-                <p>There is a name. (YOUR NAME)</p>
-                <p>There is an address, but you recognise none of it. The address ends "BIG CITY", like the library's name.</p>
-                <p>You look around. Stretching to the horizon there are buildings, and parks, and high rise flats.</p>
-                <p>This must be Big City.</p>
-                <p>There is an image. (CHOOSE AN IMAGE)</p>
-                <p>You feel your face. It feels like the face in the photo.</p>
-                <p>This must be me.</p>
-                <Effect fn={() => setWalletDone(true)}></Effect>
+                <p>There is a name.</p>
+                <LibraryCard callback={() => {setWalletDone(true)}} />
             </InvestigationFrame>
             <InvestigationFrame title="Deck of Cards">
                 <p>The deck cover is unmarked. You open the packet.</p>
