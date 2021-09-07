@@ -6,7 +6,7 @@ import {
     Button
 } from "@chakra-ui/react";
 
-import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
+import { WindupChildren } from "windups";
 
 export interface IInvestigationFrame {
     title: string,

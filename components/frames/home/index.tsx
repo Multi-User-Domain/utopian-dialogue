@@ -3,16 +3,14 @@ import { cx } from "linaria";
 import { css } from "@emotion/css";
 
 import {
-    Box,
     Button,
     Center,
-    Container,
-    Heading
 } from "@chakra-ui/react";
 
 import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
 import { IStoryFrame } from "../../lib/types";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
+import InvestigationFrame from "../../lib/investigationFrame";
 
 const SMASH_MS = 5000;
 
@@ -72,6 +70,32 @@ const SmashEffect: React.FC = ({ children }) => {
   );
 };
 
+function ContinueB({followLink} : IStoryFrame): React.ReactElement {
+  return (
+    <InvestigationFrame title="Continue">
+      <p>You don’t remember who you are.</p>
+      <Pause ms={LONG_PAUSE} />
+      <Center marginTop="20px">
+          <Button onClick={() => followLink("whoAmI")}>Who Am I?</Button>
+      </Center>
+    </InvestigationFrame>
+  );
+}
+
+function ContinueA({followLink} : IStoryFrame): React.ReactElement {
+  return (
+    <InvestigationFrame title="Continue">
+      <p>You have woken up in a park. You're lying down.</p>
+      <p>There is a tree branch above you. It crosses your vision.</p>
+      <Pause ms={SHORT_PAUSE} />
+      <p>The tree is covered in a crop of leaves, but autumn is approaching.</p>
+      <p>The sky above is clear, it's hot.</p>
+      <Pause ms={SHORT_PAUSE} />
+      <ContinueB followLink={followLink} />
+    </InvestigationFrame>
+  );
+}
+
 export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
 
     return (
@@ -81,10 +105,8 @@ export default function HomeFrame({followLink} : IStoryFrame): React.ReactElemen
             </Pace>
             <Pause ms={LONG_PAUSE}/>
             <p>A bang.</p>
-            <Pause ms={SHORT_PAUSE} />
-            <SmashEffect>
-                <p>A POP!</p>
-            </SmashEffect>
+            <SmashEffect />
+            <p>A POP!</p>
             <Pause ms={LONG_PAUSE} />
             <Pace ms={SLOW_PACE}>
                 <p>A long silence…</p>
@@ -93,19 +115,7 @@ export default function HomeFrame({followLink} : IStoryFrame): React.ReactElemen
             <p>Your eyes open slowly. The light hurts.</p>
             <p>The world seems to flutter.</p>
             <Pause ms={SHORT_PAUSE} />
-            <br/>
-            <p>You have woken up in a park. You're lying down.</p>
-            <p>There is a tree branch above you. It crosses your vision.</p>
-            <Pause ms={SHORT_PAUSE} />
-            <p>The tree is covered in a crop of leaves, but autumn is approaching.</p>
-            <p>The sky above is clear, it's hot.</p>
-            <br/>
-            <Pause ms={SHORT_PAUSE} />
-            <p>You don’t remember who you are.</p>
-            <Pause ms={LONG_PAUSE} />
-            <Center marginTop="20px">
-                <Button onClick={() => followLink("whoAmI")}>Who Am I?</Button>
-            </Center>
+            <ContinueA followLink={followLink} />
         </WindupChildren>
     );
 }
