@@ -9,6 +9,7 @@ import {
 
 export default function usePlayer() : IPlayerContext {
     const {
+        webId,
         name,
         setName,
         image,
@@ -16,6 +17,7 @@ export default function usePlayer() : IPlayerContext {
     } = useContext(PlayerContext);
 
     return {
+        webId,
         name,
         setName,
         image,

@@ -1,16 +1,15 @@
 import React, { createContext, ReactElement, useState, useEffect } from "react";
 
-export interface IPossibleResponse {
-    representation: ReactElement;
-    act: () => void;
-}
-
 export interface IMessage {
+    webId?: string;
+    msgId?: string;
     name: string;
-    imgSrc: string;
+    imgSrc?: string;
     content: ReactElement;
-    urgency: number;
-    read: boolean;
+    shorthandContent?: ReactElement;
+    urgency?: number;
+    read?: boolean;
+    getResponses?: () => IMessage[];
 }
 
 export interface IRelationship {
@@ -18,6 +17,7 @@ export interface IRelationship {
 }
 
 export interface IDialogueParticipant {
+    webId?: string;
     name: string;
     imgSrc: string;
     isHuman: boolean;
