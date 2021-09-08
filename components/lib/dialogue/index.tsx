@@ -3,30 +3,46 @@ import React from "react";
 import {
     Container,
     Grid,
+    Center,
+    Text,
     GridItem,
     Image
 } from "@chakra-ui/react";
 
+import { WindupChildren, Pause, Effect, Pace } from "windups";
+
+import useDialogue from "../../../hooks/useDialogue";
+import DialogueMessage from "../dialogueMessage";
+
 export interface IDialogue {
-    imgSrc: string;
-    children: any;
+    children: any
 }
 
-export default function Dialogue({imgSrc, children}: IDialogue): React.ReactElement {
+export default function Dialogue({children}: IDialogue): React.ReactElement {
+
+    const { timeline } = useDialogue();
+
+    const messagesRead = [];
+    const messagesUnread = [];
+
+    for (let i = 0; i < timeline.length; i++) {
+        let msgValue = timeline[i];
+        let msgDisplay = <DialogueMessage key={i} message={msgValue}>{msgValue.content}</DialogueMessage>;
+
+        if(msgValue.read) messagesRead.push(msgDisplay);
+        else {
+            messagesUnread.push(msgDisplay);
+            // the windupchildren doesn't work if you do this here for some reason
+            //msgValue.read = true;
+        }
+    }
 
     return (
-        <Grid
-            templateColumns="repeat(5, 1fr)"
-            gap={1}
-        >
-            <GridItem colSpan={2} h={100} w={100} position="relative" overflow="hidden" borderRadius="50%">
-                <Image h="auto" w="100%" src={imgSrc}/>
-            </GridItem>
-            <GridItem colSpan={3} h="100%">
-                <Container paddingLeft={5} paddingTop={15}>
-                    {children}
-                </Container>
-            </GridItem>
-        </Grid>
+        <Container>
+            {messagesRead}
+            <WindupChildren>
+                {messagesUnread}
+            </WindupChildren>
+        </Container>
     );
 }
