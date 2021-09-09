@@ -20,7 +20,7 @@ export interface IDialogueParticipant {
     indexStart: number;
     mood: string;
     currentGoal: string;
-    speak: () => IMessage;
+    speak: (lastMsg: IMessage) => IMessage;
 }
 
 export interface IDialogueContext {
@@ -40,7 +40,7 @@ export const DialogueProvider = ({
     children
 }: IDialogueContextProps): ReactElement => {
 
-    const [participants, setParticipants] = useState({});
+    const [participants, setParticipants] = useState<{ [key: string]: IDialogueParticipant }>({});
     const [timeline, setTimeline] = useState([]);
 
     const addParticipant = (p: IDialogueParticipant) => {
@@ -57,15 +57,20 @@ export const DialogueProvider = ({
     }
 
     const getResponse = (msg) => {
-        // someone has sent a message
+        // the conversation lead (player) has said something
+        addMessage(msg);
 
-        // this function is the triggering of a new "round" of dialogue
-        // each character is given a chance to speak
+        // this is the triggering of a new "round" of dialogue
+        // each non-human character is given a chance to speak, the highest priority wins
+        let response = null;
 
-        // human participants speak with priority
+        for(let [name, participant] of Object.entries(participants)) {
+            let newResponse = participant.speak(msg);
 
-        // AI is allowed to react
+            if(response == null || newResponse.urgency > response.urgency) response = newResponse;
+        }
 
+        addMessage(response);
     }
 
     return(
