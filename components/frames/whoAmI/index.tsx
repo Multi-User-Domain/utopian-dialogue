@@ -4,7 +4,8 @@ import {
     Center,
     Container,
     Text,
-    Input
+    Input,
+    Image
 } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Effect, Pace } from "windups";
@@ -13,6 +14,7 @@ import InvestigationFrame from "../../lib/investigationFrame";
 import GameFeedback from "../../lib/gameFeedback";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import usePlayer from "../../../hooks/usePlayer";
+import GridSelect from "../../lib/gridSelect";
 
 function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.ReactElement {
     const [pinFin, setPinFin] = useState(false);
@@ -30,22 +32,50 @@ function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.
 }
 
 function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
-    const { name, setName } = usePlayer();
-    const [ displayContinue, setDisplayContinue ] = useState(true);
+    const { name, setName, image, setImage } = usePlayer();
+    const [ displayContinue, setDisplayContinue ] = useState([true, true]);
 
-    const submit = () => {
+    const faceChoices = [
+        {imgSrc: "../../../public/img/playerProfile/3.webp"},
+        {imgSrc: "../../../public/img/playerProfile/4.webp"},
+        {imgSrc: "../../../public/img/playerProfile/5.webp"},
+        {imgSrc: "../../../public/img/playerProfile/6.webp"},
+        {imgSrc: "../../../public/img/playerProfile/7.webp"},
+        {imgSrc: "../../../public/img/playerProfile/8.webp"},
+        {imgSrc: "../../../public/img/playerProfile/9.webp"},
+    ];
+
+    const submitName = () => {
         if(name.length == 0) setName("Mysterio");
-        setDisplayContinue(false);
+        setDisplayContinue([false, true]);
     }
 
-    let continueButton = displayContinue ? (
-    <Center><Button onClick={() => submit()}>Continue</Button></Center>
-    ) : (
+    const submitImg = (i: number) => {
+        setImage(faceChoices[i].imgSrc);
+        setDisplayContinue([false, false]);
+    }
+
+    let nameEnteredContent = (
+        <>
+        <p>There is an address, but you recognise none of it. The address ends "BIG CITY", like the library's name.</p>
+        <p>You look around. Stretching to the horizon there are buildings, and parks, and high rise flats.</p>
+        <p>This must be Big City.</p>
+        <p>There is an image.</p>
+        </>
+    );
+
+    let continueButton = displayContinue[0] ? (
+    <Center><Button onClick={() => submitName()}>Continue</Button></Center>
+    ) : displayContinue[1] ? (
         <WindupChildren>
-            <p>There is an address, but you recognise none of it. The address ends "BIG CITY", like the library's name.</p>
-            <p>You look around. Stretching to the horizon there are buildings, and parks, and high rise flats.</p>
-            <p>This must be Big City.</p>
-            <p>There is an image. (CHOOSE AN IMAGE)</p>
+            {nameEnteredContent}
+            <GridSelect gridComponents={faceChoices} onSelect={submitImg} itemsPerRow={3} gap={5}/>
+        </WindupChildren>
+    ) :
+    (
+        <WindupChildren>
+            {nameEnteredContent}
+            <Image src={image} />
             <p>You feel your face. It feels like the face in the photo.</p>
             <p>This must be me.</p>
             <GameFeedback theme="success" text="Library Card added to inventory."/>
@@ -95,7 +125,7 @@ function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
                 <Pause ms={SHORT_PAUSE} />
                 <p>You give up.</p>
                 <Pause ms={SHORT_PAUSE} />
-                <p>The device returns to the lock screen. There is a background. TODO</p>
+                <p>The device returns to the lock screen.</p>
                 <GameFeedback theme="success" text="Mobile Phone added to inventory."/>
             </InvestigationFrame>
             <InvestigationFrame title="Wallet">
@@ -125,10 +155,11 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
             <p>Your back muscles complain as you claw your way into a seating position.</p>
             <p>Your mouth is dry.</p>
             <Text fontStyle="italic">How long was I out?</Text>
-            <br/>
-            <p>You are lying on the grass.</p>
-            <p>In your lap there is a set of keys and a mobile phone. Beside you there is a thin leather wallet and a deck of cards.</p>
-            <WhoAmIOptions followLink={followLink}/>
+            <InvestigationFrame title="continue">
+                <p>You are lying on the grass.</p>
+                <p>In your lap there is a set of keys and a mobile phone. Beside you there is a thin leather wallet and a deck of cards.</p>
+                <WhoAmIOptions followLink={followLink}/>
+            </InvestigationFrame>
         </WindupChildren>
     );
 }
