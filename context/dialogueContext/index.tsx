@@ -9,6 +9,7 @@ export interface IMessage {
     shorthandContent?: ReactElement;
     urgency?: number;
     read?: boolean;
+    sideEffect?: () => void;
     getResponses?: () => IMessage[];
 }
 
@@ -51,6 +52,8 @@ export const DialogueProvider = ({
     }
 
     const addMessage = (msg) => {
+        if(msg.sideEffect) msg.sideEffect();
+
         setTimeline(prevTimeline => (
             [...prevTimeline, msg]
         ));
