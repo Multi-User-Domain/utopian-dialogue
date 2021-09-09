@@ -13,7 +13,11 @@ export default function usePlayer() : IPlayerContext {
         name,
         setName,
         image,
-        setImage
+        setImage,
+        incomingRelationships,
+        outgoingRelationships,
+        addIncomingRelationship,
+        addOutgoingRelationship
     } = useContext(PlayerContext);
 
     return {
@@ -21,7 +25,11 @@ export default function usePlayer() : IPlayerContext {
         name,
         setName,
         image,
-        setImage
+        setImage,
+        incomingRelationships,
+        outgoingRelationships,
+        addIncomingRelationship,
+        addOutgoingRelationship
     };
 }
   

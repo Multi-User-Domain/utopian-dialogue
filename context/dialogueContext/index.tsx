@@ -12,10 +12,6 @@ export interface IMessage {
     getResponses?: () => IMessage[];
 }
 
-export interface IRelationship {
-
-}
-
 export interface IDialogueParticipant {
     webId?: string;
     name: string;
@@ -24,7 +20,6 @@ export interface IDialogueParticipant {
     indexStart: number;
     mood: string;
     currentGoal: string;
-    relationships: any;
     speak: () => IMessage;
 }
 
