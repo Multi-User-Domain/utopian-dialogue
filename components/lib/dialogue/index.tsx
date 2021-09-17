@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useRef} from "react";
 
 import {
     Container
 } from "@chakra-ui/react";
 
-import { WindupChildren } from "windups";
+import { WindupChildren, OnChar } from "windups";
 
 import useDialogue from "../../../hooks/useDialogue";
 import DialogueMessage from "../dialogueMessage";
@@ -17,6 +17,7 @@ export interface IDialogue {
 export default function Dialogue({children}: IDialogue): React.ReactElement {
 
     const { timeline } = useDialogue();
+    const messagesEnd = useRef(null);
 
     const messagesRead = [];
     const messagesUnread = [];
@@ -27,17 +28,29 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
         if(msgValue.read) messagesRead.push(msgDisplay);
         else {
             messagesUnread.push(msgDisplay);
-            msgValue.read = true;
         }
     });
 
+    const markAllAsUnread = () => {
+        timeline.map((msgValue, i) => {
+            msgValue.read = true;
+        });
+    }
+
+    const scrollToBottom = () => {
+        messagesEnd.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
     return (
-        <Container>
+        <Container paddingBottom="10vh">
             {messagesRead}
-            <WindupChildren>
-                {messagesUnread}
-                <DialogueResponsePrompt />
+            <WindupChildren onFinished={markAllAsUnread}>
+                <OnChar fn={scrollToBottom}>
+                    {messagesUnread}
+                    <DialogueResponsePrompt />
+                </OnChar>
             </WindupChildren>
+            <div style={{ float:"left", clear: "both"}} ref={messagesEnd}></div>
         </Container>
     );
 }
