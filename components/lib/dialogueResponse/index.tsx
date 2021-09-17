@@ -19,7 +19,7 @@ export function DialogueResponsePrompt({}): React.ReactElement {
     let content = null;
 
     if(lastMessage.webId != webId) {
-        const responses = lastMessage.getResponses();
+        const responses = lastMessage['getResponses'] ? lastMessage.getResponses() : [];
         let responseDisplay = [];
 
         for(let i = 0; i < responses.length; i++) {
