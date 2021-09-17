@@ -9,6 +9,7 @@ export interface IMessage {
     shorthandContent?: ReactElement;
     urgency?: number;
     read?: boolean;
+    includeContinuePrompt?: boolean; //if set to true it will hold other messages until the user selects 'Continue'
     sideEffect?: () => void;
     getResponses?: () => IMessage[];
 }
