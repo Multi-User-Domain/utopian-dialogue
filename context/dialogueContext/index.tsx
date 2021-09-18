@@ -12,6 +12,7 @@ export interface IMessage {
     includeContinuePrompt?: boolean; //if set to true it will hold other messages until the user selects 'Continue'
     sideEffect?: () => void;
     getResponses?: () => IMessage[];
+    selectFollowup?: () => void; // a shortcut to the response mechanism - forces the message to be responded to in a specific way
 }
 
 export interface IDialogueParticipant {
@@ -63,6 +64,11 @@ export const DialogueProvider = ({
     const getResponse = (msg) => {
         // the conversation lead (player) has said something
         addMessage(msg);
+
+        if(msg.selectFollowup) {
+            msg.selectFollowup();
+            return;
+        }
 
         // this is the triggering of a new "round" of dialogue
         // each non-human character is given a chance to speak, the highest priority wins
