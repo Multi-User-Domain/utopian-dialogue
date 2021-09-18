@@ -10,7 +10,6 @@ import { WindupChildren, OnChar } from "windups";
 
 import useDialogue from "../../../hooks/useDialogue";
 import DialogueMessage from "../dialogueMessage";
-import { DialogueResponsePrompt } from "../dialogueResponse";
 
 export interface IDialogue {
     children: any
@@ -81,7 +80,6 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
             <WindupChildren onFinished={markAllAsRead}>
                 <OnChar fn={scrollToBottom}>
                     {displayMessages}
-                    <DialogueResponsePrompt />
                     {continueButton}
                 </OnChar>
             </WindupChildren>
