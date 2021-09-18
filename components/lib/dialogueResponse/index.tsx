@@ -1,12 +1,39 @@
 import React from "react";
 
+import { css } from "@emotion/css";
+
 import {
     Container,
-    Text
+    Text,
+    Grid,
+    GridItem
 } from "@chakra-ui/react";
+import { TriangleUpIcon } from "@chakra-ui/icons";
 
 import usePlayer from "../../../hooks/usePlayer";
 import useDialogue from "../../../hooks/useDialogue";
+
+function DialogueResponseChoice({key, onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
+    const containerStyles = css`
+      margin-top: 5px;
+
+      &:hover {
+        color: #32CD32;
+        cursor: pointer;
+      }
+    `;
+
+    const iconStyles = css`
+      transform: rotate(90deg);
+    `;
+
+    return (
+    <Grid key={key} onClick={onClick} className={containerStyles} templateColumns="repeat(6, 1fr)">
+        <GridItem colSpan={1}><TriangleUpIcon className={iconStyles} /></GridItem>
+        <GridItem colSpan={5}>{children}</GridItem>
+    </Grid>
+    );
+}
 
 export function DialogueResponsePrompt({}): React.ReactElement {
 
@@ -27,7 +54,7 @@ export function DialogueResponsePrompt({}): React.ReactElement {
             // special case - say nothing
             if(responses[i] == null) {
                 responseDisplay.push(
-                    <Container key={i} onClick={() => getResponse(responses[i])}><Text>[Say Nothing]</Text></Container>
+                    <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}><Text>[Say Nothing]</Text></DialogueResponseChoice>
                 );
                 continue;
             }
@@ -35,12 +62,12 @@ export function DialogueResponsePrompt({}): React.ReactElement {
             let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
 
             responseDisplay.push(
-                <Container key={i} onClick={() => getResponse(responses[i])}>{responseContent}</Container>
+                <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}>{responseContent}</DialogueResponseChoice>
             );
         }
 
         content = (
-            <Container>
+            <Container padding={5} marginTop={5}>
                 {...responseDisplay}
             </Container>
         );
