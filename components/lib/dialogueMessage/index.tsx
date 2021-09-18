@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {
     Container,
@@ -18,7 +18,7 @@ export interface IDialogueMessage {
 
 export default function DialogueMessage({message, children}: IDialogueMessage): React.ReactElement {
 
-    let dialogueResponsePrompt = message.getResponses ? <DialogueResponsePrompt /> : null;
+    let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
 
     return (
         <Container>
