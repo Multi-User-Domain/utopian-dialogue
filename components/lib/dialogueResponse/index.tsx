@@ -13,7 +13,7 @@ import { TriangleUpIcon } from "@chakra-ui/icons";
 import usePlayer from "../../../hooks/usePlayer";
 import useDialogue from "../../../hooks/useDialogue";
 
-function DialogueResponseChoice({key, onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
+function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
     const containerStyles = css`
       margin-top: 5px;
 
@@ -28,7 +28,7 @@ function DialogueResponseChoice({key, onClick, children}: {key:number, onClick:(
     `;
 
     return (
-    <Grid key={key} onClick={onClick} className={containerStyles} templateColumns="repeat(6, 1fr)">
+    <Grid onClick={onClick} className={containerStyles} templateColumns="repeat(6, 1fr)">
         <GridItem colSpan={1}><TriangleUpIcon className={iconStyles} /></GridItem>
         <GridItem colSpan={5}>{children}</GridItem>
     </Grid>
