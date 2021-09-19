@@ -25,11 +25,7 @@ function initMayorRupert() : IDialogueParticipant {
     }
 
     mayor.speak = (lastMsg: IMessage) => {
-        return {
-            content: null,
-            name: mayor.name,
-            imgSrc: mayor.imgSrc
-        };
+        return null;
     }
 
     return mayor;
@@ -424,7 +420,6 @@ function AgoraDialogue() : React.ReactElement {
                                             shorthandContent: <Text>Mock them as they leave</Text>,
                                             name: name,
                                             imgSrc: image,
-                                            selectFollowup: () => {},
                                             includeContinuePrompt: true
                                         },
                                         null

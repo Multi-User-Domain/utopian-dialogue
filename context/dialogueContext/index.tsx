@@ -77,10 +77,10 @@ export const DialogueProvider = ({
         for(let [name, participant] of Object.entries(participants)) {
             let newResponse = participant.speak(msg);
 
-            if(response == null || newResponse.urgency > response.urgency) response = newResponse;
+            if(newResponse != null && (response == null || newResponse.urgency > response.urgency)) response = newResponse;
         }
 
-        addMessage(response);
+        if(response != null) addMessage(response);
     }
 
     return(
