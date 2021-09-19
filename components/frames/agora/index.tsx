@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Text
+    Text,
+    Button,
+    Center
 } from "@chakra-ui/react";
 
-import { WindupChildren, Pause, Effect, Pace } from "windups";
+import { WindupChildren, Pause, Pace } from "windups";
 import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
@@ -11,7 +13,6 @@ import usePlayer from "../../../hooks/usePlayer";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import { IDialogueParticipant, IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
-import DialogueMessage from "../../lib/dialogueMessage";
 
 function initMayorRupert() : IDialogueParticipant {
     let mayor: IDialogueParticipant = {
@@ -71,6 +72,7 @@ function AgoraDialogue() : React.ReactElement {
 
     const { addParticipant, addMessage } = useDialogue();
     const { name, image, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
+    const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const introduceMayorRupert = (mayorRupert) => {
         return {
@@ -436,14 +438,26 @@ function AgoraDialogue() : React.ReactElement {
         });
     }, []);
 
+    let content = null;
+
+    if(!dialogueStarted) content = (
+        <>
+        <p>A man dressed in fine clothing approaches, his face is red and puffy with sweat.</p>
+        <p>He is accompanied by five other men, dressed in bright uniform.</p>
+        <Center marginTop={10}>
+            <Button onClick={() => setDialogueStarted(true)}>Continue</Button>
+        </Center>
+        </>
+    );
+
+    else content = (
+        <Dialogue>
+        </Dialogue>
+    );
+
     return (
         <WindupChildren>
-            <p>A man dressed in fine clothing approaches, his face is red and puffy with sweat.</p>
-            <p>He is accompanied by five other men, dressed in bright uniform.</p>
-
-            <Dialogue>
-
-            </Dialogue>
+            {content}
         </WindupChildren>
     );
 }
