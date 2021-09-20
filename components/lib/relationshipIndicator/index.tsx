@@ -3,8 +3,11 @@ import { css } from '@emotion/css'
 
 import {
     Container,
-    Text
+    Grid,
+    GridItem
 } from "@chakra-ui/react";
+
+import { ViewIcon } from "@chakra-ui/icons";
 
 export default function RelationshipIndicator({color, children} : {color: string, children: any}): React.ReactElement {
 
@@ -13,8 +16,10 @@ export default function RelationshipIndicator({color, children} : {color: string
         margin: 5px 0px;
         color: ${color};
         `}>
-            <Text><em>New relationship effect!</em></Text>
-            {children}
+            <Grid templateColumns="repeat(6, 1fr)">
+                <GridItem colSpan={1}><ViewIcon /></GridItem>
+                <GridItem colSpan={5}>{children}</GridItem>
+            </Grid>
         </Container>
     );
 }
