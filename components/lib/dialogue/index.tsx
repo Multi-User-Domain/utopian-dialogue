@@ -10,6 +10,7 @@ import { WindupChildren, OnChar } from "windups";
 
 import useDialogue from "../../../hooks/useDialogue";
 import DialogueMessage from "../dialogueMessage";
+import { IMessage } from "../../../context/dialogueContext";
 
 export interface IDialogue {
     children: any
@@ -44,7 +45,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
                 if(msgValue.includeContinuePrompt) {
                     setContinueButton(<Container marginTop={5}>
                         <Center>
-                            <Button onClick={() => nextMessage()}>Continue</Button>
+                            <Button onClick={() => nextMessage(msgValue)}>Continue</Button>
                         </Center>
                     </Container>);
                     break;
@@ -56,8 +57,9 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
 
     }
 
-    const nextMessage = () => {
+    const nextMessage = (msgValue: IMessage) => {
         setContinueButton(null);
+        if(msgValue.sideEffect) msgValue.sideEffect();
         renderNextMessages();
     }
 
@@ -65,6 +67,9 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
         for(let msg of timeline) {
             if(!msg.read) {
                 msg.read = true;
+                //side-effects are carried out when the message has been read
+                //but if there is a continue prompt then it will be effected after that is clicked
+                if(msg.sideEffect && !msg.includeContinuePrompt) msg.sideEffect();
                 if(msg.includeContinuePrompt) return; //stop at any breaks
             }
         }

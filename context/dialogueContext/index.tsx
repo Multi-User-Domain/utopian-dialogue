@@ -57,8 +57,6 @@ export const DialogueProvider = ({
     }
 
     const addMessage = (msg) => {
-        if(msg.sideEffect) msg.sideEffect();
-
         setTimeline(prevTimeline => (
             [...prevTimeline, msg]
         ));
