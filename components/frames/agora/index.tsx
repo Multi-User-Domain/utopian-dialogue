@@ -70,7 +70,7 @@ function initMari() : IDialogueParticipant {
 
 function AgoraDialogue() : React.ReactElement {
 
-    const { addParticipant, addMessage } = useDialogue();
+    const { addParticipant, addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { name, image, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
@@ -80,8 +80,9 @@ function AgoraDialogue() : React.ReactElement {
                 <>
                 <p>"What is the meaning of this?!"</p>
                 <p>He calls out to the audience, his arms waving theatrically:</p>
-                <p>"Good citizens of <b>Rupertston</b>, I am your regent!"</p>
-                <p>"I understand that The Great Pop seems to have affected our memories of that but I am your mayor!"</p>
+                <p>"Good citizens of <b>Rupertston</b>, I am your leader!"</p>
+                <Pause ms={SHORT_PAUSE * 0.75} />
+                <p>"I understand that The Great Pop seems to have affected our memories but nevertheless <em>I am your mayor!</em>"</p>
                 <Pause ms={SHORT_PAUSE * 1.25} />
                 <p>"And of course I have all of the necessary <Pause ms={SHORT_PAUSE*0.25}/><em>*ahem*</em> records to prove it"</p>
                 </>
@@ -217,10 +218,10 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"This man... was KING!"</p>
                                     <Pause ms={SHORT_PAUSE * 1.25} />
                                     <p>There is a collective gasp.</p>
-                                    <Pace ms={SLOW_PACE}>
+                                    <Pace ms={SLOW_PACE * 1.5}>
                                         <Text color="#9246d9"><em>They're buying it!</em></Text>
                                     </Pace>
-                                    <Text color="#FCF55F">It must be the sensational <em>authority</em> that you're projecting.</Text>
+                                    <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
                                     <p>The crowd turns in favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.</p>
                                     <RelationshipIndicator color="#3cb371"><p>Rupert is now King!</p></RelationshipIndicator>
                                     </>
@@ -257,13 +258,17 @@ function AgoraDialogue() : React.ReactElement {
                                     <>
                                     <p>"Long live the King!"</p>
                                     <p>"Long live the King!"</p>
-                                    <p>"Long live the King!"</p>
-                                    <p>"Long live the King!"</p>
                                     </>
                                 ),
                                 name: null,
                                 imgSrc: "../../../public/img/anonymous_citizen.webp"
                             });
+
+                            addMessage({
+                                content: <p>"Long live the King!"</p>,
+                                name: null,
+                                imgSrc: "../../../public/img/anonymous_citizen2.webp"
+                            })
 
                             addMessage({
                                 content: (
@@ -299,7 +304,7 @@ function AgoraDialogue() : React.ReactElement {
                             });
 
                             addMessage({
-                                content: <p>"Where's that, boss"</p>,
+                                content: <p>"Where's that, boss?"</p>,
                                 name: bg.name,
                                 imgSrc: bg.imgSrc,
                                 includeContinuePrompt: true
@@ -310,19 +315,21 @@ function AgoraDialogue() : React.ReactElement {
                                     <>
                                     <p>"Burly, what have we discussed about speaking before you're spoken to?"</p>
                                     <p>"And it's <em>Your Grace</em>, now."</p>
-                                    <p>He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.</p>
+                                    <Text color="#9246d9">He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.</Text>
                                     <Pause ms={SHORT_PAUSE} />
                                     <p>"You can find me at the <b>Palace</b>" he says with a wink.</p>
                                     </>
                                 ),
                                 name: mayorRupert.name,
                                 imgSrc: mayorRupert.imgSrc,
-                                includeContinuePrompt: true
+                                includeContinuePrompt: true,
+                                sideEffect: () => setDialogueEnded(true)
                             });
                         },
-                        shorthandContent: <Text>"Mayor?! No, this man was no mayor... he was our <b>King!</b>"</Text>,
+                        shorthandContent: <Text>"Mayor?! No, this man was no mayor... he is our <b>King!</b>"</Text>,
                         name: name,
-                        imgSrc: image
+                        imgSrc: image,
+
                     },
                     {
                         msgId: "communism",
@@ -348,7 +355,7 @@ function AgoraDialogue() : React.ReactElement {
                             });
                             
                             addMessage({
-                                content: <p>"Long live the Polis!</p>,
+                                content: <p>"Long live the Polis!"</p>,
                                 name: null,
                                 imgSrc: "../../../public/img/anonymous_citizen2.webp"
                             })
@@ -448,6 +455,10 @@ function AgoraDialogue() : React.ReactElement {
             <Button onClick={() => setDialogueStarted(true)}>Continue</Button>
         </Center>
         </>
+    );
+
+    else if(dialogueEnded) content = (
+        <p>Dialogue ended.</p>
     );
 
     else content = (
