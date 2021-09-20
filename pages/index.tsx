@@ -8,6 +8,7 @@ import {
 import { NarrativeProvider } from "../context/narrativeContext";
 import { PlayerProvider } from "../context/playerContext";
 import StoryView from "../components/lib/storyView";
+import { BigCityProvider } from '../context/bigCityContext';
 
 export default function Home(): React.ReactElement {
 
@@ -15,9 +16,11 @@ export default function Home(): React.ReactElement {
     <ChakraProvider>
       <Container marginTop="20px">
           <NarrativeProvider>
-            <PlayerProvider>
-              <StoryView></StoryView>
-            </PlayerProvider>
+            <BigCityProvider>
+              <PlayerProvider>
+                <StoryView></StoryView>
+              </PlayerProvider>
+            </BigCityProvider>
           </NarrativeProvider>
       </Container>
     </ChakraProvider>

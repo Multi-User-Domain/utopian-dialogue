@@ -13,6 +13,8 @@ import usePlayer from "../../../hooks/usePlayer";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import { IDialogueParticipant, IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
+import {World} from "../../../context/bigCityContext";
+import useBigCity from "../../../hooks/useBigCity";
 
 function initMayorRupert() : IDialogueParticipant {
     let mayor: IDialogueParticipant = {
@@ -71,6 +73,7 @@ function initMari() : IDialogueParticipant {
 function AgoraDialogue() : React.ReactElement {
 
     const { addParticipant, addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
+    const { setWorldItem } = useBigCity();
     const { name, image, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
@@ -223,6 +226,7 @@ function AgoraDialogue() : React.ReactElement {
                                     </Pace>
                                     <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
                                     <p>The crowd turns in favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.</p>
+                                    <RelationshipIndicator color="#3cb371"><p>Big City is now an <b>Absolute Monarchy</b>.</p></RelationshipIndicator>
                                     <RelationshipIndicator color="#3cb371"><p>Rupert is now King!</p></RelationshipIndicator>
                                     </>
                                 ),
@@ -231,6 +235,8 @@ function AgoraDialogue() : React.ReactElement {
                                 sideEffect: () => {
                                     addIncomingRelationship('rupert', ['extreme gratitude']);
                                     addOutgoingRelationship('rupert', ['king']);
+                                    setWorldItem(World.GOVERNANCE, 'absolute monarchy');
+                                    setWorldItem(World.RULER, mayorRupert.name);
                                 }
                             });
 
@@ -433,6 +439,9 @@ function AgoraDialogue() : React.ReactElement {
                                         },
                                         null
                                     ]
+                                },
+                                sideEffect: () => {
+                                    setWorldItem(World.GOVERNANCE, 'agora');
                                 }
                             });
                         },
