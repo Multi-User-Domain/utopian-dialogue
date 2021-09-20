@@ -12,14 +12,18 @@ export default function useDialogue() : IDialogueContext {
         getResponse,
         timeline,
         addParticipant,
-        addMessage
+        addMessage,
+        dialogueEnded,
+        setDialogueEnded
     } = useContext(DialogueContext);
 
     return {
         getResponse,
         timeline,
         addParticipant,
-        addMessage
+        addMessage,
+        dialogueEnded,
+        setDialogueEnded
     };
 }
   

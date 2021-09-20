@@ -31,6 +31,8 @@ export interface IDialogueContext {
     timeline?: IMessage[];
     addParticipant?: (p: IDialogueParticipant) => void;
     addMessage?: (msg: IMessage) => void;
+    dialogueEnded?: boolean;
+    setDialogueEnded?: (dialogueEnded: boolean) => void;
 };
 
 export interface IDialogueContextProps {
@@ -45,6 +47,7 @@ export const DialogueProvider = ({
 
     const [participants, setParticipants] = useState<{ [key: string]: IDialogueParticipant }>({});
     const [timeline, setTimeline] = useState([]);
+    const [dialogueEnded, setDialogueEnded] = useState(false);
 
     const addParticipant = (p: IDialogueParticipant) => {
         setParticipants(prevParticipants => ({
@@ -89,7 +92,9 @@ export const DialogueProvider = ({
                 getResponse,
                 timeline,
                 addParticipant,
-                addMessage
+                addMessage,
+                dialogueEnded,
+                setDialogueEnded
             }}
         >
             {children}
