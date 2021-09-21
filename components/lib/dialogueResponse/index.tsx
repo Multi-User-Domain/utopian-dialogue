@@ -51,14 +51,6 @@ export function DialogueResponsePrompt({}): React.ReactElement {
 
         for(let i = 0; i < responses.length; i++) {
 
-            // special case - say nothing
-            if(responses[i] == null) {
-                responseDisplay.push(
-                    <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}><Text>[Say Nothing]</Text></DialogueResponseChoice>
-                );
-                continue;
-            }
-
             let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
 
             responseDisplay.push(

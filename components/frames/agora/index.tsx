@@ -437,7 +437,13 @@ function AgoraDialogue() : React.ReactElement {
                                             imgSrc: image,
                                             includeContinuePrompt: true
                                         },
-                                        null
+                                        {
+                                            content: <Text>...</Text>,
+                                            shorthandContent: <Text>[Say Nothing]</Text>,
+                                            name: name,
+                                            imgSrc: image,
+                                            includeContinuePrompt: true
+                                        }
                                     ]
                                 },
                                 sideEffect: () => {
