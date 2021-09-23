@@ -7,9 +7,11 @@ export interface IPlayerContext {
     image?: string;
     setImage?: (string) => void;
     incomingRelationships?: any;
-    outgoingRelationships?: any;
+    outgoingRelationships?: {[object: string]: string[]};
     addIncomingRelationship?: (subject: string, labels: string[]) => void;
+    hasIncomingRelationshipPair?: (subject: string, label: string) => boolean;
     addOutgoingRelationship?: (object: string, labels: string[]) => void;
+    hasOutgoingRelationshipPair?: (object: string, label: string) => boolean;
 };
 
 export const PlayerContext = createContext<IPlayerContext>({});
@@ -20,7 +22,7 @@ export const PlayerProvider = ({
 
     const [webId, setWebId] = useState("_:player");
     const [name, setName] = useState("");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState("../../../public/img/playerProfile/3.webp");
     const [incomingRelationships, setIncomingRelationships] = useState({});
     const [outgoingRelationships, setOutgoingRelationships] = useState({});
 
@@ -34,9 +36,8 @@ export const PlayerProvider = ({
             labels = concatWithoutDuplicates(labels, incomingRelationships[subject])
         }
 
-        setIncomingRelationships(prevIncomingRelationships => (
-            {...prevIncomingRelationships, [subject]: labels}
-        ));
+        incomingRelationships[subject] = labels;
+        setIncomingRelationships({...incomingRelationships});
     }
 
     const addOutgoingRelationship = (object, labels) => {
@@ -45,9 +46,16 @@ export const PlayerProvider = ({
             labels = concatWithoutDuplicates(labels, outgoingRelationships[object])
         }
 
-        setOutgoingRelationships(prevOutgoingRelationships => (
-            {...prevOutgoingRelationships, [object]: labels}
-        ));
+        outgoingRelationships[object] = labels;
+        setOutgoingRelationships({...outgoingRelationships});
+    }
+
+    const hasIncomingRelationshipPair = (subject, label) => {
+        return (subject in incomingRelationships && incomingRelationships[subject].includes(label));
+    }
+
+    const hasOutgoingRelationshipPair = (object, label) => {
+        return (object in outgoingRelationships && outgoingRelationships[object].includes(label));
     }
 
     return(
@@ -61,7 +69,9 @@ export const PlayerProvider = ({
                 incomingRelationships,
                 outgoingRelationships,
                 addIncomingRelationship,
-                addOutgoingRelationship
+                addOutgoingRelationship,
+                hasIncomingRelationshipPair,
+                hasOutgoingRelationshipPair
             }}
         >
             {children}
