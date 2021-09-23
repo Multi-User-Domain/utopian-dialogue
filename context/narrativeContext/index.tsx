@@ -1,6 +1,8 @@
 import React, { lazy, createContext, ReactElement, useState, useEffect } from "react";
 import Home from "../../components/frames/home"
 import WhoAmI from "../../components/frames/whoAmI";
+import WhereAmI from "../../components/frames/whereAmI";
+import Agora from "../../components/frames/agora";
 
 export interface INarrativeContext {
     activeFrame: ReactElement;
@@ -16,7 +18,9 @@ const frameDictionary = {
     // look into using ESM format (had difficulties bundling this)
     //'home': lazy(() => import('../../components/frames/home')),
     'home': Home,
-    'whoAmI': WhoAmI
+    'whoAmI': WhoAmI,
+    'whereAmI': WhereAmI,
+    'agora': Agora
 }
 
 export const NarrativeProvider = ({
@@ -38,7 +42,7 @@ export const NarrativeProvider = ({
     }
 
     useEffect(() => {
-        setFrame("whoAmI");
+        setFrame("home");
     }, []);
 
     return(
