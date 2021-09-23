@@ -1,10 +1,10 @@
 import React, { createContext, ReactElement, useState, useEffect } from "react";
+import { IPerformer } from "../../components/lib/performers";
 
 export interface IMessage {
     webId?: string;
     msgId?: string;
-    name: string;
-    imgSrc?: string;
+    performer: IPerformer;
     content: ReactElement;
     shorthandContent?: ReactElement;
     urgency?: number;

@@ -28,9 +28,9 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
                 gap={1}
             >
                 <GridItem colSpan={2} h={100} w={100} position="relative" overflow="hidden" borderRadius="50%">
-                    <Image h="auto" w="100%" src={message.imgSrc}/>
+                    <Image h="auto" w="100%" src={message.performer.imgSrc}/>
                     <Center marginTop={5}>
-                        <Text>{message.name}</Text>
+                        <Text>{message.performer.name}</Text>
                     </Center>
                 </GridItem>
                 <GridItem colSpan={3} h="100%">

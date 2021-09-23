@@ -11,64 +11,11 @@ import Dialogue from "../../lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
-import { IDialogueParticipant, IMessage, DialogueProvider } from "../../../context/dialogueContext";
+import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World} from "../../../context/bigCityContext";
 import useBigCity from "../../../hooks/useBigCity";
-
-function initMayorRupert() : IDialogueParticipant {
-    let mayor: IDialogueParticipant = {
-        name: "Mayor Rupert",
-        imgSrc: "../../../public/img/mayor_rupert.png",
-        isHuman: false,
-        indexStart: 0,
-        mood: "",
-        currentGoal: "Enforce Power",
-        speak: null
-    }
-
-    mayor.speak = (lastMsg: IMessage) => {
-        return null;
-    }
-
-    return mayor;
-}
-
-function initBodyGuard() : IDialogueParticipant {
-    let bg: IDialogueParticipant = {
-        name: "Burly Bodyguard",
-        imgSrc: "../../../public/img/bodyguard.webp",
-        isHuman: false,
-        indexStart: 0,
-        mood: "",
-        currentGoal: "Shout a bit and let off some steam",
-        speak: null
-    }
-
-    bg.speak = (lastMsg: IMessage) => {
-        return null;
-    }
-
-    return bg;
-}
-
-function initMari() : IDialogueParticipant {
-    let mari: IDialogueParticipant = {
-        name: "Mari",
-        imgSrc: "../../../public/img/mari.webp",
-        isHuman: false,
-        indexStart: 0,
-        mood: "",
-        currentGoal: "Establish an agora",
-        speak: null
-    }
-
-    mari.speak = (lastMsg: IMessage) => {
-        return null;
-    }
-
-    return mari;
-}
+import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 
 function AgoraDialogue() : React.ReactElement {
 
@@ -77,7 +24,12 @@ function AgoraDialogue() : React.ReactElement {
     const { name, image, hasOutgoingRelationshipPair, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
-    const introduceMayorRupert = (mayorRupert) => {
+    const playerPerformer: IPerformer = {
+        name: name,
+        imgSrc: image
+    }
+
+    const introduceMayorRupert = () => {
         addMessage({
             content: (
                 <>
@@ -87,8 +39,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"And just <Pause ms={SHORT_PAUSE *0.25}/><b>what</b> is the meaning of all this <em>nonsense</em>?!"</p>
                 </>
             ),
-            name: mayorRupert.name,
-            imgSrc: mayorRupert.imgSrc,
+            performer: performers[PerformerNames.RUPERT],
             includeContinuePrompt: true
         });
 
@@ -103,38 +54,35 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"Nevertheless I have all of the necessary <Pause ms={SHORT_PAUSE*0.25}/><em>*ahem*</em> records to prove it"</p>
                 </>
             ),
-            name: mayorRupert.name,
-            imgSrc: mayorRupert.imgSrc,
+            performer: performers[PerformerNames.RUPERT],
             includeContinuePrompt: true
         });
     }
 
-    const introduceBodyguard = (bg) => {
-        return {
+    const introduceBodyguard = () => {
+        addMessage({
             content: (
                 <>
                 <p>"Yeah! Your gathering here is illegal!" Says the tallest of the guardsmen, in a fiercely bright orange and white blouse.</p>
                 </>
             ),
-            name: bg.name,
-            imgSrc: bg.imgSrc,
+            performer: performers[PerformerNames.BURLY],
             includeContinuePrompt: true
-        }
+        });
     }
 
-    const introduceMari = (mari) => {
-        return {
+    const introduceMari = () => {
+        addMessage({
             content: (
                 <>
                 <p>"Who are you?"</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc
-        }
+            performer: performers[PerformerNames.MARI],
+        });
     }
 
-    const prisonDecision: (mari: IDialogueParticipant) => IMessage[] = () => {
+    const prisonDecision: () => IMessage[] = () => {
         // the question which provokes this function: "How should we punish people who break the rules?"
 
         return [
@@ -145,20 +93,17 @@ function AgoraDialogue() : React.ReactElement {
                     { hasOutgoingRelationshipPair('self', 'revolutionary') ? <p>"It was a tool of oppression!"</p> : null}
                     </>
                 ),
-                name: name,
-                imgSrc: image,
+                performer: playerPerformer,
                 shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
                 selectFollowup: () => {
                     addMessage({
                         content: <p>"Yes. The <b>old ways</b> are something to be overcome"</p>,
-                        name: "Mari",
-                        imgSrc: "../../../public/img/mari.webp"
+                        performer: performers[PerformerNames.MARI],
                     });
 
                     addMessage({
                         content: <RelationshipIndicator color="#ff5dcb"><p>Andrew seems relieved. He looks on you fondly.</p></RelationshipIndicator>,
-                        name: "Andrew",
-                        imgSrc: "../../../public/img/andrew.webp",
+                        performer: performers[PerformerNames.ANDREW],
                         includeContinuePrompt: true
                     });
 
@@ -171,8 +116,7 @@ function AgoraDialogue() : React.ReactElement {
                             <RelationshipIndicator color="#ff5dcb"><p>Big City Prison has been abolished!</p></RelationshipIndicator>
                             </>
                         ),
-                        name: name,
-                        imgSrc: image,
+                        performer: playerPerformer,
                         includeContinuePrompt: true
                     });
                 },
@@ -183,8 +127,7 @@ function AgoraDialogue() : React.ReactElement {
             },
             {
                 content: <></>,
-                name: name,
-                imgSrc: image,
+                performer: playerPerformer,
                 shorthandContent: <Text>"[Not yet implemented] We could replace the prison with something more focussed on <em>reform</em>"</Text>,
                 selectFollowup: () => {
 
@@ -192,8 +135,7 @@ function AgoraDialogue() : React.ReactElement {
             },
             {
                 content: <></>,
-                name: name,
-                imgSrc: image,
+                performer: playerPerformer,
                 shorthandContent: <Text>"[Not yet implemented] The prison was absolutely necessary, it is a <em>deterrant</em>"</Text>,
                 selectFollowup: () => {
 
@@ -203,11 +145,11 @@ function AgoraDialogue() : React.ReactElement {
     }
 
     //a dilemna involving what to do with prison and people who break the rules
-    const prisonDilemma = (mari: IDialogueParticipant) => {
+    const prisonDilemma = () => {
         addMessage({
             content: <p>"There's this collossal building in the city centre, called '<b>Big City Prison</b>'.<Pause ms={LONG_PAUSE * 0.8} /> From the inside, we figured out that they were locking <em>people</em> up in there. People locked into tiny cells. It makes me feel sick<Pause ms={LONG_PAUSE * 0.7} />"</p>,
-            name: null,
-            imgSrc: "../../../public/img/anonymous_citizen2.webp"
+            performer: performers[PerformerNames.ALICIA],
+            
         });
 
         addMessage({
@@ -218,8 +160,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"Perhaps our nature is inherently dangerous, something that we must control."</p>
                 </>
             ),
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
 
@@ -234,8 +175,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"I'm not a bad man and I don't see how that could have been for my own good"</p>
                 </>
             ),
-            name: "Andrew",
-            imgSrc: "../../../public/img/andrew.webp",
+            performer: performers[PerformerNames.ANDREW],
             includeContinuePrompt: true
         });
 
@@ -246,9 +186,8 @@ function AgoraDialogue() : React.ReactElement {
                 <Text color="#9246d9">The statement is intended to relieve the tension.</Text>
                 </>
             ),
-            name: null,
-            imgSrc: "../../../public/img/anonymous_citizen.webp",
-            getResponses: () => {return prisonDecision(mari);}
+            performer: performers[PerformerNames.ZOE],
+            getResponses: () => {return prisonDecision();}
         });
     }
 
@@ -260,8 +199,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"We can learn of our history, we still have the books"</p>
                 </>
             ),
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
 
@@ -273,8 +211,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"Do you know what I saw?"</p>
                 </>
             ),
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
 
@@ -285,17 +222,15 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"I saw a lot of pain and suffering. Soldiers and wars, famines and plagues. Most of it was <em>man-made</em>"</p>
                 </>
             ),
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
     }
 
-    const stateDecision = (mari: IDialogueParticipant) => {
+    const stateDecision = () => {
         addMessage({
             content: <p>"I think that we need to establish some <b>state apparatus</b> to help ensure that we do not revert into a state of chaos"</p>,
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
 
@@ -307,23 +242,21 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"Since when was <b>organised violence</b> a part of 'how we want to live together'?"</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             includeContinuePrompt: true
         });
 
         addMessage({
             content: <p>"Everyone <em>here</em> wants to build utopia, but that doesn't mean that <em>everyone</em> does. Some people are just bad. We <em>need</em> an armed minority, to keep us safe"</p>,
-            name: "Leopald",
-            imgSrc: "../../../public/img/leopald.webp",
+            performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
 
-        prisonDilemma(mari);
+        prisonDilemma();
     }
 
     // if you choose to expel Rupert and his cronies, the agora dialogue will continue
-    const agoraMeeting = (mari: IDialogueParticipant) => {
+    const agoraMeeting = () => {
         addMessage({
             content: (
                 <>
@@ -336,8 +269,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"This is such an <Pause ms={SHORT_PAUSE * 0.25} /><em>exhillarating</em> feeling!"</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             includeContinuePrompt: true
         });
 
@@ -350,15 +282,13 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"We are the masters of our own destiny"</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             includeContinuePrompt: true
         });
 
         addMessage({
             content: <p>"Where do we start?"</p>,
-            name: null,
-            imgSrc: "../../../public/img/guard2.webp"
+            performer: performers[PerformerNames.AXEL]
         });
 
         addMessage({
@@ -369,8 +299,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"So, how do we want to live together?"</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             getResponses: () => {
                 return [
                     {
@@ -384,8 +313,7 @@ function AgoraDialogue() : React.ReactElement {
                             <p>"You said that we are masters of our own destiny. <Pause ms={SHORT_PAUSE * 0.75} /> But how can we ensure that we are not just masters of our own peril?"</p>
                             </>
                         ),
-                        name: name,
-                        imgSrc: image,
+                        performer: playerPerformer,
                         includeContinuePrompt: true,
                         selectFollowup: () => {
                             addMessage({
@@ -395,13 +323,12 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"These are my concerns exactly"</p>
                                     </>
                                 ),
-                                name: "Leopald",
-                                imgSrc: "../../../public/img/leopald.webp",
+                                performer: performers[PerformerNames.LEOPALD],
                                 includeContinuePrompt: true
                             });
 
                             leopaldTalksOfHistory();
-                            stateDecision(mari);
+                            stateDecision();
                         },
                         shorthandContent: <Text>"I'm not sure we're ready for this"</Text>
                     },
@@ -412,14 +339,12 @@ function AgoraDialogue() : React.ReactElement {
                             <p>"All power to the agora!"</p>
                             </>
                         ),
-                        name: name,
-                        imgSrc: image,
+                        performer: playerPerformer,
                         includeContinuePrompt: true,
                         selectFollowup: () => {
                             addMessage({
                                 content: <RelationshipIndicator color="#ff5dcb"><p>You are developing the reputation of a revolutionary leader. People look up to you.</p></RelationshipIndicator>,
-                                name: mari.name,
-                                imgSrc: mari.imgSrc,
+                                performer: performers[PerformerNames.MARI],
                                 sideEffect: () => {
                                     addIncomingRelationship('mari', ['camaradery']);
                                     addOutgoingRelationship('self', ['revolutionary']);
@@ -429,27 +354,24 @@ function AgoraDialogue() : React.ReactElement {
 
                             addMessage({
                                 content: <p>"{name}, my dear, I think you're being <b>naïve</b>."<Pause ms={SHORT_PAUSE} /></p>,
-                                name: "Leopald",
-                                imgSrc: "../../../public/img/leopald.webp"
+                                performer: performers[PerformerNames.LEOPALD],
                             });
 
                             leopaldTalksOfHistory();
-                            stateDecision(mari);
+                            stateDecision();
                         },
                         shorthandContent: <Text>"We are so ready for this! All power to our Agora!"</Text>
                     },
                     {
                         content: (
                             <>
-                            <p>"We are <b>so</b> ready for this."</p>
                             </>
                         ),
-                        name: name,
-                        imgSrc: image,
+                        performer: playerPerformer,
                         includeContinuePrompt: true,
                         selectFollowup: () => {
                             leopaldTalksOfHistory();
-                            stateDecision(mari);
+                            stateDecision();
                         },
                         shorthandContent: <Text>[Say Nothing]</Text>
                     }
@@ -459,19 +381,9 @@ function AgoraDialogue() : React.ReactElement {
     }
 
     useEffect(() => {
-        let mayorRupert = initMayorRupert();
-        addParticipant(mayorRupert);
-        introduceMayorRupert(mayorRupert);
-
-        let bg = initBodyGuard();
-        addParticipant(bg);
-        addMessage(introduceBodyguard(bg));
-
-        let mari = initMari();
-        addParticipant(mari);
-        addMessage(introduceMari(mari));
-
-        agoraMeeting(mari);
+        introduceMayorRupert();
+        introduceBodyguard();
+        introduceMari();
 
         addMessage({
             content: (
@@ -485,8 +397,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>"I'm Mayor Rupert's lead bodyguard"</p>
                 </>
             ),
-            name: bg.name,
-            imgSrc: bg.imgSrc,
+            performer: performers[PerformerNames.BURLY],
             includeContinuePrompt: true
         });
 
@@ -499,8 +410,7 @@ function AgoraDialogue() : React.ReactElement {
                 <Text color="#9246d9">She is grinning widely as she says it.</Text>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             includeContinuePrompt: true
         });
 
@@ -512,8 +422,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>He folds his arms protectively.</p>
                 </>
             ),
-            name: bg.name,
-            imgSrc: bg.imgSrc,
+            performer: performers[PerformerNames.BURLY],
             includeContinuePrompt: true
         });
 
@@ -529,8 +438,7 @@ function AgoraDialogue() : React.ReactElement {
                 <p>Now is your chance to speak.</p>
                 </>
             ),
-            name: mari.name,
-            imgSrc: mari.imgSrc,
+            performer: performers[PerformerNames.MARI],
             getResponses: () => {
                 return [
                     {
@@ -549,8 +457,7 @@ function AgoraDialogue() : React.ReactElement {
                         selectFollowup: () => {
                             addMessage({
                                 content: <p>The burly man makes a motion to interrupt you but he is silenced by his boss.</p>,
-                                name: bg.name,
-                                imgSrc: bg.imgSrc,
+                                performer: performers[PerformerNames.BURLY],
                                 includeContinuePrompt: true
                             });
 
@@ -569,20 +476,18 @@ function AgoraDialogue() : React.ReactElement {
                                     <RelationshipIndicator color="#3cb371"><p>Rupert is now King!</p></RelationshipIndicator>
                                     </>
                                 ),
-                                name: name,
-                                imgSrc: image,
+                                performer: playerPerformer,
                                 sideEffect: () => {
                                     addIncomingRelationship('rupert', ['extreme gratitude']);
                                     addOutgoingRelationship('rupert', ['king']);
                                     setWorldItem(World.GOVERNANCE, 'absolute monarchy');
-                                    setWorldItem(World.RULER, mayorRupert.name);
+                                    setWorldItem(World.RULER, PerformerNames.RUPERT);
                                 }
                             });
 
                             addMessage({
                                 content: <RelationshipIndicator color="#ff5dcb"><p>King Rupert eyes have started to sparkle whenever he looks at you.</p></RelationshipIndicator>,
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 includeContinuePrompt: true
                             });
 
@@ -594,8 +499,7 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>The cheers of the crowd drown her out</p>
                                     </>
                                 ),
-                                name: mari.name,
-                                imgSrc: mari.imgSrc
+                                performer: performers[PerformerNames.MARI]
                             });
 
                             addMessage({
@@ -605,14 +509,12 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"Long live the King!"</p>
                                     </>
                                 ),
-                                name: null,
-                                imgSrc: "../../../public/img/anonymous_citizen.webp"
+                                performer: performers[PerformerNames.ZOE]
                             });
 
                             addMessage({
                                 content: <p>"Long live the King!"</p>,
-                                name: null,
-                                imgSrc: "../../../public/img/anonymous_citizen2.webp"
+                                performer: performers[PerformerNames.ALICIA]
                             })
 
                             addMessage({
@@ -623,35 +525,30 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"Your ambition is remarkable"</p>
                                     </>
                                 ),
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 includeContinuePrompt: true
                             });
 
                             addMessage({
                                 content: <p>"Your stature, Olympian!"</p>,
-                                name: bg.name,
-                                imgSrc: bg.imgSrc
+                                performer: performers[PerformerNames.BURLY]
                             });
 
                             addMessage({
                                 content: <p>"Your words, honey!"</p>,
-                                name: null,
-                                imgSrc: "../../../public/img/guard2.webp",
+                                performer: performers[PerformerNames.AXEL],
                                 includeContinuePrompt: true
                             });
 
                             addMessage({
                                 content: <p>"Anytime you need <b>Anything</b>, you will know where to find me"</p>,
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 includeContinuePrompt: true
                             });
 
                             addMessage({
                                 content: <p>"Where's that, boss?"</p>,
-                                name: bg.name,
-                                imgSrc: bg.imgSrc,
+                                performer: performers[PerformerNames.BURLY],
                                 includeContinuePrompt: true
                             });
                             
@@ -665,15 +562,13 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"You can find me at the <b>Palace</b>" he says with a wink.</p>
                                     </>
                                 ),
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 includeContinuePrompt: true,
                                 sideEffect: () => setDialogueEnded(true)
                             });
                         },
                         shorthandContent: <Text>"Mayor?! No, this man was no mayor... he is our <b>King!</b>"</Text>,
-                        name: name,
-                        imgSrc: image,
+                        performer: playerPerformer
 
                     },
                     {
@@ -695,20 +590,17 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"Long live the Polis!"</p>
                                     </>
                                 ),
-                                name: null,
-                                imgSrc: "../../../public/img/anonymous_citizen.webp"
+                                performer: performers[PerformerNames.ZOE]
                             });
                             
                             addMessage({
                                 content: <p>"Long live the Polis!"</p>,
-                                name: null,
-                                imgSrc: "../../../public/img/anonymous_citizen2.webp"
+                                performer: performers[PerformerNames.ALICIA]
                             })
 
                             addMessage({
                                 content: <p>"Long live the Polis!"</p>,
-                                name: mari.name,
-                                imgSrc: mari.imgSrc,
+                                performer: performers[PerformerNames.MARI],
                                 includeContinuePrompt: true
                             });
 
@@ -725,8 +617,7 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"Burly. <Pace ms={SLOW_PACE * 1.5}><em>Do something</em></Pace>"</p>
                                     </>
                                 ),
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 includeContinuePrompt: true
                             });
 
@@ -742,8 +633,7 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>Those who remain are chanting with the others.</p>
                                     </>
                                 ),
-                                name: bg.name,
-                                imgSrc: bg.imgSrc
+                                performer: performers[PerformerNames.BURLY]
                             });
 
                             addMessage({
@@ -752,15 +642,13 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"Long live the Polis!"</p>
                                     </>
                                 ),
-                                name: null,
-                                imgSrc: "../../../public/img/guard2.webp",
+                                performer: performers[PerformerNames.AXEL],
                                 includeContinuePrompt: true
                             });
 
                             addMessage({
                                 content: <p>Burly and the would-be mayor beat a slow retreat from the crowd.</p>,
-                                name: mayorRupert.name,
-                                imgSrc: mayorRupert.imgSrc,
+                                performer: performers[PerformerNames.RUPERT],
                                 getResponses: () => {
                                     return [
                                         {
@@ -772,18 +660,16 @@ function AgoraDialogue() : React.ReactElement {
                                                 </>
                                             ),
                                             shorthandContent: <Text>Mock them as they leave</Text>,
-                                            name: name,
-                                            imgSrc: image,
+                                            performer: playerPerformer,
                                             includeContinuePrompt: true,
-                                            selectFollowup: () => agoraMeeting(mari)
+                                            selectFollowup: () => agoraMeeting()
                                         },
                                         {
                                             content: <Text>...</Text>,
                                             shorthandContent: <Text>[Say Nothing]</Text>,
-                                            name: name,
-                                            imgSrc: image,
+                                            performer: playerPerformer,
                                             includeContinuePrompt: true,
-                                            selectFollowup: () => agoraMeeting(mari)
+                                            selectFollowup: () => agoraMeeting()
                                         }
                                     ]
                                 },
@@ -793,8 +679,7 @@ function AgoraDialogue() : React.ReactElement {
                             });
                         },
                         shorthandContent: <Text>Side with Mari</Text>,
-                        name: name,
-                        imgSrc: image
+                        performer: playerPerformer
                     }
                 ]
             }
