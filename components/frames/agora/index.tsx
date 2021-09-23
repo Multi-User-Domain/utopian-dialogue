@@ -74,7 +74,7 @@ function AgoraDialogue() : React.ReactElement {
 
     const { addParticipant, addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { setWorldItem } = useBigCity();
-    const { name, image, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
+    const { name, image, hasOutgoingRelationshipPair, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const introduceMayorRupert = (mayorRupert) => {
@@ -132,6 +132,194 @@ function AgoraDialogue() : React.ReactElement {
             name: mari.name,
             imgSrc: mari.imgSrc
         }
+    }
+
+    const prisonDecision: (mari: IDialogueParticipant) => IMessage[] = () => {
+        // the question which provokes this function: "How should we punish people who break the rules?"
+
+        return [
+            {
+                content: (
+                    <>
+                    <p>"The prison was not necessary, it was cruel"</p>
+                    { hasOutgoingRelationshipPair('self', 'revolutionary') ? <p>"It was a tool of oppression!"</p> : null}
+                    </>
+                ),
+                name: name,
+                imgSrc: image,
+                shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>"Yes. The <b>old ways</b> are something to be overcome"</p>,
+                        name: "Mari",
+                        imgSrc: "../../../public/img/mari.webp"
+                    });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#ff5dcb"><p>Andrew seems relieved. He looks on you fondly.</p></RelationshipIndicator>,
+                        name: "Andrew",
+                        imgSrc: "../../../public/img/andrew.webp",
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"We will try to resolve all of our issues face-to-face" You begin.</p>
+                            <p>"We should focus on restorative justice, and on solving the issues which cause transgressions"</p>
+                            <p>"If it comes to it, we can discuss transgressions and punishments collectively to find solutions"</p>
+                            <RelationshipIndicator color="#ff5dcb"><p>Big City Prison has been abolished!</p></RelationshipIndicator>
+                            </>
+                        ),
+                        name: name,
+                        imgSrc: image,
+                        includeContinuePrompt: true
+                    });
+                },
+                sideEffect: () => {
+                    addIncomingRelationship('andrew', ['kind']);
+                    setWorldItem(World.PRISON, "abolished");
+                }
+            },
+            {
+                content: <></>,
+                name: name,
+                imgSrc: image,
+                shorthandContent: <Text>"[Not yet implemented] We could replace the prison with something more focussed on <em>reform</em>"</Text>,
+                selectFollowup: () => {
+
+                }
+            },
+            {
+                content: <></>,
+                name: name,
+                imgSrc: image,
+                shorthandContent: <Text>"[Not yet implemented] The prison was absolutely necessary, it is a <em>deterrant</em>"</Text>,
+                selectFollowup: () => {
+
+                }
+            },
+        ];
+    }
+
+    //a dilemna involving what to do with prison and people who break the rules
+    const prisonDilemma = (mari: IDialogueParticipant) => {
+        addMessage({
+            content: <p>"There's this collossal building in the city centre, called '<b>Big City Prison</b>'.<Pause ms={LONG_PAUSE * 0.8} /> From the inside, we figured out that they were locking <em>people</em> up in there. People locked into tiny cells. It makes me feel sick<Pause ms={LONG_PAUSE * 0.7} />"</p>,
+            name: null,
+            imgSrc: "../../../public/img/anonymous_citizen2.webp"
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"Have you considered that they might have <em>had to</em> lock those people up? For their own good and for the good of society?"</p>
+                <Pause ms={SHORT_PAUSE * 1.5} />
+                <p>"Perhaps our nature is inherently dangerous, something that we must control."</p>
+                </>
+            ),
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"<b>I <em>woke up</em> in one of those cells</b>"</p>
+                <Pause ms={SHORT_PAUSE} />
+                <Text color="#9246d9">His muscles are tense and his arms are arched.</Text>
+                <Text color="#9246d9">He feels a pain at the knowledge of what happened to him.</Text>
+                <Pause ms={SHORT_PAUSE * 0.5} />
+                <p>"I'm not a bad man and I don't see how that could have been for my own good"</p>
+                </>
+            ),
+            name: "Andrew",
+            imgSrc: "../../../public/img/andrew.webp",
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"Perhaps they were not <em>always</em> right then, clearly. But neither surely were they <em>always</em> wrong?"</p>
+                <Text color="#9246d9">The statement is intended to relieve the tension.</Text>
+                </>
+            ),
+            name: null,
+            imgSrc: "../../../public/img/anonymous_citizen.webp",
+            getResponses: () => {return prisonDecision(mari);}
+        });
+    }
+
+    const leopaldTalksOfHistory = () => {
+        addMessage({
+            content: (
+                <>
+                <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?</p>
+                <p>"We can learn of our history, we still have the books"</p>
+                </>
+            ),
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"It's been <b>two days</b> since the Big Pop. I've flicked through some of the <b>history books</b> I found down by the library"</p>
+                <Pause ms={LONG_PAUSE * 0.75} />
+                <p>"Do you know what I saw?"</p>
+                </>
+            ),
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"I've only flicked through and looked at the pictures but..."</p>
+                <p>"I saw a lot of pain and suffering. Soldiers and wars, famines and plagues. Most of it was <em>man-made</em>"</p>
+                </>
+            ),
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+    }
+
+    const stateDecision = (mari: IDialogueParticipant) => {
+        addMessage({
+            content: <p>"I think that we need to establish some <b>state apparatus</b> to help ensure that we do not revert into a state of chaos"</p>,
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"Pish!"</p>
+                <p>"How is this man any different than Rupert? I don't think you can coerce anyone to be free!"</p>
+                <p>"Since when was <b>organised violence</b> a part of 'how we want to live together'?"</p>
+                </>
+            ),
+            name: mari.name,
+            imgSrc: mari.imgSrc,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"Everyone <em>here</em> wants to build utopia, but that doesn't mean that <em>everyone</em> does. Some people are just bad. We <em>need</em> an armed minority, to keep us safe"</p>,
+            name: "Leopald",
+            imgSrc: "../../../public/img/leopald.webp",
+            includeContinuePrompt: true
+        });
+
+        prisonDilemma(mari);
     }
 
     // if you choose to expel Rupert and his cronies, the agora dialogue will continue
@@ -212,18 +400,8 @@ function AgoraDialogue() : React.ReactElement {
                                 includeContinuePrompt: true
                             });
 
-                            addMessage({
-                                content: (
-                                    <>
-                                    <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?</p>
-                                    <p>"We can learn of our history, we still have the books"</p>
-                                    <Pause ms={LONG_PAUSE} />
-                                    </>
-                                ),
-                                name: "Leopald",
-                                imgSrc: "../../../public/img/leopald.webp",
-                                includeContinuePrompt: true
-                            });
+                            leopaldTalksOfHistory();
+                            stateDecision(mari);
                         },
                         shorthandContent: <Text>"I'm not sure we're ready for this"</Text>
                     },
@@ -245,9 +423,18 @@ function AgoraDialogue() : React.ReactElement {
                                 sideEffect: () => {
                                     addIncomingRelationship('mari', ['camaradery']);
                                     addOutgoingRelationship('self', ['revolutionary']);
-                                    setWorldItem(World.GOVERNANCE, 'agora');
-                                }
+                                },
+                                includeContinuePrompt: true
                             });
+
+                            addMessage({
+                                content: <p>"{name}, my dear, I think you're being <b>naïve</b>."<Pause ms={SHORT_PAUSE} /></p>,
+                                name: "Leopald",
+                                imgSrc: "../../../public/img/leopald.webp"
+                            });
+
+                            leopaldTalksOfHistory();
+                            stateDecision(mari);
                         },
                         shorthandContent: <Text>"We are so ready for this! All power to our Agora!"</Text>
                     },
@@ -261,18 +448,8 @@ function AgoraDialogue() : React.ReactElement {
                         imgSrc: image,
                         includeContinuePrompt: true,
                         selectFollowup: () => {
-                            addMessage({
-                                content: (
-                                    <>
-                                    <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?</p>
-                                    <p>"We can learn of our history, we still have the books"</p>
-                                    <Pause ms={LONG_PAUSE} />
-                                    </>
-                                ),
-                                name: "Leopald",
-                                imgSrc: "../../../public/img/leopald.webp",
-                                includeContinuePrompt: true
-                            });
+                            leopaldTalksOfHistory();
+                            stateDecision(mari);
                         },
                         shorthandContent: <Text>[Say Nothing]</Text>
                     }
@@ -293,6 +470,8 @@ function AgoraDialogue() : React.ReactElement {
         let mari = initMari();
         addParticipant(mari);
         addMessage(introduceMari(mari));
+
+        agoraMeeting(mari);
 
         addMessage({
             content: (
@@ -638,6 +817,7 @@ function AgoraDialogue() : React.ReactElement {
         <p>The others have been awake for longer, they are discussing what they are supposed to do next.</p>
         </>
     );
+    //const introText = null;
 
     if(!dialogueStarted) content = (
         <>

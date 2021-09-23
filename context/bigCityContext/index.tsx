@@ -2,7 +2,8 @@ import React, { createContext, ReactElement, useState, useEffect } from "react";
 
 export enum World {
     GOVERNANCE = "GOVERNANCE",
-    RULER = "RULER"
+    RULER = "RULER",
+    PRISON = "PRISON"
 };
 
 export interface IBigCityContext {
