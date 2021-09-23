@@ -78,22 +78,35 @@ function AgoraDialogue() : React.ReactElement {
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const introduceMayorRupert = (mayorRupert) => {
-        return {
+        addMessage({
             content: (
                 <>
-                <p>"What is the meaning of this?!"</p>
-                <p>He calls out to the audience, his arms waving theatrically:</p>
-                <p>"Good citizens of <b>Rupertston</b>, I am your leader!"</p>
-                <Pause ms={SHORT_PAUSE * 0.75} />
-                <p>"I understand that The Great Pop seems to have affected our memories but nevertheless <em>I am your mayor!</em>"</p>
-                <Pause ms={SHORT_PAUSE * 1.25} />
-                <p>"And of course I have all of the necessary <Pause ms={SHORT_PAUSE*0.25}/><em>*ahem*</em> records to prove it"</p>
+                <p>A man dressed in fine clothing approaches, his face is red and puffy with sweat.</p>
+                <p>He is leading a procession of five other men, dressed in bright uniform.</p>
+                <Pause ms={LONG_PAUSE} />
+                <p>"And just <Pause ms={SHORT_PAUSE *0.25}/><b>what</b> is the meaning of all this <em>nonsense</em>?!"</p>
                 </>
             ),
             name: mayorRupert.name,
             imgSrc: mayorRupert.imgSrc,
             includeContinuePrompt: true
-        }
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>He calls out to the audience, his arms waving theatrically:</p>
+                <p>"Good citizens of <b>Rupertston</b>, I am your leader!"</p>
+                <Pause ms={SHORT_PAUSE * 0.75} />
+                <p>"I understand that The Great Pop seems to have affected our memories but nevertheless!<Pause ms={SHORT_PAUSE * 0.25} /> <em>I am your mayor!</em>"</p>
+                <Pause ms={SHORT_PAUSE * 1.25} />
+                <p>"Nevertheless I have all of the necessary <Pause ms={SHORT_PAUSE*0.25}/><em>*ahem*</em> records to prove it"</p>
+                </>
+            ),
+            name: mayorRupert.name,
+            imgSrc: mayorRupert.imgSrc,
+            includeContinuePrompt: true
+        });
     }
 
     const introduceBodyguard = (bg) => {
@@ -121,10 +134,157 @@ function AgoraDialogue() : React.ReactElement {
         }
     }
 
+    // if you choose to expel Rupert and his cronies, the agora dialogue will continue
+    const agoraMeeting = (mari: IDialogueParticipant) => {
+        addMessage({
+            content: (
+                <>
+                <p>"Yeeeahh!"</p>
+                <Text color="#9246d9">Mari is elated as she watches the pretenders flee.</Text>
+                <Pause ms={SHORT_PAUSE} />
+                <p>"Long live the Polis!"</p>
+                <Text color="#9246d9">Rupert is looking over his shoulder as he leaves, his face is a picture.</Text>
+                <Pause ms={SHORT_PAUSE} />
+                <p>"This is such an <Pause ms={SHORT_PAUSE * 0.25} /><em>exhillarating</em> feeling!"</p>
+                </>
+            ),
+            name: mari.name,
+            imgSrc: mari.imgSrc,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"There is no burden of power over us, no burden of tradition behind us" she says with a long <Pace ms={SLOW_PACE * 2}><em>sigh.</em></Pace></p>
+                <Pause ms={SHORT_PAUSE * 0.5} />
+                <p>"We are held back only by the capabilities of our language and the limits of our abilities"</p>
+                <p>"We are the masters of our own destiny"</p>
+                </>
+            ),
+            name: mari.name,
+            imgSrc: mari.imgSrc,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"Where do we start?"</p>,
+            name: null,
+            imgSrc: "../../../public/img/guard2.webp"
+        });
+
+        addMessage({
+            content: (
+                <>
+                <Pause ms={SHORT_PAUSE * 0.5} />
+                <p>"That is for us all to decide together<Pace ms={SLOW_PACE * 2}>...</Pace>"</p>
+                <p>"So, how do we want to live together?"</p>
+                </>
+            ),
+            name: mari.name,
+            imgSrc: mari.imgSrc,
+            getResponses: () => {
+                return [
+                    {
+                        content: (
+                            <>
+                            <p>"Are we ready for this?"</p>
+                            <Pause ms={SHORT_PAUSE * 0.5} />
+                            <p>You gesture around you.</p>
+                            <p>"We - our ancestors - surely built this city, but we don't remember <em>how</em> we did it"</p>
+                            <Pause ms={SHORT_PAUSE} />
+                            <p>"You said that we are masters of our own destiny. <Pause ms={SHORT_PAUSE * 0.75} /> But how can we ensure that we are not just masters of our own peril?"</p>
+                            </>
+                        ),
+                        name: name,
+                        imgSrc: image,
+                        includeContinuePrompt: true,
+                        selectFollowup: () => {
+                            addMessage({
+                                content: (
+                                    <>
+                                    <p>"Yes!" he shouts, all in a rush.</p>
+                                    <p>"These are my concerns exactly"</p>
+                                    </>
+                                ),
+                                name: "Leopald",
+                                imgSrc: "../../../public/img/leopald.webp",
+                                includeContinuePrompt: true
+                            });
+
+                            addMessage({
+                                content: (
+                                    <>
+                                    <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?</p>
+                                    <p>"We can learn of our history, we still have the books"</p>
+                                    <Pause ms={LONG_PAUSE} />
+                                    </>
+                                ),
+                                name: "Leopald",
+                                imgSrc: "../../../public/img/leopald.webp",
+                                includeContinuePrompt: true
+                            });
+                        },
+                        shorthandContent: <Text>"I'm not sure we're ready for this"</Text>
+                    },
+                    {
+                        content: (
+                            <>
+                            <p>"We are <b>so</b> ready for this."</p>
+                            <p>"All power to the agora!"</p>
+                            </>
+                        ),
+                        name: name,
+                        imgSrc: image,
+                        includeContinuePrompt: true,
+                        selectFollowup: () => {
+                            addMessage({
+                                content: <RelationshipIndicator color="#ff5dcb"><p>You are developing the reputation of a revolutionary leader. People look up to you.</p></RelationshipIndicator>,
+                                name: mari.name,
+                                imgSrc: mari.imgSrc,
+                                sideEffect: () => {
+                                    addIncomingRelationship('mari', ['camaradery']);
+                                    addOutgoingRelationship('self', ['revolutionary']);
+                                    setWorldItem(World.GOVERNANCE, 'agora');
+                                }
+                            });
+                        },
+                        shorthandContent: <Text>"We are so ready for this! All power to our Agora!"</Text>
+                    },
+                    {
+                        content: (
+                            <>
+                            <p>"We are <b>so</b> ready for this."</p>
+                            </>
+                        ),
+                        name: name,
+                        imgSrc: image,
+                        includeContinuePrompt: true,
+                        selectFollowup: () => {
+                            addMessage({
+                                content: (
+                                    <>
+                                    <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?</p>
+                                    <p>"We can learn of our history, we still have the books"</p>
+                                    <Pause ms={LONG_PAUSE} />
+                                    </>
+                                ),
+                                name: "Leopald",
+                                imgSrc: "../../../public/img/leopald.webp",
+                                includeContinuePrompt: true
+                            });
+                        },
+                        shorthandContent: <Text>[Say Nothing]</Text>
+                    }
+                ];
+            }
+        });
+    }
+
     useEffect(() => {
         let mayorRupert = initMayorRupert();
         addParticipant(mayorRupert);
-        addMessage(introduceMayorRupert(mayorRupert));
+        introduceMayorRupert(mayorRupert);
 
         let bg = initBodyGuard();
         addParticipant(bg);
@@ -221,7 +381,7 @@ function AgoraDialogue() : React.ReactElement {
                                     <p>"This man... was KING!"</p>
                                     <Pause ms={SHORT_PAUSE * 1.25} />
                                     <p>There is a collective gasp.</p>
-                                    <Pace ms={SLOW_PACE * 1.5}>
+                                    <Pace ms={SLOW_PACE * 2}>
                                         <Text color="#9246d9"><em>They're buying it!</em></Text>
                                     </Pace>
                                     <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
@@ -435,14 +595,16 @@ function AgoraDialogue() : React.ReactElement {
                                             shorthandContent: <Text>Mock them as they leave</Text>,
                                             name: name,
                                             imgSrc: image,
-                                            includeContinuePrompt: true
+                                            includeContinuePrompt: true,
+                                            selectFollowup: () => agoraMeeting(mari)
                                         },
                                         {
                                             content: <Text>...</Text>,
                                             shorthandContent: <Text>[Say Nothing]</Text>,
                                             name: name,
                                             imgSrc: image,
-                                            includeContinuePrompt: true
+                                            includeContinuePrompt: true,
+                                            selectFollowup: () => agoraMeeting(mari)
                                         }
                                     ]
                                 },
@@ -462,10 +624,24 @@ function AgoraDialogue() : React.ReactElement {
 
     let content = null;
 
+    const introText = (
+        <>
+        <p>You follow the path which leads downhill, taking care on the slope.</p>
+        <p>You come upon a large circular clearing enclosed by the remains of ancient stonework steps, steep and incomplete.</p>
+        <Pause ms={LONG_PAUSE} />
+        <p>There is a crowd of people here, in between the ruins.</p>
+        <p>They are talking as a group with some energy.</p>
+        <Pause ms={SHORT_PAUSE} />
+        <p>It becomes apparent that you are not the only one who does not remember.</p>
+        <p>In fact, nobody does.</p>
+        <Pause ms={LONG_PAUSE} />
+        <p>The others have been awake for longer, they are discussing what they are supposed to do next.</p>
+        </>
+    );
+
     if(!dialogueStarted) content = (
         <>
-        <p>A man dressed in fine clothing approaches, his face is red and puffy with sweat.</p>
-        <p>He is accompanied by five other men, dressed in bright uniform.</p>
+        {introText}
         <Center marginTop={10}>
             <Button onClick={() => setDialogueStarted(true)}>Continue</Button>
         </Center>
