@@ -19,9 +19,9 @@ import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 
 function AgoraDialogue() : React.ReactElement {
 
-    const { addParticipant, addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
+    const { addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { setWorldItem } = useBigCity();
-    const { name, image, hasOutgoingRelationshipPair, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
+    const { name, image, hasOutgoingRelationshipPair, hasIncomingRelationshipPair, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const playerPerformer: IPerformer = {
@@ -82,6 +82,10 @@ function AgoraDialogue() : React.ReactElement {
         });
     }
 
+    const coupDilemma: () => IMessage[] = () => {
+        return [];
+    }
+
     const prisonDecision: () => IMessage[] = () => {
         // the question which provokes this function: "How should we punish people who break the rules?"
 
@@ -94,7 +98,6 @@ function AgoraDialogue() : React.ReactElement {
                     </>
                 ),
                 performer: playerPerformer,
-                shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
                 selectFollowup: () => {
                     addMessage({
                         content: <p>"Yes. The <b>old ways</b> are something to be overcome"</p>,
@@ -119,26 +122,170 @@ function AgoraDialogue() : React.ReactElement {
                         performer: playerPerformer,
                         includeContinuePrompt: true
                     });
+
+                    // Leopald suggests that a state apparatus will be necessary
+                    addMessage({
+                        content: (
+                            <>
+                            <p>{PerformerNames.LEOPALD} eyes each of you coldly, but he does not speak for a long while.</p>
+                            <p>The others are anticipating what he might say.</p>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <Pause ms={SHORT_PAUSE} />
+                            <p>"My comrades and peers, I share in your vision of creating a utopian society, really I do"</p>
+                            <p>"I felt that a prison apparatus would be necessary it is true, necessary to protect our vision from those who would do it ill"</p>
+                            <Pause ms={LONG_PAUSE * 0.75} />
+                            <p>"But there is a greater threat to us than the sin of individuals - and that is the threat of <b>armed gangs</b>"</p>
+                            <p>"What is the worth of all we will build, if someone decided to <em>take</em> it from us?"</p>
+                            <Pause ms={LONG_PAUSE} />
+                            <p>"Naturally - and to protect ourselves - it is imperative that we form our own armed group - a <b>state</b> - staffed by our trustworthy Utopianists, and capable of protecting our vision"</p>
+                            <Pause ms={SHORT_PAUSE} />
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        getResponses: () => coupDilemma()
+                    });
                 },
                 sideEffect: () => {
-                    addIncomingRelationship('andrew', ['kind']);
+                    addIncomingRelationship(PerformerNames.ANDREW, ['kind']);
                     setWorldItem(World.PRISON, "abolished");
-                }
+                },
+                shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
             },
             {
-                content: <></>,
+                content: (
+                    <>
+                    <p>"Locking someone up only serves to alienate them from society further"</p>
+                    <p>"It's sweeping a problem under the rug, instead of dealing with it"</p>
+                    <p>"Before we build this kind of system, we should ask ourselves - what do we want it to achieve?"</p>
+                    </>
+                ),
                 performer: playerPerformer,
-                shorthandContent: <Text>"[Not yet implemented] We could replace the prison with something more focussed on <em>reform</em>"</Text>,
                 selectFollowup: () => {
+                    addMessage({
+                        content: <p>"It should be <em>restorative</em> as much as possible, focussed on allowing me to repair the relationships I damaged"</p>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true
+                    });
 
-                }
+                    addMessage({
+                        content: <p>"It should be focussed on <em>preventing</em> the behaviour from happening again"</p>,
+                        performer: performers[PerformerNames.MARI]
+                    });
+
+                    addMessage({
+                        content: <p>Other suggestions are made by many in the discussion. Alicia has started to take notes.</p>,
+                        performer: performers[PerformerNames.ALICIA],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"... Decisions will be made collectively and based on consent, with a circle being delegated to <em>implement</em> the process."</p>,
+                        performer: performers[PerformerNames.MARI]
+                    })
+
+                    addMessage({
+                        content: <p>This is found to be acceptable by the majority of the agora. Andrew and several others volunteered to be a part of this circle, their actions under the supervision and authority of the agora as a whole.</p>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>Leopald is at first adamently opposed to the suggestions, when all of a sudden he is convinced.</p><Pause ms={SHORT_PAUSE} />
+                            <p>"Yes, yes... I see the value in what you are saying now, Mari"</p>
+                            <p>"And the body which you are leading, Andrew, will be responsible for establishing our new...<Pause ms={SHORT_PAUSE * 0.75} /> <em>egalitarian</em> infrastructure"</p>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"And naturally another body will be needed,<Pause ms={SHORT_PAUSE * 0.5} /> to <em>enforce</em> our new regime"</p><Pause ms={SHORT_PAUSE} />
+                            <p>"To deal with those who would oppose us.<Pause ms={SHORT_PAUSE * 0.25} /> To protect ourselves"</p>
+                            <Pause ms={SHORT_PAUSE} />
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        getResponses: () => coupDilemma()
+                    });
+                },
+                sideEffect: () => {
+                    addIncomingRelationship(PerformerNames.ANDREW, ['kind']);
+                    setWorldItem(World.PRISON, "abolished");
+                },
+                shorthandContent: <Text>"We should replace the prison with something more focussed on <em>reform</em>"</Text>
             },
             {
-                content: <></>,
+                content: (<>
+                    <p>"The old ways were necessarily cruel"</p>
+                    <p>"Or else it would not have been an effective detterant"</p>
+                </>),
                 performer: playerPerformer,
-                shorthandContent: <Text>"[Not yet implemented] The prison was absolutely necessary, it is a <em>deterrant</em>"</Text>,
                 selectFollowup: () => {
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"Clearly at least an <em>element</em> of our nature is sinful"</p>
+                            <p>"To shape the society that we wish to live in we must punish wrongdoing and reward goodness"</p><Pause ms={LONG_PAUSE * 0.5} />
+                            </>
+                        ),
+                        performer: playerPerformer
+                    });
 
+                    addMessage({
+                        content: <p>"The old society...<Pause ms={SHORT_PAUSE * 0.25} /> used to reward goodness? Did you see this in the history books, {PerformerNames.LEOPALD}? Could you tell use more?"</p>,
+                        performer: performers[PerformerNames.ZOE],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"I.. er.. I don't know if I could say for definite. As I say, I just skimmed the pages"<Pause ms={SHORT_PAUSE * 0.75} /> I believe this was always their aim"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"You <em>believe?</em><Pause ms={SHORT_PAUSE * 0.5} /> So you don't know"</p>,
+                        performer: performers[PerformerNames.MARI]
+                    });
+
+                    addMessage({
+                        content: <p>"What else would their aim be? It's our aim, isn't it?"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    // Leopald suggests that a state apparatus will be necessary
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"I think that the prison might not <em>always</em> be necessary, perhaps we can use it sparingly"</p>
+                            <p>"But it can be a powerful tool, in order to shape <em>our citizens</em> to be the way we want them to be"</p>
+                            <Pause ms={LONG_PAUSE} />
+                            <p>"Naturally.. it will require enforcement, it requires us to form a <b>state</b>, capable of pursuing - and protecting - our <b>utopian vision</b>"</p>
+                            <Pause ms={SHORT_PAUSE} />
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        getResponses: () => coupDilemma()
+                    });
+                },
+                includeContinuePrompt: true,
+                shorthandContent: <Text>"The prison was absolutely necessary, it is a <em>deterrant</em>"</Text>,
+                sideEffect: () => {
+                    setWorldItem(World.PRISON, "deterrant");
                 }
             },
         ];
@@ -346,7 +493,7 @@ function AgoraDialogue() : React.ReactElement {
                                 content: <RelationshipIndicator color="#ff5dcb"><p>You are developing the reputation of a revolutionary leader. People look up to you.</p></RelationshipIndicator>,
                                 performer: performers[PerformerNames.MARI],
                                 sideEffect: () => {
-                                    addIncomingRelationship('mari', ['camaradery']);
+                                    addIncomingRelationship(PerformerNames.MARI, ['comrade']);
                                     addOutgoingRelationship('self', ['revolutionary']);
                                 },
                                 includeContinuePrompt: true
@@ -478,8 +625,8 @@ function AgoraDialogue() : React.ReactElement {
                                 ),
                                 performer: playerPerformer,
                                 sideEffect: () => {
-                                    addIncomingRelationship('rupert', ['extreme gratitude']);
-                                    addOutgoingRelationship('rupert', ['king']);
+                                    addIncomingRelationship(PerformerNames.RUPERT, ['extreme gratitude']);
+                                    addOutgoingRelationship(PerformerNames.RUPERT, ['king']);
                                     setWorldItem(World.GOVERNANCE, 'absolute monarchy');
                                     setWorldItem(World.RULER, PerformerNames.RUPERT);
                                 }
