@@ -10,12 +10,16 @@ import {
 export default function useBigCity() : IBigCityContext {
     const {
         world,
-        setWorldItem
+        setWorldItem,
+        locations,
+        visitLocation
     } = useContext(BigCityContext);
 
     return {
         world,
-        setWorldItem
+        setWorldItem,
+        locations,
+        visitLocation
     };
 }
   

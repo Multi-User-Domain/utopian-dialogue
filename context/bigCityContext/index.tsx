@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, useState, useEffect } from "react";
+import React, { createContext, ReactElement, useState } from "react";
 
 export enum World {
     GOVERNANCE = "GOVERNANCE",
@@ -6,9 +6,17 @@ export enum World {
     PRISON = "PRISON"
 };
 
+export interface ILocation {
+    name: string;
+    visited: boolean;
+    frameKey: string;
+}
+
 export interface IBigCityContext {
     world?: any;
     setWorldItem?: (key: string, value: any) => void;
+    locations?: ILocation[];
+    visitLocation?: (name: string) => void;
 };
 
 export const BigCityContext = createContext<IBigCityContext>({});
@@ -20,6 +28,18 @@ export const BigCityProvider = ({
 }): ReactElement => {
 
     const [world, setWorld] = useState({});
+    const [locations, setLocations] = useState([
+        {
+            name: 'Holy Spire',
+            visited: false,
+            frameKey: 'holySpire'
+        },
+        {
+            name: 'Armoury',
+            visited: false,
+            frameKey: 'armoury'
+        }
+    ]);
 
     const setWorldItem = (key: string, value: any) => {
         setWorld(prevWorld => (
@@ -27,11 +47,20 @@ export const BigCityProvider = ({
         ));
     }
 
+    const visitLocation = (name: string) => {
+        if(name == null || !(name in locations)) return;
+
+        locations[name].visited = true;
+        setLocations({...locations});
+    }
+
     return(
         <BigCityContext.Provider
             value={{
                 world,
-                setWorldItem
+                setWorldItem,
+                locations,
+                visitLocation
             }}
         >
             {children}
