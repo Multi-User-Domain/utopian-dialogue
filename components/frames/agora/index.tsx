@@ -6,7 +6,7 @@ import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
-import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
+import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, FAST_PACE } from "../../lib/constants";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World, PrisonStates, GovernanceStates} from "../../../context/bigCityContext";
@@ -18,8 +18,8 @@ import { Relationships, SelfIdentityLabels } from "../../lib/relationships";
 function AgoraDialogue() : React.ReactElement {
 
     const { addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
-    const { setWorldItem } = useBigCity();
-    const { name, image, hasRelationshipPair, addRelationship } = usePlayer();
+    const { world, setWorldItem } = useBigCity();
+    const { name, image, hasRelationshipPair, addRelationship, removeRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const playerPerformer: IPerformer = {
@@ -99,7 +99,8 @@ function AgoraDialogue() : React.ReactElement {
     }
 
     const useOfForce: () => IMessage[] = () => {
-        return [
+        // there are some default choices, always available
+        let choices = [
             {
                 content: (
                     <>
@@ -142,20 +143,183 @@ function AgoraDialogue() : React.ReactElement {
 
                 },
                 shorthandContent: <Text>[Not Implemented] "Let us instead empty the armoury to arm the mob!"</Text>
-            },
-            {
+            }
+        ];
+
+        // there is a bonus choice available provided the prison has not been abolished
+        if(world[World.PRISON] != PrisonStates.ABOLISHED) {
+            choices.push({
                 content: (
                     <>
-                    <p></p>
+                    <p><Pace ms={SLOW_PACE * 2}>"<em>Pssst</em>"</Pace></p><Pause ms={SHORT_PAUSE} />
+                    <p><Pace ms={FAST_PACE}>"PSSSSST!"</Pace></p><Pause ms={LONG_PAUSE * 0.75} />
                     </>
                 ),
                 performer: playerPerformer,
+                includeContinuePrompt: true,
                 selectFollowup: () => {
+                    addMessage({
+                        content: <p>Slowly but surely<Pace ms={SLOW_PACE}>...</Pace> {PerformerNames.LEOPALD} comes to the realisation that it's your voice inside his head and not his.</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
 
+                    addMessage({
+                        content: <p>"Oh<Pace ms={SLOW_PACE}>..</Pace> Er<Pace ms={SLOW_PACE}>..</Pace> me?"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"Who else would I mean? I'm talking inside of your head"<Pause ms={LONG_PAUSE} /></p>
+                            <p>"This lot are suckers. What do you say we plot a good old-fashioned coup d'état?"</p>
+                            </>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"I didn't have you pegged as a <b>player of the Game</b>" {PerformerNames.LEOPALD} responds to you cooly</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"I'm one step ahead of you, boss, actually I already had one planned for today.</p>
+                            <Pause ms={LONG_PAUSE * 0.75} />
+                            <p>"I left for the <b>arsenal</b> with a few <b>likeminded individuals</b>, and we armed ourselves to the teeth. My goons are lurking in the <b>shrub</b> with our guns, ready to strike"</p>
+                            <Pause ms={SHORT_PAUSE} />
+                            <p>"I figure since you're already inside of my head I might as well tell you"</p>
+                            <Pause ms={SHORT_PAUSE * 0.5} />
+                            <p>"Besides, these people listen to you, I had you down as my <em>greatest threat</em>, so I'm glad you're in. Are you gonna give them the good news, or shall I?"</p>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <Container className={colourFadeAnimationCss("black", "red", 5)}>
+                                <p>"Listen up, you maggots!" You declare in unveiled contempt</p><Pause ms={SHORT_PAUSE} />
+                                <p>"{PerformerNames.LEOPALD} and I, we're of one mind, two peas in an iron pod"</p><Pause ms={SHORT_PAUSE} />
+                                <p>"And that pod,<Pause ms={SHORT_PAUSE} /> is Justice"</p>
+                            </Container>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <Container color="red">
+                                <p>"The utopia we wish to build must be built on virtue <em>and</em> terror, in equal measure"</p><Pause ms={SHORT_PAUSE} />
+                                <p>"Virtue, without which terror is fatal; terror, without which virtue is powerless!"</p>
+                            </Container>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <Container color="red">
+                                <p>"It is true that we've robbed the armoury, and it's true that you're <b>surrounded</b> now by our goons"</p>
+                                <p>"It has been said that terror is the principle of <b>tyranny</b>, and yes, the swords that gleam now in the hands of the <b>heroes of liberty</b> do ressemble the swords of the henchmen of tyranny. <Pause ms={SHORT_PAUSE} /> The government of the utopia is liberty's despotism against tyranny. Is force made only to protect crime? And is the thunderbolt not destined to strike the heads of the proud?"</p>
+                            </Container>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>By your signal, {PerformerNames.LEOPALD}'s co-conspirators emerge from the bushes, armed with rifles and swords.</p>,
+                        performer: performers[PerformerNames.ARSENE]
+                    });
+
+                    addMessage({
+                        content: <p>The agora does not react, stunned into silence by your sudden and effective betrayal</p>,
+                        performer: performers[PerformerNames.ALICIA],
+                        includeContinuePrompt: true
+                    });
+
+                    if(hasRelationshipPair(PerformerNames.MARI, Relationships.COMRADE)) {
+                        addMessage({
+                            content: (
+                                <>
+                                <p>{PerformerNames.MARI} has tears in her eyes.</p>
+                                <p>"<Pace ms={SLOW_PACE * 2}>I trusted you</Pace>"</p>
+                                </>
+                            ),
+                            performer: performers[PerformerNames.MARI],
+                            sideEffect: () => {
+                                removeRelationship(PerformerNames.MARI, [Relationships.COMRADE]);
+                                addRelationship(PerformerNames.MARI, [Relationships.BETRAYAL]);
+                            },
+                            includeContinuePrompt: true
+                        });
+                    }
+
+                    addMessage({
+                        content: <p>As the crowd is cleared from the agora you waste no time in rounding up the most vocal utopians for imprisonment.</p>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">{PerformerNames.MARI} is imprisoned!</RelationshipIndicator>,
+                        performer: performers[PerformerNames.MARI],
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.MARI, [Relationships.IMPRISONED]);
+                        }
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <RelationshipIndicator color="#F8350B">{PerformerNames.ANDREW} is imprisoned!</RelationshipIndicator>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.ANDREW],
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.ANDREW, [Relationships.IMPRISONED]);
+                        }
+                    });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">{PerformerNames.ALICIA} is imprisoned!</RelationshipIndicator>,
+                        performer: performers[PerformerNames.ALICIA],
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.ALICIA, [Relationships.IMPRISONED]);
+                        }
+                    });
+
+                    addMessage({
+                        content: (
+                            <>                        
+                            <RelationshipIndicator color="#F8350B">Big City is now a {GovernanceStates.MILITARY_CONSULATE}!</RelationshipIndicator>
+                            <RelationshipIndicator color="#800080">You are now considered to be <b>ruthless</b></RelationshipIndicator>
+                            </>
+                        ),
+                        performer: playerPerformer,
+                        sideEffect: () => {
+                            setWorldItem(World.GOVERNANCE, GovernanceStates.MILITARY_CONSULATE);
+                            addRelationship('self', [SelfIdentityLabels.RUTHLESS]);
+                            setDialogueEnded(true);
+                        },
+                        includeContinuePrompt: true
+                    });
                 },
-                shorthandContent: <Text>[Not Implemented] [Telepathically] "You and I {PerformerNames.LEOPALD}, let's take this town"</Text>
-            },
-        ];
+                shorthandContent: <Text>[Telepathically] "You and I {PerformerNames.LEOPALD}, let's take this town"</Text>
+            });
+        }
+
+        return choices;
     }
 
     const prisonDecision: () => IMessage[] = () => {
