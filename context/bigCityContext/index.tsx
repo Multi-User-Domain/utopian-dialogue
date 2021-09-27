@@ -6,6 +6,16 @@ export enum World {
     PRISON = "PRISON"
 };
 
+export enum GovernanceStates {
+    MONARCHY = "absolute monarchy",
+    AGORA = "agora"
+}
+
+export enum PrisonStates {
+    ABOLISHED = "abolished",
+    DETERRANT = "deterrant"
+}
+
 export interface ILocation {
     name: string;
     visited: boolean;

@@ -9,10 +9,11 @@ import usePlayer from "../../../hooks/usePlayer";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
-import {World} from "../../../context/bigCityContext";
+import {World, PrisonStates, GovernanceStates} from "../../../context/bigCityContext";
 import useBigCity from "../../../hooks/useBigCity";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 import { colourFadeAnimationCss } from "../../lib/animations";
+import { Relationships, SelfIdentityLabels } from "../../lib/relationships";
 
 function AgoraDialogue() : React.ReactElement {
 
@@ -225,8 +226,8 @@ function AgoraDialogue() : React.ReactElement {
                     });
                 },
                 sideEffect: () => {
-                    addIncomingRelationship(PerformerNames.ANDREW, ['kind']);
-                    setWorldItem(World.PRISON, "abolished");
+                    addIncomingRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
+                    setWorldItem(World.PRISON, PrisonStates.ABOLISHED);
                 },
                 shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
             },
@@ -293,8 +294,8 @@ function AgoraDialogue() : React.ReactElement {
                     });
                 },
                 sideEffect: () => {
-                    addIncomingRelationship(PerformerNames.ANDREW, ['kind']);
-                    setWorldItem(World.PRISON, "abolished");
+                    addIncomingRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
+                    setWorldItem(World.PRISON, PrisonStates.ABOLISHED);
                 },
                 shorthandContent: <Text>"We should replace the prison with something more focussed on <em>reform</em>"</Text>
             },
@@ -356,7 +357,7 @@ function AgoraDialogue() : React.ReactElement {
                 includeContinuePrompt: true,
                 shorthandContent: <Text>"The prison was absolutely necessary, it is a <em>deterrant</em>"</Text>,
                 sideEffect: () => {
-                    setWorldItem(World.PRISON, "deterrant");
+                    setWorldItem(World.PRISON, PrisonStates.DETERRANT);
                 }
             },
         ];
@@ -564,8 +565,8 @@ function AgoraDialogue() : React.ReactElement {
                                 content: <RelationshipIndicator color="#ff5dcb"><p>You are developing the reputation of a revolutionary leader. People look up to you.</p></RelationshipIndicator>,
                                 performer: performers[PerformerNames.MARI],
                                 sideEffect: () => {
-                                    addIncomingRelationship(PerformerNames.MARI, ['comrade']);
-                                    addOutgoingRelationship('self', ['revolutionary']);
+                                    addIncomingRelationship(PerformerNames.MARI, [Relationships.COMRADE]);
+                                    addOutgoingRelationship('self', [SelfIdentityLabels.REVOLUTIONARY]);
                                 },
                                 includeContinuePrompt: true
                             });
@@ -696,9 +697,9 @@ function AgoraDialogue() : React.ReactElement {
                                 ),
                                 performer: playerPerformer,
                                 sideEffect: () => {
-                                    addIncomingRelationship(PerformerNames.RUPERT, ['extreme gratitude']);
-                                    addOutgoingRelationship(PerformerNames.RUPERT, ['king']);
-                                    setWorldItem(World.GOVERNANCE, 'absolute monarchy');
+                                    addIncomingRelationship(PerformerNames.RUPERT, [Relationships.GRATITUDE]);
+                                    addOutgoingRelationship(PerformerNames.RUPERT, [Relationships.KING]);
+                                    setWorldItem(World.GOVERNANCE, GovernanceStates.MONARCHY);
                                     setWorldItem(World.RULER, PerformerNames.RUPERT);
                                 }
                             });
@@ -892,7 +893,7 @@ function AgoraDialogue() : React.ReactElement {
                                     ]
                                 },
                                 sideEffect: () => {
-                                    setWorldItem(World.GOVERNANCE, 'agora');
+                                    setWorldItem(World.GOVERNANCE, GovernanceStates.AGORA);
                                 }
                             });
                         },
