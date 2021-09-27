@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    Text,
-    Button,
-    Center
-} from "@chakra-ui/react";
+import { Text, Button, Center, Container } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Pace } from "windups";
 import { IStoryFrame } from "../../lib/types";
@@ -16,6 +12,7 @@ import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World} from "../../../context/bigCityContext";
 import useBigCity from "../../../hooks/useBigCity";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
+import { colourFadeAnimationCss } from "../../lib/animations";
 
 function AgoraDialogue() : React.ReactElement {
 
@@ -82,8 +79,82 @@ function AgoraDialogue() : React.ReactElement {
         });
     }
 
-    const coupDilemma: () => IMessage[] = () => {
-        return [];
+    // Leopald reveals that he is armed and makes a coup attempt
+    const coupDilemma = () => {
+        addMessage({
+            content: (
+                <Container className={colourFadeAnimationCss("black", "red", 5)}>
+                    <p>"I've already been to the armoury" {PerformerNames.LEOPALD} reveals..</p><Pause ms={SHORT_PAUSE} />
+                    <p>"I do not <em>need</em> your permission, {name}. Or anyone else's for that matter"</p>
+                </Container>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            getResponses: () => {
+                return [
+
+                ];
+            }
+        })
+    }
+
+    const useOfForce: () => IMessage[] = () => {
+        return [
+            {
+                content: (
+                    <>
+                    <p>"There are times when violence is necessary, for example in self-defence it is justified"</p>
+                    <p>"But this simple fact does not mean that we will abandon our dreams of direct democracy"</p>
+                    <p>"The agora is the <em>only</em> state apparatus that we need"</p>
+                    </>
+                ),
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    coupDilemma();
+                },
+                shorthandContent: <Text>Violence is justifiable out of necessity, but it will not replace direct democracy</Text>
+            },
+            {
+                content: <p></p>,
+                performer: playerPerformer,
+                selectFollowup: () => {
+
+                },
+                shorthandContent: <Text>[Not Implemented] "The armoury must be destroyed!"</Text>
+            },
+            {
+                content: <p></p>,
+                performer: playerPerformer,
+                selectFollowup: () => {
+
+                },
+                shorthandContent: <Text>[Not Implemented] Violence is exclusively the right of an estbalished state which will be kept in check by representation</Text>
+            },
+            {
+                content: (
+                    <>
+                    <p></p>
+                    </>
+                ),
+                performer: playerPerformer,
+                selectFollowup: () => {
+
+                },
+                shorthandContent: <Text>[Not Implemented] "Let us instead empty the armoury to arm the mob!"</Text>
+            },
+            {
+                content: (
+                    <>
+                    <p></p>
+                    </>
+                ),
+                performer: playerPerformer,
+                selectFollowup: () => {
+
+                },
+                shorthandContent: <Text>[Not Implemented] [Telepathically] "You and I {PerformerNames.LEOPALD}, let's take this town"</Text>
+            },
+        ];
     }
 
     const prisonDecision: () => IMessage[] = () => {
@@ -150,7 +221,7 @@ function AgoraDialogue() : React.ReactElement {
                             </>
                         ),
                         performer: performers[PerformerNames.LEOPALD],
-                        getResponses: () => coupDilemma()
+                        getResponses: () => useOfForce()
                     });
                 },
                 sideEffect: () => {
@@ -218,7 +289,7 @@ function AgoraDialogue() : React.ReactElement {
                             </>
                         ),
                         performer: performers[PerformerNames.LEOPALD],
-                        getResponses: () => coupDilemma()
+                        getResponses: () => useOfForce()
                     });
                 },
                 sideEffect: () => {
@@ -279,7 +350,7 @@ function AgoraDialogue() : React.ReactElement {
                             </>
                         ),
                         performer: performers[PerformerNames.LEOPALD],
-                        getResponses: () => coupDilemma()
+                        getResponses: () => useOfForce()
                     });
                 },
                 includeContinuePrompt: true,
