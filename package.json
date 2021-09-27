@@ -47,7 +47,6 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "dev": "node server.js",
     "build": "rollup -c rollup.config.js",
     "start": "rollup -c rollup.config.js -w",
     "test": "react-scripts test",
