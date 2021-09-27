@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, useState, useEffect } from "react";
+import React, { createContext, ReactElement, useState } from "react";
 
 export interface IPlayerContext {
     webId?: string;
@@ -6,12 +6,10 @@ export interface IPlayerContext {
     setName?: (string) => void;
     image?: string;
     setImage?: (string) => void;
-    incomingRelationships?: any;
-    outgoingRelationships?: {[object: string]: string[]};
-    addIncomingRelationship?: (subject: string, labels: string[]) => void;
-    hasIncomingRelationshipPair?: (subject: string, label: string) => boolean;
-    addOutgoingRelationship?: (object: string, labels: string[]) => void;
-    hasOutgoingRelationshipPair?: (object: string, label: string) => boolean;
+    relationships?: {[object: string]: string[]};
+    hasRelationshipPair?: (object: string, label: string) => boolean;
+    addRelationship?: (object: string, labels: string[]) => void;
+    removeRelationship?: (object: string, labels: string[]) => void;
 };
 
 export const PlayerContext = createContext<IPlayerContext>({});
@@ -23,39 +21,31 @@ export const PlayerProvider = ({
     const [webId, setWebId] = useState("_:player");
     const [name, setName] = useState("");
     const [image, setImage] = useState("../../../public/img/playerProfile/3.webp");
-    const [incomingRelationships, setIncomingRelationships] = useState({});
-    const [outgoingRelationships, setOutgoingRelationships] = useState({});
+    const [relationships, setRelationships] = useState({});
 
     const concatWithoutDuplicates = (arr1, arr2) => {
         return Array.from(new Set([...arr1,...arr2]));
     }
 
-    const addIncomingRelationship = (subject, labels) => {
+    const addRelationship = (object, labels) => {
         // merge with pre-existing relationships
-        if(subject in incomingRelationships) {
-            labels = concatWithoutDuplicates(labels, incomingRelationships[subject])
+        if(object in relationships) {
+            labels = concatWithoutDuplicates(labels, relationships[object])
         }
 
-        incomingRelationships[subject] = labels;
-        setIncomingRelationships({...incomingRelationships});
+        relationships[object] = labels;
+        setRelationships({...relationships});
     }
 
-    const addOutgoingRelationship = (object, labels) => {
-        // merge with pre-existing relationships
-        if(object in outgoingRelationships) {
-            labels = concatWithoutDuplicates(labels, outgoingRelationships[object])
-        }
+    const removeRelationship = (object, labels) => {
+        if(!(object in relationships)) return;
 
-        outgoingRelationships[object] = labels;
-        setOutgoingRelationships({...outgoingRelationships});
+        relationships[object] = relationships[object].filter(x => !labels.includes(x));
+        setRelationships({...relationships});
     }
 
-    const hasIncomingRelationshipPair = (subject, label) => {
-        return (subject in incomingRelationships && incomingRelationships[subject].includes(label));
-    }
-
-    const hasOutgoingRelationshipPair = (object, label) => {
-        return (object in outgoingRelationships && outgoingRelationships[object].includes(label));
+    const hasRelationshipPair = (object, label) => {
+        return (object in relationships && relationships[object].includes(label));
     }
 
     return(
@@ -66,12 +56,10 @@ export const PlayerProvider = ({
                 setName,
                 image,
                 setImage,
-                incomingRelationships,
-                outgoingRelationships,
-                addIncomingRelationship,
-                addOutgoingRelationship,
-                hasIncomingRelationshipPair,
-                hasOutgoingRelationshipPair
+                relationships,
+                addRelationship,
+                removeRelationship,
+                hasRelationshipPair
             }}
         >
             {children}

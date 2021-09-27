@@ -19,7 +19,7 @@ function AgoraDialogue() : React.ReactElement {
 
     const { addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { setWorldItem } = useBigCity();
-    const { name, image, hasOutgoingRelationshipPair, hasIncomingRelationshipPair, addOutgoingRelationship, addIncomingRelationship } = usePlayer();
+    const { name, image, hasRelationshipPair, addRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const playerPerformer: IPerformer = {
@@ -166,7 +166,7 @@ function AgoraDialogue() : React.ReactElement {
                 content: (
                     <>
                     <p>"The prison was not necessary, it was cruel"</p>
-                    { hasOutgoingRelationshipPair('self', 'revolutionary') ? <p>"It was a tool of oppression!"</p> : null}
+                    { hasRelationshipPair('self', SelfIdentityLabels.REVOLUTIONARY) ? <p>"It was a tool of oppression!"</p> : null}
                     </>
                 ),
                 performer: playerPerformer,
@@ -226,7 +226,7 @@ function AgoraDialogue() : React.ReactElement {
                     });
                 },
                 sideEffect: () => {
-                    addIncomingRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
+                    addRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
                     setWorldItem(World.PRISON, PrisonStates.ABOLISHED);
                 },
                 shorthandContent: <Text>"We do not need a prison. We can resolve conflicts collectively"</Text>,
@@ -294,7 +294,7 @@ function AgoraDialogue() : React.ReactElement {
                     });
                 },
                 sideEffect: () => {
-                    addIncomingRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
+                    addRelationship(PerformerNames.ANDREW, [Relationships.KIND]);
                     setWorldItem(World.PRISON, PrisonStates.ABOLISHED);
                 },
                 shorthandContent: <Text>"We should replace the prison with something more focussed on <em>reform</em>"</Text>
@@ -565,8 +565,8 @@ function AgoraDialogue() : React.ReactElement {
                                 content: <RelationshipIndicator color="#ff5dcb"><p>You are developing the reputation of a revolutionary leader. People look up to you.</p></RelationshipIndicator>,
                                 performer: performers[PerformerNames.MARI],
                                 sideEffect: () => {
-                                    addIncomingRelationship(PerformerNames.MARI, [Relationships.COMRADE]);
-                                    addOutgoingRelationship('self', [SelfIdentityLabels.REVOLUTIONARY]);
+                                    addRelationship(PerformerNames.MARI, [Relationships.COMRADE]);
+                                    addRelationship('self', [SelfIdentityLabels.REVOLUTIONARY]);
                                 },
                                 includeContinuePrompt: true
                             });
@@ -697,8 +697,8 @@ function AgoraDialogue() : React.ReactElement {
                                 ),
                                 performer: playerPerformer,
                                 sideEffect: () => {
-                                    addIncomingRelationship(PerformerNames.RUPERT, [Relationships.GRATITUDE]);
-                                    addOutgoingRelationship(PerformerNames.RUPERT, [Relationships.KING]);
+                                    addRelationship(PerformerNames.RUPERT, [Relationships.GRATITUDE]);
+                                    addRelationship(PerformerNames.RUPERT, [Relationships.KING]);
                                     setWorldItem(World.GOVERNANCE, GovernanceStates.MONARCHY);
                                     setWorldItem(World.RULER, PerformerNames.RUPERT);
                                 }

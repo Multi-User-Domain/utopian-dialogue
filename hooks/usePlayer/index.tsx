@@ -14,12 +14,10 @@ export default function usePlayer() : IPlayerContext {
         setName,
         image,
         setImage,
-        incomingRelationships,
-        outgoingRelationships,
-        addIncomingRelationship,
-        addOutgoingRelationship,
-        hasIncomingRelationshipPair,
-        hasOutgoingRelationshipPair
+        relationships,
+        addRelationship,
+        removeRelationship,
+        hasRelationshipPair
     } = useContext(PlayerContext);
 
     return {
@@ -28,12 +26,10 @@ export default function usePlayer() : IPlayerContext {
         setName,
         image,
         setImage,
-        incomingRelationships,
-        outgoingRelationships,
-        addIncomingRelationship,
-        addOutgoingRelationship,
-        hasIncomingRelationshipPair,
-        hasOutgoingRelationshipPair
+        relationships,
+        addRelationship,
+        removeRelationship,
+        hasRelationshipPair
     };
 }
   
