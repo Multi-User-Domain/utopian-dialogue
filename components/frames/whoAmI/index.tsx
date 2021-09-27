@@ -46,7 +46,7 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
     ];
 
     const submitName = () => {
-        if(name.length == 0) setName("Mysterio");
+        if(name.length == 0) setName("Mysterious");
         setDisplayContinue([false, true]);
     }
 

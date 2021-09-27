@@ -3,12 +3,14 @@ import React, { createContext, ReactElement, useState } from "react";
 export enum World {
     GOVERNANCE = "GOVERNANCE",
     RULER = "RULER",
-    PRISON = "PRISON"
+    PRISON = "PRISON",
+    ARMOURY_DESTROYED = "ARMOURY_DESTROYED"
 };
 
 export enum GovernanceStates {
     MONARCHY = "absolute monarchy",
-    AGORA = "agora"
+    AGORA = "agora",
+    MILITARY_CONSULATE = "Military Consulate"
 }
 
 export enum PrisonStates {
