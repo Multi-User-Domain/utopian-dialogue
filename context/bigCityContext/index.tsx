@@ -10,7 +10,8 @@ export enum World {
 export enum GovernanceStates {
     MONARCHY = "absolute monarchy",
     AGORA = "agora",
-    MILITARY_CONSULATE = "Military Consulate"
+    MILITARY_CONSULATE = "Military Consulate",
+    MOB_RULE = "Mob Rule"
 }
 
 export enum PrisonStates {

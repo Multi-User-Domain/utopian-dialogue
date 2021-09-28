@@ -80,13 +80,36 @@ function AgoraDialogue() : React.ReactElement {
         });
     }
 
+    //TODO
+    const armouryDestroyedEnding = () => {
+        setDialogueEnded(true);
+    }
+
+    //TODO
+    const armTheMobEnding = () => {
+        setDialogueEnded(true);
+    }
+
     // Leopald reveals that he is armed and makes a coup attempt
     const coupDilemma = () => {
+        
         addMessage({
             content: (
                 <Container className={colourFadeAnimationCss("black", "red", 5)}>
-                    <p>"I've already been to the armoury" {PerformerNames.LEOPALD} reveals..</p><Pause ms={SHORT_PAUSE} />
-                    <p>"I do not <em>need</em> your permission, {name}. Or anyone else's for that matter"</p>
+                    <p>"I already left for the <b>arsenal</b> this morning" {PerformerNames.LEOPALD} reveals..</p><Pause ms={SHORT_PAUSE} />
+                    <p>"I went with some <b>likeminded individuals</b>, and we armed ourselves to the teeth. These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
+                </Container>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <Container color="red">
+                    <p>"The utopia we wish to build must be built on virtue <em>and</em> terror, in equal measure"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"I went with some <b>likeminded individuals</b>, and we armed ourselves to the teeth. These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
+                    <p>"Will you stand in our way, and fall by the sword of virtue, or repent, and live?!"</p>
                 </Container>
             ),
             performer: performers[PerformerNames.LEOPALD],
@@ -117,32 +140,64 @@ function AgoraDialogue() : React.ReactElement {
                 shorthandContent: <Text>Violence is justifiable out of necessity, but it will not replace direct democracy</Text>
             },
             {
-                content: <p></p>,
+                content: <p>"We must destroy the armoury, lest it become a <b>threat</b> to our nonviolent utopia!"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
-
+                    setWorldItem(World.ARMOURY_DESTROYED, true);
+                    coupDilemma();
                 },
-                shorthandContent: <Text>[Not Implemented] "The armoury must be destroyed!"</Text>
+                shorthandContent: <Text>"The armoury must be destroyed!"</Text>
             },
             {
-                content: <p></p>,
+                content: <p>"I believe that {PerformerNames.LEOPALD} is right in the need of an established state, to protect us from the threat of <b>mob rule</b>"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    addMessage({
+                        content: <p>"But what makes this 'state' any different from any other armed mob?" {PerformerNames.MARI} complains</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
 
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"<Pace ms={SLOW_PACE * 4}><b>Representation</b></Pace>", you begin.</p>
+                            <p>"The armed group will be <b>organised</b>, and structured on discipline and <b>self-restraint</b>. We will vote from those among us who will represent us in the leadership positions of this organisation, and in so doing we will keep it in check"</p>
+                            </>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>As the majority think over your proposition, it becomes clear that {PerformerNames.LEOPALD} in particular is not content.</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    coupDilemma();
                 },
-                shorthandContent: <Text>[Not Implemented] Violence is exclusively the right of an estbalished state which will be kept in check by representation</Text>
+                shorthandContent: <Text>Violence is exclusively the right of an estbalished state which will be kept in check by representation</Text>
             },
             {
                 content: (
                     <>
-                    <p></p>
+                    <p>"There will be no <b>armed minority</b>, because instead we will arm the <b>majority</b>!<Pause ms={SHORT_PAUSE} /> There will be no <b>coup</b>, because we will <b>outgun</b> them!"</p>
+                    <Pause ms={SHORT_PAUSE} /><p>"Long live the Mob!"</p>
                     </>
                 ),
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    addRelationship(PerformerNames.AXEL, [Relationships.COMRADE]);
+                    setWorldItem(World.GOVERNANCE, GovernanceStates.MOB_RULE);
+                    addMessage({
+                        content: <p>"Hurrah!" {PerformerNames.AXEL} cheers. He is emphatically in agreement with your aims.<Pause ms={SHORT_PAUSE} /> The others seem less sure.</p>,
+                        performer: performers[PerformerNames.AXEL]
+                    });
 
+                    coupDilemma();
                 },
-                shorthandContent: <Text>[Not Implemented] "Let us instead empty the armoury to arm the mob!"</Text>
+                shorthandContent: <Text>"Let us instead empty the armoury to arm the mob!"</Text>
             }
         ];
 
