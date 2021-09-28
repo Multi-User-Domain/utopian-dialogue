@@ -3,7 +3,6 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import linaria from '@linaria/rollup';
 import css from 'rollup-plugin-css-only';
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
@@ -11,7 +10,6 @@ import livereload from "rollup-plugin-livereload";
 export default {
   input: "./index.tsx",
   plugins: [
-    linaria({ sourceMap: process.env.NODE_ENV !== 'production', }),
     css({ output: 'styles.css', }),
     nodeResolve({ 
         extensions: [".js", ".jsx", ".ts", ".tsx"],
@@ -21,7 +19,6 @@ export default {
       'process.env.NODE_ENV': JSON.stringify( 'development' )
     }),
     babel({ presets: [
-      "@linaria",
       ["@babel/preset-env", { targets: { node: "current" } }],
       //["@babel/preset-react", {"runtime": "automatic"}],
       "@babel/preset-react",

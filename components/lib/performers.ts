@@ -26,7 +26,7 @@ export const performers: {[key: string]: IPerformer} = {
         name: PerformerNames.ANDREW,
         imgSrc: "../../../public/img/andrew.webp",
     },
-    [PerformerNames.ANDREW]: {
+    [PerformerNames.ARSENE]: {
         name: PerformerNames.ARSENE,
         imgSrc: "../../../public/img/arsene.webp",
     },
