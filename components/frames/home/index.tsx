@@ -1,74 +1,17 @@
-import React, { useState, useContext } from "react";
-import { cx } from "linaria";
-import { css } from "@emotion/css";
+import React, { useState } from "react";
 
 import {
     Button,
     Center,
+    Container
 } from "@chakra-ui/react";
 
-import { WindupChildren, OnChar, Pause, Effect, Pace } from "windups";
+import { WindupChildren, Pause, Effect, Pace } from "windups";
 import { IStoryFrame } from "../../lib/types";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import InvestigationFrame from "../../lib/investigationFrame";
 
-const SMASH_MS = 5000;
-
-const smashStyles = css`
-  @keyframes smash {
-    0% {
-      transform: translate(0, 10px);
-    }
-    10% {
-      transform: translate(20px, -30px);
-    }
-    20% {
-      transform: translate(-12px, 17px);
-    }
-    40% {
-      transform: translate(7px, -9px);
-    }
-    60% {
-      transform: translate(-3px, 4px);
-    }
-    80% {
-      transform: translate(1px, -1px);
-    }
-    100% {
-      transform: translate(0, 0);
-    }
-  }
-  animation-name: smash;
-  animation-duration: ${SMASH_MS}ms;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-`;
-
-export const SFXContext = React.createContext({
-  smash: () => {},
-});
-
-const SmashEffect: React.FC = ({ children }) => {
-  const [isSmashing, setIsSmashing] = useState(false);
-
-  const smash = React.useCallback(() => {
-    setIsSmashing(true);
-  }, []);
-
-  React.useEffect(() => {
-    if (isSmashing) {
-      setTimeout(() => {
-        setIsSmashing(false);
-      }, SMASH_MS);
-    }
-  }, [isSmashing]);
-
-  return (
-    <SFXContext.Provider value={{ smash }}>
-      <div className={cx(isSmashing && smashStyles)}>{children}</div>
-    </SFXContext.Provider>
-  );
-};
+const SHAKE_TIMEOUT = 500;
 
 function ContinueB({followLink} : IStoryFrame): React.ReactElement {
   return (
@@ -96,20 +39,29 @@ function ContinueA({followLink} : IStoryFrame): React.ReactElement {
   );
 }
 
-export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
+function HomeContent({followLink} : IStoryFrame) : React.ReactElement {
+  const [isShaking, setIsShaking] = useState(false);
+
+  const shakeEffect = () => {
+    setIsShaking(true);
+
+    setTimeout(() => {
+      setIsShaking(false);
+    }, SHAKE_TIMEOUT);
+  }
 
     return (
+      <Container className={isShaking ? "shake-hard shake-constant" : ""}>
         <WindupChildren>
             <Pace ms={SLOW_PACE}>
                 <p>Dreaming...</p>
             </Pace>
             <Pause ms={LONG_PAUSE}/>
             <p>A bang.</p>
-            <SmashEffect />
-            <p>A POP!</p>
+            <p>A <Effect fn={shakeEffect} />POP!</p>
             <Pause ms={LONG_PAUSE} />
             <Pace ms={SLOW_PACE}>
-                <p>A long silence…</p>
+                <p>A long silence. . .</p>
             </Pace>
             <Pause ms={LONG_PAUSE} />
             <p>Your eyes open slowly. The light hurts.</p>
@@ -117,5 +69,10 @@ export default function HomeFrame({followLink} : IStoryFrame): React.ReactElemen
             <Pause ms={SHORT_PAUSE} />
             <ContinueA followLink={followLink} />
         </WindupChildren>
+      </Container>
     );
+} 
+
+export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
+  return <HomeContent followLink={followLink} />
 }
