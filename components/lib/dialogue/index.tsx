@@ -42,14 +42,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
             if(msgValue.read) messagesRead.push(msgDisplay);
             else {
                 temp.push(msgDisplay);
-                if(msgValue.includeContinuePrompt) {
-                    setContinueButton(<Container marginTop={5}>
-                        <Center>
-                            <Button onClick={() => nextMessage(msgValue)}>Continue</Button>
-                        </Center>
-                    </Container>);
-                    break;
-                }
+                if(msgValue.includeContinuePrompt) break;
             }
         }
 
@@ -70,7 +63,16 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
                 //side-effects are carried out when the message has been read
                 //but if there is a continue prompt then it will be effected after that is clicked
                 if(msg.sideEffect && !msg.includeContinuePrompt) msg.sideEffect();
-                if(msg.includeContinuePrompt) return; //stop at any breaks
+                if(msg.includeContinuePrompt) {
+                    //display continue button
+                    setContinueButton(<Container marginTop={5}>
+                        <Center>
+                            <Button onClick={() => nextMessage(msg)}>Continue</Button>
+                        </Center>
+                    </Container>);
+
+                    return; //stop marking message read at any breaks
+                };
             }
         }
     }
@@ -85,9 +87,9 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
             <WindupChildren onFinished={markAllAsRead}>
                 <OnChar fn={scrollToBottom}>
                     {displayMessages}
-                    {continueButton}
                 </OnChar>
             </WindupChildren>
+            {continueButton}
             <div style={{ float:"left", clear: "both"}} ref={messagesEnd}></div>
         </Container>
     );
