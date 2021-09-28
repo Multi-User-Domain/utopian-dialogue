@@ -5,6 +5,7 @@ export interface IMessage {
     webId?: string;
     msgId?: string;
     performer: IPerformer;
+    containerCss?: string;
     content: ReactElement;
     shorthandContent?: ReactElement;
     urgency?: number;

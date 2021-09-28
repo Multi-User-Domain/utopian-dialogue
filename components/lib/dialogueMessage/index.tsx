@@ -21,7 +21,7 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
     let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
 
     return (
-        <Container>
+        <Container className={message.containerCss ? message.containerCss : null}>
             <Grid
                 marginTop={10}
                 templateColumns="repeat(5, 1fr)"
