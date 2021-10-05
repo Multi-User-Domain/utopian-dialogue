@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 import {
     Container,
@@ -18,10 +18,16 @@ export interface IDialogueMessage {
 
 export default function DialogueMessage({message, children}: IDialogueMessage): React.ReactElement {
 
+    const [activeCss, setActiveCss] = useState(false);
+
+    useEffect(() => {
+        if(message.containerCss) setActiveCss(true);
+    }, []);
+
     let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
 
     return (
-        <Container className={message.containerCss ? message.containerCss : null}>
+        <Container className={activeCss ? message.containerCss : null}>
             <Grid
                 marginTop={10}
                 templateColumns="repeat(5, 1fr)"
