@@ -29,7 +29,7 @@ export default function InvestigationFrame({title, children}: IInvestigationFram
                     <Button onClick={() => setDiscovered(true)}>{title}</Button>
                 </Center>
             </Container>
-            <Container>
+            <Container marginTop={5}>
                 {content}
             </Container>
         </WindupChildren>
