@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { Text, Button, Center, Container } from "@chakra-ui/react";
+import { css } from "@emotion/css";
 
-import { WindupChildren, Pause, Pace } from "windups";
+import { WindupChildren, Pause, Pace, Effect } from "windups";
 import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
-import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, FAST_PACE } from "../../lib/constants";
+import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World, PrisonStates, GovernanceStates} from "../../../context/bigCityContext";
 import useBigCity from "../../../hooks/useBigCity";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
-import { colourFadeAnimationCss } from "../../lib/animations";
+import { colourFadeAnimationCss, fadeOutTransition, growTextAnimation } from "../../lib/animations";
 import { Relationships, SelfIdentityLabels } from "../../lib/relationships";
 
-function AgoraDialogue() : React.ReactElement {
+const SHAKE_TIMEOUT = 500;
+
+function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     const { addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { world, setWorldItem } = useBigCity();
     const { name, image, hasRelationshipPair, addRelationship, removeRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
+
+    const [shakingClasses, setShakingClasses] = useState(null);
+
+    const shakeEffect = (classes: string, timeout=SHAKE_TIMEOUT) => {
+        setShakingClasses(classes);
+
+        setTimeout(() => {
+            setShakingClasses(null);
+        }, timeout);
+    }
 
     const playerPerformer: IPerformer = {
         name: name,
@@ -80,14 +93,12 @@ function AgoraDialogue() : React.ReactElement {
         });
     }
 
-    //TODO
     const armouryDestroyedEnding = () => {
-        setDialogueEnded(true);
+        followLink('armoury');
     }
 
-    //TODO
     const armTheMobEnding = () => {
-        setDialogueEnded(true);
+        followLink('armoury');
     }
 
     // Leopald reveals that he is armed and makes a coup attempt
@@ -97,7 +108,7 @@ function AgoraDialogue() : React.ReactElement {
             content: (
                 <Container className={colourFadeAnimationCss("black", "red", 5)}>
                     <p>"I already left for the <b>arsenal</b> this morning" {PerformerNames.LEOPALD} reveals..</p><Pause ms={SHORT_PAUSE} />
-                    <p>"I went with some <b>likeminded individuals</b>, and we armed ourselves to the teeth. These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
+                    <p>"I went with some <Pace ms={SLOW_PACE * 0.4}><b>likeminded individuals</b></Pace>, and we armed ourselves <Pace ms={SLOW_PACE * 0.4}>to the </Pace><Pace ms={SLOW_PACE * 0.35}>teeth</Pace>. <Pause ms={SHORT_PAUSE} />These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
                 </Container>
             ),
             performer: performers[PerformerNames.LEOPALD],
@@ -107,18 +118,138 @@ function AgoraDialogue() : React.ReactElement {
         addMessage({
             content: (
                 <Container color="red">
-                    <p>"The utopia we wish to build must be built on virtue <em>and</em> terror, in equal measure"</p><Pause ms={SHORT_PAUSE} />
-                    <p>"I went with some <b>likeminded individuals</b>, and we armed ourselves to the teeth. These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
-                    <p>"Will you stand in our way, and fall by the sword of virtue, or repent, and live?!"</p>
+                    <p>"The utopia we wish to build must be built on virtue <Pace ms={SLOW_PACE * 0.6}><em>and</em></Pace> terror, in equal measure"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"Will you stand in our way, and fall by the sword of virtue, or repent,<Pause ms={SHORT_PAUSE * 0.75} /> and live?!"</p>
                 </Container>
             ),
             performer: performers[PerformerNames.LEOPALD],
-            getResponses: () => {
-                return [
+            includeContinuePrompt: true
+        });
 
+        addMessage({
+            content: (
+                <>
+                <p>You are stunned into silence, your words fail you.</p>
+                <p>{PerformerNames.LEOPALD}'s men have you surrounded.</p>
+                </>
+            ),
+            performer: playerPerformer
+        });
+
+        addMessage({
+            content: <p>The others are silent, too.</p>,
+            performer: performers[PerformerNames.ANDREW]
+        });
+        
+        addMessage({
+            content: <p>{PerformerNames.MARI} has turned on her heels and ran away. The brigands laugh at her as she runs.</p>,
+            performer: performers[PerformerNames.MARI],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"What do you want us to do with them, boss?"</p>,
+            performer: performers[PerformerNames.ARSENE],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>{PerformerNames.LEOPALD} licks his lips. <Pause ms={SHORT_PAUSE * 0.75} /></p>
+                <Text color="#9246d9">He is hungry for this.</Text>
+                <p>"{name}, you are under arrest, for your crimes against the Big City Republic"</p>
+                <p>"Round up the other leaders, throw them in the prison.<Pause ms={SHORT_PAUSE} /> We'll decide what to do with them later"</p>
+                </>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>{PerformerNames.ARSENE} grabs you by your arm and roughly jerks you in front of him, his rifle to your back.<Pause ms={SHORT_PAUSE} /> They drive you from the agora and through the park, to the gates.<Pause ms={SHORT_PAUSE} /> By the gates there are more armed guards. They watch on nervously as a crowd is gathering to see what is going on.</p>,
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"Disperse!" {PerformerNames.ARSENE} shouts into a crowd that does not hear him.</p><Pause ms={SHORT_PAUSE} />
+                <p>"Disperse!"</p>
+                </>
+            ),
+            performer: performers[PerformerNames.ARSENE],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>A troop approaches over the horizon. They are different from the other workers, they are organised and calling people onto the street to join them.<Pause ms={SHORT_PAUSE} /> At the head of the crowd you spot {PerformerNames.MARI}, she is leading them forward.</p>,
+            performer: playerPerformer,
+            getResponses: () => {
+                const callout = <p>"{PerformerNames.MARI}!" you call out, but {PerformerNames.ARSENE} <em>SLAMS</em><Effect fn={() => shakeEffect("shake-hard shake-constant")} /><Pause ms={SHAKE_TIMEOUT * 0.5} /> the butt of his rifle into your stomach and you keel over in pain.</p>
+
+                const followup = () => {
+                    addMessage({
+                        content: <p>"{name}!" {PerformerNames.MARI} calls to you, rushing forward to help you.<Pause ms={SHORT_PAUSE} /> Where she treads the crowd follows, despite the danger. {PerformerNames.LEOPALD} and his followers have caught up, rifles pointed into the crowd.</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>They will not fire. <Pause ms={SHORT_PAUSE * 0.75} />That would be madness.</p>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p><b>BOOM!</b><Effect fn={() => shakeEffect("shake-horizontal shake-constant")} /><Pause ms={SHORT_PAUSE * 0.33} /> {PerformerNames.LEOPALD}'s rifle sounds. The echo rings through your body into a terrible abyss.</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        containerCss: fadeOutTransition(1 + (name.length * 0.1)),
+                        content: <p><Pace ms={SLOW_PACE * 0.5}>"{name}...</Pace><Pace ms={SLOW_PACE}> I .."</Pace></p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>You are tumbling down into {PerformerNames.MARI}'s eyes, swirling down into the faded light of life that was behind them. <Pace ms={SLOW_PACE * 0.25}>Chasing it, further down and down into the dark.</Pace></p>
+                            <p>There is a battle raging around you, you are dimly aware.</p>
+                            </>
+                        ),
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+                }
+
+                return [
+                    {
+                        content: callout,
+                        performer: playerPerformer,
+                        selectFollowup: followup,
+                        shorthandContent: <Text>[Call out for aid]</Text>
+                    },
+                    {
+                        content: callout,
+                        performer: playerPerformer,
+                        selectFollowup: followup,
+                        shorthandContent: <Text>[Call out in warning]</Text>
+                    },
+                    {
+                        content: <></>,
+                        performer: playerPerformer,
+                        selectFollowup: followup,
+                        shorthandContent: <Text>[Say nothing]</Text>
+                    }
                 ];
             }
-        })
+        });
+
     }
 
     const useOfForce: () => IMessage[] = () => {
@@ -201,14 +332,19 @@ function AgoraDialogue() : React.ReactElement {
             }
         ];
 
+        const telepathicCommunication = css`
+            color: #9932CC;
+            font-style: italic;
+        `;
+
         // there is a bonus choice available provided the prison has not been abolished
         if(world[World.PRISON] != PrisonStates.ABOLISHED) {
             choices.push({
                 content: (
-                    <>
-                    <p><Pace ms={SLOW_PACE * 2}>"<em>Pssst</em>"</Pace></p><Pause ms={SHORT_PAUSE} />
-                    <p><Pace ms={FAST_PACE}>"PSSSSST!"</Pace></p><Pause ms={LONG_PAUSE * 0.75} />
-                    </>
+                    <Container className={telepathicCommunication}>
+                        <p><Pace ms={SLOW_PACE * 3}>'Pssst'</Pace></p><Pause ms={SHORT_PAUSE} />
+                        <p><Pace ms={SLOW_PACE}>'PSSSSST!'</Pace></p><Pause ms={LONG_PAUSE * 0.75} />
+                    </Container>
                 ),
                 performer: playerPerformer,
                 includeContinuePrompt: true,
@@ -220,39 +356,39 @@ function AgoraDialogue() : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"Oh<Pace ms={SLOW_PACE}>..</Pace> Er<Pace ms={SLOW_PACE}>..</Pace> me?"</p>,
+                        content: <p className={telepathicCommunication}>'Oh<Pace ms={SLOW_PACE}>..</Pace> Er<Pace ms={SLOW_PACE}>..</Pace> me?'</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
 
                     addMessage({
                         content: (
-                            <>
-                            <p>"Who else would I mean? I'm talking inside of your head"<Pause ms={LONG_PAUSE} /></p>
-                            <p>"This lot are suckers. What do you say we plot a good old-fashioned coup d'état?"</p>
-                            </>
+                            <Container className={telepathicCommunication}>
+                                <p>'Who else would I mean? I'm talking inside of your head'<Pause ms={LONG_PAUSE} /></p>
+                                <p>'This lot are suckers. What do you say we plot a good old-fashioned coup d'état?'</p>
+                            </Container>
                         ),
                         performer: playerPerformer,
                         includeContinuePrompt: true
                     });
 
                     addMessage({
-                        content: <p>"I didn't have you pegged as a <b>player of the Game</b>" {PerformerNames.LEOPALD} responds to you cooly</p>,
+                        content: <p><span className={telepathicCommunication}>'I didn't have you pegged as a <b>player of the Game</b>'</span> {PerformerNames.LEOPALD} responds to you cooly</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
 
                     addMessage({
                         content: (
-                            <>
-                            <p>"I'm one step ahead of you, boss, actually I already had one planned for today.</p>
-                            <Pause ms={LONG_PAUSE * 0.75} />
-                            <p>"I left for the <b>arsenal</b> with a few <b>likeminded individuals</b>, and we armed ourselves to the teeth. My goons are lurking in the <b>shrub</b> with our guns, ready to strike"</p>
-                            <Pause ms={SHORT_PAUSE} />
-                            <p>"I figure since you're already inside of my head I might as well tell you"</p>
-                            <Pause ms={SHORT_PAUSE * 0.5} />
-                            <p>"Besides, these people listen to you, I had you down as my <em>greatest threat</em>, so I'm glad you're in. Are you gonna give them the good news, or shall I?"</p>
-                            </>
+                            <Container className={telepathicCommunication}>
+                                <p>'I'm one step ahead of you, boss, actually I already had one planned for today'</p>
+                                <Pause ms={LONG_PAUSE * 0.75} />
+                                <p>'I left for the <b>arsenal</b> with a few <b>likeminded individuals</b>, and we armed ourselves to the teeth. My goons are lurking in the <b>shrub</b> with our guns, ready to strike'</p>
+                                <Pause ms={SHORT_PAUSE} />
+                                <p>'I figure since you're already inside of my head I might as well tell you'</p>
+                                <Pause ms={SHORT_PAUSE * 0.5} />
+                                <p>'Besides, these people listen to you, I had you down as my <em>greatest threat</em>, so I'm glad you're in. Are you gonna give them the good news, or shall I?'</p>
+                            </Container>
                         ),
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
@@ -1161,9 +1297,11 @@ function AgoraDialogue() : React.ReactElement {
     );
 
     return (
-        <WindupChildren>
-            {content}
-        </WindupChildren>
+        <Container className={shakingClasses ? shakingClasses : ""}>
+            <WindupChildren>
+                {content}
+            </WindupChildren>
+        </Container>
     );
 }
 
@@ -1171,7 +1309,7 @@ export default function Agora({followLink} : IStoryFrame): React.ReactElement {
 
     return (
         <DialogueProvider>
-            <AgoraDialogue />
+            <AgoraDialogue followLink={followLink}/>
         </DialogueProvider>
     );
 }
