@@ -34,6 +34,14 @@ export const fadeOutTransition = (durationSeconds: number) => {
     `;
 }
 
+export const fadeInTransition = (durationSeconds: number) => {
+    return css`
+        visibility: visible;
+        opacity: 100;
+        transition: visibility 0s ${durationSeconds}s, opacity ${durationSeconds}s linear;
+    `;
+}
+
 export const growTextAnimation = (fontSize: string, durationSeconds: number) => {
     return css`
         font-size: ${fontSize};

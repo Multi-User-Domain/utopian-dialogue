@@ -13,10 +13,11 @@ import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World, PrisonStates, GovernanceStates} from "../../../context/bigCityContext";
 import useBigCity from "../../../hooks/useBigCity";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
-import { colourFadeAnimationCss, fadeOutTransition, growTextAnimation } from "../../lib/animations";
+import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
 import { Relationships, SelfIdentityLabels } from "../../lib/relationships";
 
 const SHAKE_TIMEOUT = 500;
+const INTUITION_COLOUR = "#9246d9"
 
 function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
@@ -101,6 +102,35 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         followLink('armoury');
     }
 
+    // a dream in which you are facing off with yourself
+    const interrogationDream = () => {
+        addMessage({
+            content: <p>The world is fading to black.</p>,
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>In your dream you are sat at a table in a polished, hostile room.</p><Pause ms={SHORT_PAUSE} />
+                <Text color={INTUITION_COLOUR}>It is the inside of a police interrogation room. It is from the old prison.</Text><Pause ms={SHORT_PAUSE} />
+                <p>Opposite you sits your identical self.</p><Pause ms={SHORT_PAUSE} />
+                <p>Identical and yet somehow...</p><Pause ms={SHORT_PAUSE} />
+                <p>This is your enemy. They must die. It's them or it's you.</p><Pause ms={SHORT_PAUSE} />
+                </>
+            ),
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"Do it now!"</p>,
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+    }
+
     // Leopald reveals that he is armed and makes a coup attempt
     const coupDilemma = () => {
         
@@ -157,7 +187,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>{PerformerNames.LEOPALD} licks his lips. <Pause ms={SHORT_PAUSE * 0.75} /></p>
-                <Text color="#9246d9">He is hungry for this.</Text>
+                <Text color={INTUITION_COLOUR}>He is hungry for this.</Text>
                 <p>"{name}, you are under arrest, for your crimes against the Big City Republic"</p>
                 <p>"Round up the other leaders, throw them in the prison.<Pause ms={SHORT_PAUSE} /> We'll decide what to do with them later"</p>
                 </>
@@ -225,6 +255,20 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         performer: playerPerformer,
                         includeContinuePrompt: true
                     });
+
+                    interrogationDream();
+
+                    addMessage({
+                        containerCss: fadeInTransition(1 + (name.length * 0.1)),
+                        content: <p>"{name}? Are you alright?"</p>,
+                        performer: performers[PerformerNames.AXEL]
+                    });
+            
+                    addMessage({
+                        content: <p>"We thought we'd lost you for a moment"</p>,
+                        performer: performers[PerformerNames.AXEL],
+                        includeContinuePrompt: true
+                    });
                 }
 
                 return [
@@ -284,7 +328,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 performer: playerPerformer,
                 selectFollowup: () => {
                     addMessage({
-                        content: <p>"But what makes this 'state' any different from any other armed mob?" {PerformerNames.MARI} complains</p>,
+                        content: <p>"But what makes this 'state' any different from any other armed mob?"</p>,
                         performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
@@ -292,8 +336,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     addMessage({
                         content: (
                             <>
-                            <p>"<Pace ms={SLOW_PACE * 4}><b>Representation</b></Pace>", you begin.</p>
-                            <p>"The armed group will be <b>organised</b>, and structured on discipline and <b>self-restraint</b>. We will vote from those among us who will represent us in the leadership positions of this organisation, and in so doing we will keep it in check"</p>
+                            <p>"<Pace ms={SLOW_PACE * 0.5}><b>Representation</b></Pace>", you begin.</p>
+                            <p>"The armed group will be <b>organised</b>, and structured on discipline and <b>self-restraint</b>.<Pause ms={SHORT_PAUSE} /> We will vote from those among us who will represent us in the leadership positions of this organisation, and in so doing we will keep it in check"</p>
                             </>
                         ),
                         performer: playerPerformer,
@@ -678,7 +722,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"I.. er.. I don't know if I could say for definite. As I say, I just skimmed the pages"<Pause ms={SHORT_PAUSE * 0.75} /> I believe this was always their aim"</p>,
+                        content: <p>"I.. er.. I don't know if I could say for definite. As I say, I just skimmed the pages.<Pause ms={SHORT_PAUSE * 0.75} /> I believe this was always their aim"</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
@@ -743,8 +787,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <>
                 <p>"<b>I <em>woke up</em> in one of those cells</b>"</p>
                 <Pause ms={SHORT_PAUSE} />
-                <Text color="#9246d9">His muscles are tense and his arms are arched.</Text>
-                <Text color="#9246d9">He feels a pain at the knowledge of what happened to him.</Text>
+                <Text color={INTUITION_COLOUR}>His muscles are tense and his arms are arched.</Text>
+                <Text color={INTUITION_COLOUR}>He feels a pain at the knowledge of what happened to him.</Text>
                 <Pause ms={SHORT_PAUSE * 0.5} />
                 <p>"I'm not a bad man and I don't see how that could have been for my own good"</p>
                 </>
@@ -757,7 +801,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>"Perhaps they were not <em>always</em> right then, clearly. But neither surely were they <em>always</em> wrong?"</p>
-                <Text color="#9246d9">The statement is intended to relieve the tension.</Text>
+                <Text color={INTUITION_COLOUR}>The statement is intended to relieve the tension.</Text>
                 </>
             ),
             performer: performers[PerformerNames.ZOE],
@@ -835,10 +879,10 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>"Yeeeahh!"</p>
-                <Text color="#9246d9">Mari is elated as she watches the pretenders flee.</Text>
+                <Text color={INTUITION_COLOUR}>Mari is elated as she watches the exiled pretenders flee.</Text>
                 <Pause ms={SHORT_PAUSE} />
                 <p>"Long live the Polis!"</p>
-                <Text color="#9246d9">Rupert is looking over his shoulder as he leaves, his face is a picture.</Text>
+                <Text color={INTUITION_COLOUR}>Rupert is looking over his shoulder as he leaves, his face is a picture.</Text>
                 <Pause ms={SHORT_PAUSE} />
                 <p>"This is such an <Pause ms={SHORT_PAUSE * 0.25} /><em>exhillarating</em> feeling!"</p>
                 </>
@@ -963,7 +1007,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>He is taken aback by the question, a little stung.</p>
-                <Text color="#9246d9">He feels as though his relevance has been brought into question.</Text>
+                <Text color={INTUITION_COLOUR}>He feels as though his relevance has been brought into question.</Text>
                 <Pause ms={SHORT_PAUSE * 1.33} />
                 <p>"I- I- the Burly Bodyguard"</p>
                 <Pause ms={SHORT_PAUSE * 0.5} />
@@ -981,7 +1025,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <p>"Oh, well"</p>
                 <Pause ms={SHORT_PAUSE * 0.75} />
                 <p>"That sounds like a real honour" the young lady responds.</p>
-                <Text color="#9246d9">She is grinning widely as she says it.</Text>
+                <Text color={INTUITION_COLOUR}>She is grinning widely as she says it.</Text>
                 </>
             ),
             performer: performers[PerformerNames.MARI],
@@ -1007,7 +1051,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <p>"Good people, what do we need a false mayor for? We are organising fine on our own!"</p>
                 <p>A number of cheers go up.</p>
                 <Pause ms={SHORT_PAUSE * 0.5} />
-                <Text color="#9246d9">Others seem unsure.</Text>
+                <Text color={INTUITION_COLOUR}>Others seem unsure.</Text>
                 <p>The crowd is mumbling.</p>
                 <p>Now is your chance to speak.</p>
                 </>
@@ -1020,7 +1064,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         content: (
                             <>
                             <p>You fill your lungs with air and stand straight.</p>
-                            <Text color="#9246d9">You are projecting such a lionesque dominance that everyone is watching you, silent.</Text>
+                            <Text color={INTUITION_COLOUR}>You are projecting such a lionesque dominance that everyone is watching you, silent.</Text>
                             <Pause ms={LONG_PAUSE} />
                             <p>"My liege, forgive me to be telling you this but you mistake yourself"</p>
                             <p>"Look at the uniform of these men" making eye contact with each citizen in the crowd in turn.</p>
@@ -1042,7 +1086,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     <Pause ms={SHORT_PAUSE * 1.25} />
                                     <p>There is a collective gasp.</p>
                                     <Pace ms={SLOW_PACE * 2}>
-                                        <Text color="#9246d9"><em>They're buying it!</em></Text>
+                                        <Text color={INTUITION_COLOUR}><em>They're buying it!</em></Text>
                                     </Pace>
                                     <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
                                     <p>The crowd turns in favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.</p>
@@ -1131,7 +1175,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     <>
                                     <p>"Burly, what have we discussed about speaking before you're spoken to?"</p>
                                     <p>"And it's <em>Your Grace</em>, now."</p>
-                                    <Text color="#9246d9">He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.</Text>
+                                    <Text color={INTUITION_COLOUR}>He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.</Text>
                                     <Pause ms={SHORT_PAUSE} />
                                     <p>"You can find me at the <b>Palace</b>" he says with a wink.</p>
                                     </>
@@ -1230,7 +1274,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                                 <>
                                                 <p>"Yeah you better run! And your outfits are terrible!"</p>
                                                 <Pause ms={SHORT_PAUSE * 1.25} />
-                                                <Text color="#9246d9">You can hear the wound from here.</Text>
+                                                <Text color={INTUITION_COLOUR}>You can hear the wound from here.</Text>
                                                 </>
                                             ),
                                             shorthandContent: <Text>Mock them as they leave</Text>,
