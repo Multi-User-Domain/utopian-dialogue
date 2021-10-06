@@ -73,14 +73,16 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
         </WindupChildren>
     ) :
     (
+        <>
+        {nameEnteredContent}
         <WindupChildren>
-            {nameEnteredContent}
             <Image src={image} />
             <p>You feel your face. It feels like the face in the photo.</p>
             <p>This must be me.</p>
             <GameFeedback theme="success" text="Library Card added to inventory."/>
             <Effect fn={() => callback()}></Effect>
         </WindupChildren>
+        </>
     );
 
     return (
@@ -152,7 +154,7 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
     return (
         <WindupChildren>
             <p>You sit up, your torso is sore.</p>
-            <p>Your back muscles complain as you claw your way into a seating position.</p>
+            <p>Your muscles complain as you claw your way into a seating position.</p>
             <p>Your mouth is dry.</p>
             <Text fontStyle="italic">How long was I out?</Text>
             <InvestigationFrame title="continue">
