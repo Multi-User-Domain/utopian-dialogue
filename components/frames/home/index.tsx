@@ -29,9 +29,9 @@ function ContinueA({followLink} : IStoryFrame): React.ReactElement {
   return (
     <InvestigationFrame title="Continue">
       <p>You have woken up in a park. You're lying down.</p>
-      <p>There is a tree branch above you. It crosses your vision.</p>
+      <p>There is a tree branch above you. It bisects your vision.</p>
       <Pause ms={SHORT_PAUSE} />
-      <p>The tree is covered in a crop of leaves, but autumn is approaching.</p>
+      <p>The tree is covered in a crop of leaves but autumn is approaching.</p>
       <p>The sky above is clear, it's hot.</p>
       <Pause ms={SHORT_PAUSE} />
       <ContinueB followLink={followLink} />
@@ -65,7 +65,7 @@ function HomeContent({followLink} : IStoryFrame) : React.ReactElement {
             </Pace>
             <Pause ms={LONG_PAUSE} />
             <p>Your eyes open slowly. The light hurts.</p>
-            <p>The world seems to flutter.</p>
+            <p>The whole world seems to flutter.</p>
             <Pause ms={SHORT_PAUSE} />
             <ContinueA followLink={followLink} />
         </WindupChildren>

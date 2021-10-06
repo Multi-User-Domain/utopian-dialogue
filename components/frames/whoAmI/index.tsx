@@ -157,7 +157,7 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
             <p>Your muscles complain as you claw your way into a seating position.</p>
             <p>Your mouth is dry.</p>
             <Text fontStyle="italic">How long was I out?</Text>
-            <InvestigationFrame title="continue">
+            <InvestigationFrame title="Continue">
                 <p>You are lying on the grass.</p>
                 <p>In your lap there is a set of keys and a mobile phone. Beside you there is a thin leather wallet and a deck of cards.</p>
                 <WhoAmIOptions followLink={followLink}/>

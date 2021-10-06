@@ -8,19 +8,20 @@ import {
 import { WindupChildren, Pause } from "windups";
 import { IStoryFrame } from "../../lib/types";
 import InvestigationFrame from "../../lib/investigationFrame";
-import { LONG_PAUSE } from "../../lib/constants";
+import { LONG_PAUSE, SHORT_PAUSE } from "../../lib/constants";
 
 function ContinueB(): React.ReactElement {
     return (
         <InvestigationFrame title="Go back to sleep">
-            <p>You lie down again and rest your eyes. Before long you are asleep.</p>
+            <p>You lie down again and rest your eyes. Before long you are asleep.</p><Pause ms={SHORT_PAUSE} />
             <p>You dream of a city, you are walking busy streets as people go about their daily business.</p>
-            <p>The streets are made of cobblestone, they are aligned with trees but not with pavements.</p>
             <p>To your right there are some large apartment blocks, to your left there is a river.</p>
-            <p>The sky looks peculiar, there are clouds but they are formed strangely.</p>
-            <p><Text fontStyle="italic">It's a reflection of the city below</Text> you realise with a shock. The clouds shift restlessly, twisting and reforming as the time passes.</p>
+            <p>A cloudy sky looms above you.</p>
+            <p>Its' structure is constantly changing, the clouds reorganising and transforming at an impossible pace.</p>
+            <p>The city above is mirroring to the city below, shadowing its' developments.</p>
             <Pause ms={LONG_PAUSE} />
-            <p>You wake up again. You feel groggy.</p>
+            <p>You wake up again.</p>
+            <p>You feel groggy.</p>
             <InvestigationFrame title="Go back to sleep">
                 <p>Your body refuses.</p>
             </InvestigationFrame>
@@ -41,12 +42,12 @@ function ContinueA({followLink} : IStoryFrame): React.ReactElement {
 
 function AttemptToGetUp({followLink}: IStoryFrame) : React.ReactElement {
     return (
-        <>
-        <p>Slowly, you struggle to your feet. Your legs are none too happy about it, and your back aches.</p>
-        <p>You stretch.</p>
-        <p>You feel tired.</p>
-        <ContinueA followLink={followLink} />
-        </>
+        <WindupChildren>
+            <p>Slowly, you struggle to your feet. Your legs are none too happy about it, and your back aches.</p>
+            <p>You stretch.</p>
+            <p>You feel tired.</p>
+            <ContinueA followLink={followLink} />
+        </WindupChildren>
     );
 }
 
@@ -55,20 +56,19 @@ export default function WhereAmIFrame({followLink} : IStoryFrame): React.ReactEl
     return (
         <>
         <WindupChildren>
-            <p>You are sat atop a hill, an enclove within a park.</p>
-            <p>Beside you is lush green grass, clover and tiny flowers.</p>
+            <p>You are sat atop a hill, it's an enclove within a park.</p>
+            <p>The grasss is lush and green and rich in glucose.</p><Pause ms={SHORT_PAUSE} />
             <p>There are some bees, gliding from flower to flower and collecting pollen.</p>
-            <p>You are enclosed behind you by larger plants, bushes and trees.</p>
             <p>Downhill there is a fence, beyond which the park continues.</p>
             <p>In the distance the horizon stretches and there is a view over a great city.</p>
         </WindupChildren>
-        <InvestigationFrame title="Look over the city's buildings">
-        <p>Highrises, and older appartment blocks, are the most dominant feature.</p>
-        <p>Central to your vision there is a break in the buildings, it must be a large square. A monument cuts through the middle in the form of a large column.</p>
-        <p>Beyond and atop a hill an impressive goliath of a building watches over the vallies below, complete with spectacular spirals and adorned with statues.</p>
-        <p>To the East there are other great buildings, one a goliath square fortress, another with columns and another still, thin but tall to an impossible height. The buildings stretch to the horizon and you cannot see beyond them.</p>
-        <p>To the West a great river cuts through the landscape, winding off to distant mountains.</p>
-        <p>In the distance you see a vast town of smaller buildings made from improvised materials.</p>
+        <InvestigationFrame title="Look over the city">
+            <p>The city is dense. Your view is dominated by the highrises and older apartment blocks.</p>
+            <p>There are occassional breaks in the buildings. In particular there is what must be a large public square, central to your vision. A large column rises from the space.</p>
+            <p>Beyond this an impressive stone goliath sits atop a hill, it is adorned with statues and fantastic spirals.</p><Pause ms={SHORT_PAUSE} />
+            <p>To the East there is a huge concrete fortress, squat and square.</p>
+            <p>To the West, the sea, and a port with great metal ships at harbour. Behind the industry there is a vast town of buildings made of scrap metal and improvised materials.</p><Pause ms={SHORT_PAUSE} />
+            <p>Beyond that, mountains.</p>
         </InvestigationFrame>
         <InvestigationFrame title="Attempt to get up">
             <AttemptToGetUp followLink={followLink} />
