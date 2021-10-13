@@ -40,7 +40,9 @@ export const BigCityProvider = ({
     children
 }): ReactElement => {
 
-    const [world, setWorld] = useState({});
+    const [world, setWorld] = useState({
+        name: 'Big City'
+    });
     const [locations, setLocations] = useState([
         {
             name: 'Holy Spire',

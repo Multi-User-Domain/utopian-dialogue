@@ -1101,6 +1101,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     addRelationship(PerformerNames.RUPERT, [Relationships.KING]);
                                     setWorldItem(World.GOVERNANCE, GovernanceStates.MONARCHY);
                                     setWorldItem(World.RULER, PerformerNames.RUPERT);
+                                    setWorldItem("name", "Rupertston");
                                 }
                             });
 
