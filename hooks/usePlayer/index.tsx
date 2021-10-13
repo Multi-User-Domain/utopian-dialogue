@@ -10,9 +10,8 @@ import {
 export default function usePlayer() : IPlayerContext {
     const {
         webId,
-        name,
+        playerPerformer,
         setName,
-        image,
         setImage,
         relationships,
         addRelationship,
@@ -22,9 +21,8 @@ export default function usePlayer() : IPlayerContext {
 
     return {
         webId,
-        name,
+        playerPerformer,
         setName,
-        image,
         setImage,
         relationships,
         addRelationship,

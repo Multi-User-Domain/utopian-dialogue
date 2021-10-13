@@ -6,7 +6,8 @@ export enum Relationships {
     GRATITUDE="gratitude",
     IMPRISONED="imprisoned",
     KIND="kind",
-    KING="king"
+    KING="king",
+    CO_RULER="coruler",
 }
 
 export enum SelfIdentityLabels {

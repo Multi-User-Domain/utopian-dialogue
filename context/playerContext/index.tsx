@@ -1,11 +1,11 @@
 import React, { createContext, ReactElement, useState } from "react";
+import { IPerformer } from "../../components/lib/performers";
 
 export interface IPlayerContext {
     webId?: string;
-    name?: string;
     setName?: (string) => void;
-    image?: string;
     setImage?: (string) => void;
+    playerPerformer?: IPerformer;
     relationships?: {[object: string]: string[]};
     hasRelationshipPair?: (object: string, label: string) => boolean;
     addRelationship?: (object: string, labels: string[]) => void;
@@ -19,9 +19,21 @@ export const PlayerProvider = ({
 }): ReactElement => {
 
     const [webId, setWebId] = useState("_:player");
-    const [name, setName] = useState("");
-    const [image, setImage] = useState("../../../public/img/playerProfile/3.webp");
+    const [playerPerformer, setPlayerPerformer] = useState<IPerformer>({
+        name: "",
+        imgSrc: "../../../public/img/playerProfile/3.webp"
+    });
     const [relationships, setRelationships] = useState({});
+
+    const setName = (value: string) => {
+        playerPerformer.name = value;
+        setPlayerPerformer(playerPerformer);
+    }
+
+    const setImage = (value: string) => {
+        playerPerformer.imgSrc = value;
+        setPlayerPerformer(playerPerformer);
+    }
 
     const concatWithoutDuplicates = (arr1, arr2) => {
         return Array.from(new Set([...arr1,...arr2]));
@@ -52,9 +64,8 @@ export const PlayerProvider = ({
         <PlayerContext.Provider
             value={{
                 webId,
-                name,
+                playerPerformer,
                 setName,
-                image,
                 setImage,
                 relationships,
                 addRelationship,

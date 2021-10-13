@@ -32,7 +32,8 @@ function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.
 }
 
 function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
-    const { name, setName, image, setImage } = usePlayer();
+    const { playerPerformer, setName, setImage } = usePlayer();
+    const [ nameInput, setNameInput ] = useState("");
     const [ displayContinue, setDisplayContinue ] = useState([true, true]);
 
     const faceChoices = [
@@ -46,7 +47,7 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
     ];
 
     const submitName = () => {
-        if(name.length == 0) setName("Mysterious");
+        if(playerPerformer.name.length == 0) setName("Mysterious");
         setDisplayContinue([false, true]);
     }
 
@@ -76,7 +77,7 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
         <>
         {nameEnteredContent}
         <WindupChildren>
-            <Image src={image} />
+            <Image src={playerPerformer.imgSrc} />
             <p>You feel your face. It feels like the face in the photo.</p>
             <p>This must be me.</p>
             <GameFeedback theme="success" text="Library Card added to inventory."/>
@@ -89,10 +90,10 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
         <Container>
             <Input
                 label="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
             />
-            <Text>{name}</Text>
+            <Text>{nameInput}</Text>
             {continueButton}
         </Container>
     );

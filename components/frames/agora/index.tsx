@@ -7,7 +7,7 @@ import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
-import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
+import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, INTUITION_COLOUR } from "../../lib/constants";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import RelationshipIndicator from "../../lib/relationshipIndicator";
 import {World, PrisonStates, GovernanceStates} from "../../../context/bigCityContext";
@@ -17,13 +17,12 @@ import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../
 import { Relationships, SelfIdentityLabels } from "../../lib/relationships";
 
 const SHAKE_TIMEOUT = 500;
-const INTUITION_COLOUR = "#9246d9"
 
 function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     const { addMessage, dialogueEnded, setDialogueEnded } = useDialogue();
     const { world, setWorldItem } = useBigCity();
-    const { name, image, hasRelationshipPair, addRelationship, removeRelationship } = usePlayer();
+    const { playerPerformer, hasRelationshipPair, addRelationship, removeRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
     const [shakingClasses, setShakingClasses] = useState(null);
@@ -34,11 +33,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         setTimeout(() => {
             setShakingClasses(null);
         }, timeout);
-    }
-
-    const playerPerformer: IPerformer = {
-        name: name,
-        imgSrc: image
     }
 
     const introduceMayorRupert = () => {
@@ -188,7 +182,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <>
                 <p>{PerformerNames.LEOPALD} licks his lips. <Pause ms={SHORT_PAUSE * 0.75} /></p>
                 <Text color={INTUITION_COLOUR}>He is hungry for this.</Text>
-                <p>"{name}, you are under arrest, for your crimes against the Big City Republic"</p>
+                <p>"{playerPerformer.name}, you are under arrest, for your crimes against the Big City Republic"</p>
                 <p>"Round up the other leaders, throw them in the prison.<Pause ms={SHORT_PAUSE} /> We'll decide what to do with them later"</p>
                 </>
             ),
@@ -221,7 +215,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
                 const followup = () => {
                     addMessage({
-                        content: <p>"{name}!" {PerformerNames.MARI} calls to you, rushing forward to help you.<Pause ms={SHORT_PAUSE} /> Where she treads the crowd follows, despite the danger. {PerformerNames.LEOPALD} and his followers have caught up, rifles pointed into the crowd.</p>,
+                        content: <p>"{playerPerformer.name}!" {PerformerNames.MARI} calls to you, rushing forward to help you.<Pause ms={SHORT_PAUSE} /> Where she treads the crowd follows, despite the danger. {PerformerNames.LEOPALD} and his followers have caught up, rifles pointed into the crowd.</p>,
                         performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
@@ -239,8 +233,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        containerCss: fadeOutTransition(1 + (name.length * 0.1)),
-                        content: <p><Pace ms={SLOW_PACE * 0.5}>"{name}...</Pace><Pace ms={SLOW_PACE}> I .."</Pace></p>,
+                        containerCss: fadeOutTransition(1 + (playerPerformer.name.length * 0.1)),
+                        content: <p><Pace ms={SLOW_PACE * 0.5}>"{playerPerformer.name}...</Pace><Pace ms={SLOW_PACE}> I .."</Pace></p>,
                         performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
@@ -259,8 +253,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     interrogationDream();
 
                     addMessage({
-                        containerCss: fadeInTransition(1 + (name.length * 0.1)),
-                        content: <p>"{name}? Are you alright?"</p>,
+                        containerCss: fadeInTransition(1 + (playerPerformer.name.length * 0.1)),
+                        content: <p>"{playerPerformer.name}? Are you alright?"</p>,
                         performer: performers[PerformerNames.AXEL]
                     });
             
@@ -545,10 +539,17 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         sideEffect: () => {
                             setWorldItem(World.GOVERNANCE, GovernanceStates.MILITARY_CONSULATE);
                             addRelationship('self', [SelfIdentityLabels.RUTHLESS]);
-                            setDialogueEnded(true);
+                            addRelationship(PerformerNames.LEOPALD, [Relationships.CO_RULER]);
                         },
                         includeContinuePrompt: true
                     });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#800080">{PerformerNames.LEOPALD} is delighted with you.</RelationshipIndicator>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    
                 },
                 shorthandContent: <Text>[Telepathically] "You and I {PerformerNames.LEOPALD}, let's take this town"</Text>
             });
@@ -971,7 +972,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                             });
 
                             addMessage({
-                                content: <p>"{name}, my dear, I think you're being <b>naïve</b>."<Pause ms={SHORT_PAUSE} /></p>,
+                                content: <p>"{playerPerformer.name}, my dear, I think you're being <b>naïve</b>."<Pause ms={SHORT_PAUSE} /></p>,
                                 performer: performers[PerformerNames.LEOPALD],
                             });
 
@@ -1091,7 +1092,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
                                     <p>The crowd turns in favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.</p>
                                     <RelationshipIndicator color="#3cb371"><p>Big City is now an <b>Absolute Monarchy</b>.</p></RelationshipIndicator>
-                                    <RelationshipIndicator color="#3cb371"><p>Rupert is now King!</p></RelationshipIndicator>
+                                    <RelationshipIndicator color="#3cb371"><p>{PerformerNames.RUPERT} is now King!</p></RelationshipIndicator>
                                     </>
                                 ),
                                 performer: playerPerformer,
@@ -1178,6 +1179,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     <Text color={INTUITION_COLOUR}>He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.</Text>
                                     <Pause ms={SHORT_PAUSE} />
                                     <p>"You can find me at the <b>Palace</b>" he says with a wink.</p>
+                                    <p>"In fact, I think we shall hold court there. My people! Come to me with your problems and I will rule on them fairly and <b>absolutely</b>!"</p>
                                     </>
                                 ),
                                 performer: performers[PerformerNames.RUPERT],
@@ -1190,13 +1192,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
                     },
                     {
-                        msgId: "communism",
+                        msgId: "agoramaker",
                         content: (
                             <>
                             <p>"This man <b>is</b> an impostor! Worse still he is a leech!"</p>
                             <p>"We can organise just fine without him!"</p>
                             <Pause ms={SHORT_PAUSE * 1.25} />
-                            <p>"All power to the Working Class!"</p>
+                            <p>"All power to the People!"</p>
                             </>
                         ),
                         selectFollowup: () => {
@@ -1232,7 +1234,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     <Pause ms={LONG_PAUSE * 1.5} />
                                     <p>His protests become increasingly desparate.</p>
                                     <p>He throws a sharp look to the his lead guard.</p>
-                                    <p>"Burly. <Pace ms={SLOW_PACE * 1.5}><em>Do something</em></Pace>"</p>
+                                    <p>"Burly. <Pace ms={SLOW_PACE}><em>Do something</em></Pace>"</p>
                                     </>
                                 ),
                                 performer: performers[PerformerNames.RUPERT],
@@ -1331,9 +1333,25 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         </>
     );
 
-    else if(dialogueEnded) content = (
-        <p>Dialogue ended.</p>
-    );
+    else if(dialogueEnded) {
+
+        let topContent = <p>You leave the park behind.</p>;
+
+        switch(world[World.GOVERNANCE]){
+            case GovernanceStates.MONARCHY:
+                topContent = <p>{PerformerNames.RUPERT} leads his procession out of the park, followed by tens of his newly loyal subjects. Others are wandering around the old arena aimlessly. The agora is dead.</p>;
+                break;
+            case GovernanceStates.MILITARY_CONSULATE:
+                break;
+        }
+
+        content = (
+            <>
+                {topContent}
+                <Button onClick={() => followLink("map")}>Continue</Button>
+            </>
+        );   
+    }
 
     else content = (
         <Dialogue>
