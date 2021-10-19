@@ -11,7 +11,8 @@ export enum GovernanceStates {
     MONARCHY = "absolute monarchy",
     AGORA = "agora",
     MILITARY_CONSULATE = "Military Consulate",
-    MOB_RULE = "Mob Rule"
+    MOB_RULE = "Mob Rule",
+    REPRESENTATIVE_DEMOCRACY = "Representative Democracy"
 }
 
 export enum PrisonStates {

@@ -96,6 +96,10 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         followLink('armoury');
     }
 
+    const representativeDemocracyEnding = () => {
+        
+    }
+
     // a dream in which you are facing off with yourself
     const interrogationDream = () => {
         addMessage({
@@ -321,6 +325,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 content: <p>"I believe that {PerformerNames.LEOPALD} is right in the need of an established state, to protect us from the threat of <b>mob rule</b>"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    setWorldItem(World.GOVERNANCE, GovernanceStates.REPRESENTATIVE_DEMOCRACY);
+
                     addMessage({
                         content: <p>"But what makes this 'state' any different from any other armed mob?"</p>,
                         performer: performers[PerformerNames.MARI],
