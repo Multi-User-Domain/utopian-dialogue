@@ -4,7 +4,8 @@ export enum World {
     GOVERNANCE = "GOVERNANCE",
     RULER = "RULER",
     PRISON = "PRISON",
-    ARMOURY_DESTROYED = "ARMOURY_DESTROYED"
+    ARMOURY_DESTROYED = "ARMOURY_DESTROYED",
+    RELIGION = "RELIGION"
 };
 
 export enum GovernanceStates {
@@ -13,6 +14,13 @@ export enum GovernanceStates {
     MILITARY_CONSULATE = "Military Consulate",
     MOB_RULE = "Mob Rule",
     REPRESENTATIVE_DEMOCRACY = "Representative Democracy"
+}
+
+export enum ReligiousIdeals {
+    DEITY = "Deity",
+    SPIRITUAL_MONISM = "Spiritual Monism",
+    POLIS = "Polis",
+    UBERMENSCH = "Ubermensch"
 }
 
 export enum PrisonStates {
