@@ -6,6 +6,7 @@ export enum PerformerNames {
     ARSENE="Arsene",
     AXEL="Axel",
     BURLY="Burly",
+    FRANCIS="Francis",
     GUILLAME="Guillame",
     LEOPALD="Leopald",
     MARI="Mari",
@@ -38,6 +39,10 @@ export const performers: {[key: string]: IPerformer} = {
     [PerformerNames.BURLY]: {
         name: PerformerNames.BURLY,
         imgSrc: "../../../public/img/bodyguard.webp",
+    },
+    [PerformerNames.FRANCIS]: {
+        name: PerformerNames.FRANCIS,
+        imgSrc: "../../../public/img/francis.webp",
     },
     [PerformerNames.GUILLAME]: {
         name: PerformerNames.GUILLAME,
