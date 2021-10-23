@@ -11,6 +11,7 @@ export enum PerformerNames {
     LEOPALD="Leopald",
     MARI="Mari",
     RUPERT="Rupert",
+    TYLER="Tyler",
     ZOE="Zoe"
 }
 
@@ -59,6 +60,10 @@ export const performers: {[key: string]: IPerformer} = {
     [PerformerNames.RUPERT]: {
         name: PerformerNames.RUPERT,
         imgSrc: "../../../public/img/mayor_rupert.png"
+    },
+    [PerformerNames.TYLER]: {
+        name: PerformerNames.TYLER,
+        imgSrc: "../../../public/img/tyler.webp"
     },
     [PerformerNames.ZOE]: {
         name: PerformerNames.ZOE,
