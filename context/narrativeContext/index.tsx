@@ -4,6 +4,7 @@ import WhoAmI from "../../components/frames/whoAmI";
 import WhereAmI from "../../components/frames/whereAmI";
 import Agora from "../../components/frames/agora";
 import HolyBuilding from "../../components/frames/holyBuilding";
+import Death from "../../components/frames/death";
 
 export interface INarrativeContext {
     activeFrame: ReactElement;
@@ -22,7 +23,8 @@ const frameDictionary = {
     'whoAmI': WhoAmI,
     'whereAmI': WhereAmI,
     'agora': Agora,
-    'holyBuilding': HolyBuilding
+    'holyBuilding': HolyBuilding,
+    'death': Death
 }
 
 export const NarrativeProvider = ({
