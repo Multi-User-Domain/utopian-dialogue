@@ -5,6 +5,7 @@ export enum Relationships {
     COMRADE="comrade",
     GRATITUDE="gratitude",
     IMPRISONED="imprisoned",
+    DEAD="dead",
     KIND="kind",
     KING="king",
     CO_RULER="coruler",

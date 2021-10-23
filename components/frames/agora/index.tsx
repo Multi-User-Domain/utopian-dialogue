@@ -88,18 +88,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
     }
 
-    const armouryDestroyedEnding = () => {
-        followLink('armoury');
-    }
-
-    const armTheMobEnding = () => {
-        followLink('armoury');
-    }
-
-    const representativeDemocracyEnding = () => {
-        
-    }
-
     // a dream in which you are facing off with yourself
     const interrogationDream = () => {
         addMessage({
@@ -240,6 +228,9 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         containerCss: fadeOutTransition(1 + (playerPerformer.name.length * 0.1)),
                         content: <p><Pace ms={SLOW_PACE * 0.5}>"{playerPerformer.name}...</Pace><Pace ms={SLOW_PACE}> I .."</Pace></p>,
                         performer: performers[PerformerNames.MARI],
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.MARI, [Relationships.DEAD])
+                        },
                         includeContinuePrompt: true
                     });
 
@@ -267,6 +258,14 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         performer: performers[PerformerNames.AXEL],
                         includeContinuePrompt: true
                     });
+
+                    addMessage({
+                        content: <p>It takes you a long while to come to. After some time has passed, discussions inevitably turn to what happened.</p>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    })
+
+                    followLink("death");
                 }
 
                 return [
@@ -317,6 +316,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 performer: playerPerformer,
                 selectFollowup: () => {
                     setWorldItem(World.ARMOURY_DESTROYED, true);
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">The armoury will be destroyed.</RelationshipIndicator>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
                     coupDilemma();
                 },
                 shorthandContent: <Text>"The armoury must be destroyed!"</Text>
@@ -368,6 +374,12 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     addMessage({
                         content: <p>"Hurrah!" {PerformerNames.AXEL} cheers. He is emphatically in agreement with your aims.<Pause ms={SHORT_PAUSE} /> The others seem less sure.</p>,
                         performer: performers[PerformerNames.AXEL]
+                    });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">The mob will be armed.</RelationshipIndicator>,
+                        performer: performers[PerformerNames.AXEL],
+                        includeContinuePrompt: true
                     });
 
                     coupDilemma();
