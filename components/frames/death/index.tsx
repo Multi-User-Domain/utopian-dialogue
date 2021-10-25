@@ -43,18 +43,18 @@ function DeathDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>You sense that {PerformerNames.FRANCIS} might be a little intimidated that you have given three commandments, where he has given none.<Pause ms={SHORT_PAUSE * 1.25} /></p>,
-                        performer: performers[PerformerNames.FRANCIS]
+                        content: <p>You sense that {actorQuestions.name} might be a little intimidated that you have given three commandments, where he has given none.<Pause ms={SHORT_PAUSE * 1.25} /></p>,
+                        performer: actorQuestions
                     });
 
                     addMessage({
                         content: (
                             <>
                             <p>"Yes.. death good.. necessary.."</p><Pause ms={SHORT_PAUSE * 0.5} />
-                            <p>His train of thought stops abruptly and he clears his throat.</p>
+                            <p>Their train of thought stops abruptly and they begin clearing their throat.</p>
                             </>
                         ),
-                        performer: performers[PerformerNames.FRANCIS],
+                        performer: actorQuestions,
                         includeContinuePrompt: true
                     });
                 },
@@ -87,8 +87,8 @@ function DeathDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"Perhaps there is someone among us who can help this pitiful man?" {PerformerNames.FRANCIS}'s voice booms into the crowd.</p>,
-                        performer: performers[PerformerNames.FRANCIS],
+                        content: <p>"Perhaps there is someone among us who can help this pitiful man?" {actorQuestions.name}'s voice booms into the crowd.</p>,
+                        performer: actorQuestions,
                         includeContinuePrompt: true
                     });
 
