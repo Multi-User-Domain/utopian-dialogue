@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container } from "@chakra-ui/react";
+import { Container, Text } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Pace, Effect } from "windups";
 import { IStoryFrame } from "../../lib/types";
@@ -22,7 +22,98 @@ function DeathDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     // why do I suffer?
     const sufferingResponses = (actorQuestions: IPerformer, witness: IPerformer) => {
-        return [];
+        return [
+            {
+                content: (
+                    <>
+                    <p>"Suffering is the friction between what <em>is</em>, and how you want it to be" you hear yourself saying in a hushed voice.</p>
+                    <p><em>Everything is exactly as it should be</em> comes a voice within you so clear and crisp and decisive.</p><Pause ms={SHORT_PAUSE} />
+                    <Text fontSize={12}>"Whatever happens - may it happen!"</Text><Pause ms={SHORT_PAUSE * 0.5} />
+                    <Text fontSize={13}>"Whichever way it goes - may it go that way!"</Text><Pause ms={SHORT_PAUSE * 0.3} />
+                    <Text fontSize={14}>"There is no purpose!"</Text>
+                    </>
+                ),
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>{PerformerNames.TYLER} is looking at you with a perplexed expression.</p>,
+                        performer: performers[PerformerNames.TYLER],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>You sense that {PerformerNames.FRANCIS} might be a little intimidated that you have given three commandments, where he has given none.<Pause ms={SHORT_PAUSE * 1.25} /></p>,
+                        performer: performers[PerformerNames.FRANCIS]
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"Yes.. death good.. necessary.."</p><Pause ms={SHORT_PAUSE * 0.5} />
+                            <p>His train of thought stops abruptly and he clears his throat.</p>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.FRANCIS],
+                        includeContinuePrompt: true
+                    });
+                },
+                shorthandContent: <p>"Allow things to be as they are"</p>
+            },
+            {
+                content: (
+                    <>
+                    </>
+                ),
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+
+                },
+                shorthandContent: <p>"[Not Implemented] Suffering happens because we've done something wrong, but do not feel guilty because it shows us how we can improve"</p>
+            },
+            {
+                content: (
+                    <>
+                    <p>"Have you considered that there might be something <em>wrong</em> with you?"</p>
+                    </>
+                ),
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>{PerformerNames.TYLER} stares at you blankly for a few moments, blinking.<Pause ms={LONG_PAUSE} /></p>,
+                        performer: performers[PerformerNames.TYLER]
+                    });
+
+                    addMessage({
+                        content: <p>"Perhaps there is someone among us who can help this pitiful man?" {PerformerNames.FRANCIS}'s voice booms into the crowd.</p>,
+                        performer: performers[PerformerNames.FRANCIS],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>Eventually someone volunteers.</p><Pause ms={SHORT_PAUSE * 0.3} />
+                            <p>"I... could give it a go"</p><Pause ms={SHORT_PAUSE} />
+                            <p>"We can start with your dreams"</p>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.SIGMUND]
+                    });
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">{PerformerNames.SIGMUND} has (re-)founded psychiatry.</RelationshipIndicator>,
+                        performer: performers[PerformerNames.SIGMUND],
+                        includeContinuePrompt: true
+                    });
+
+                    addRelationship(PerformerNames.SIGMUND, [SelfIdentityLabels.PSYCHIATRIST]);
+                },
+                shorthandContent: <p>"Suffering is normal. If you are suffering a lot, you may have a mental health problem"</p>
+            },
+        ];
     }
     const sufferingDialogue = (actorQuestions: IPerformer, witness: IPerformer) => {
         addMessage({

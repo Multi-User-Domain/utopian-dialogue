@@ -12,6 +12,7 @@ export enum Relationships {
 }
 
 export enum SelfIdentityLabels {
+    PSYCHIATRIST="psychiatrist",
     REVOLUTIONARY="revolutionary",
     RUTHLESS="ruthless"
 }
