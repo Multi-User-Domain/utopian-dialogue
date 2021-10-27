@@ -23,7 +23,7 @@ const frameDictionary = {
     'whoAmI': WhoAmI,
     'whereAmI': WhereAmI,
     'agora': Agora,
-    'holyBuilding': HolyBuilding,
+    'holySpire': HolyBuilding,
     'death': Death
 }
 

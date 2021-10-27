@@ -58,11 +58,6 @@ export const BigCityProvider = ({
             visited: false,
             frameKey: 'holySpire'
         },
-        {
-            name: 'Armoury',
-            visited: false,
-            frameKey: 'armoury'
-        }
     ]);
 
     const setWorldItem = (key: string, value: any) => {
