@@ -21,6 +21,31 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
     const { playerPerformer, hasRelationshipPair, addRelationship, removeRelationship } = usePlayer();
     const [ dialogueStarted, setDialogueStarted ] = useState(false);
 
+    //monarchies and military consulates need a religious justification of their power
+    const justifyState = () => {
+        const coConspirator = world[World.GOVERNANCE] == GovernanceStates.MONARCHY ? performers[PerformerNames.RUPERT] : performers[PerformerNames.LEOPALD];
+        
+        addMessage({
+            content: <p>"But if that's the case, then what is the justification for the State? Why do we follow?"</p>,
+            performer: performers[PerformerNames.SIGMUND]
+        });
+
+        addMessage({
+            content: <p>As the question is asked, {coConspirator.name} arrives with their retinue. The crowd parts from them to keep a safe distance. Some bow. They await your justification eagerly.</p>,
+            performer: coConspirator,
+            /*getResponses: () => {
+                return [
+                    {
+                        shorthandContent: <p>"[Not Implemented] Because the alternative is Anarchy!"</p>
+                    },
+                    {
+                        shorthandContent: <p>"[Not Implemented] Because our particular State transcends Time itself"</p>
+                    }
+                ];
+            }*/
+        });
+    }
+
     // a method which returns different description of God depending on the Governance system in place
     const characteriseGod = () => {
         switch(world[World.GOVERNANCE]) {
@@ -85,7 +110,6 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
         // Francis asks what it is that unites everyone as citizens, who we are in common
         // Heroic stance of socially and environmentally involved body politic
         // Self-creation
-        // What is God?
         // Who am I?
 
         let greatestGoodChoices: IMessage[] = [
@@ -95,6 +119,12 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 includeContinuePrompt: true,
                 selectFollowup: () => {
                     setWorldItem(World.RELIGION, ReligiousIdeals.DEITY);
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">You created the concept that reality is planned.</RelationshipIndicator>,
+                        performer: performers[PerformerNames.FRANCIS],
+                        includeContinuePrompt: true
+                    });
                 },
                 shorthandContent: <p>"Our reverance to our Creator"</p>
             },
@@ -108,9 +138,15 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 ),
                 selectFollowup: () => {
                     setWorldItem(World.RELIGION, ReligiousIdeals.SPIRITUAL_MONISM);
+
+                    addMessage({
+                        content: <RelationshipIndicator color="#F8350B">You created a form of Monism, a concept of Oneness.</RelationshipIndicator>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
                 },
                 performer: playerPerformer,
-                shorthandContent: <p>"Our embededness within nature"</p>
+                shorthandContent: <p>"Our embededness within nature and society"</p>
             },
             {
                 content: (
@@ -142,6 +178,9 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     <>
                     </>
                 ),
+                selectFollowup: () => {
+                    justifyState();
+                },
                 performer: playerPerformer,
                 shorthandContent: <p>[Not Implemented] "There is no greater good than the state, the {GovernanceStates.MILITARY_CONSULATE}"</p>
             });
@@ -152,6 +191,9 @@ function HolyBuildingDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     <>
                     </>
                 ),
+                selectFollowup: () => {
+                    justifyState();
+                },
                 performer: playerPerformer,
                 shorthandContent: <p>[Not Implemented] "There is no greater good than the head of state, our Monarch"</p>
             });
