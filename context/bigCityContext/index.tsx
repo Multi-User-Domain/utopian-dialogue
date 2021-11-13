@@ -58,6 +58,11 @@ export const BigCityProvider = ({
             visited: false,
             frameKey: 'holySpire'
         },
+        {
+            name: 'Data Silos',
+            visited: false,
+            frameKey: 'dataSilos'
+        }
     ]);
 
     const setWorldItem = (key: string, value: any) => {
