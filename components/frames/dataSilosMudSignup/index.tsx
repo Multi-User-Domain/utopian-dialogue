@@ -27,7 +27,9 @@ import {
 } from "../../lib/loginForm";
 import useDialogue from "../../../hooks/useDialogue";
 import Dialogue from "../../lib/dialogue";
-import { DialogueProvider } from "../../../context/dialogueContext";
+import { DialogueProvider, IMessage } from "../../../context/dialogueContext";
+import usePlayer from "../../../hooks/usePlayer";
+import { IPerformer } from "../../lib/performers";
 
 /**
  * @returns All Things from a given dataset if they are of parameterised type
@@ -44,25 +46,67 @@ export const getFilteredThings: (dataset: SolidDataset, propertyType: string) =>
 export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
     const { dataset } = useDataset();
     const { addMessage } = useDialogue();
+    const { playerPerformer } = usePlayer();
+
+    const parsePerformer = (mt: Thing) => {
+        const performerUrl = getUrl(mt, MUD_DIALOGUE.performer);
+
+        return new Promise<Thing>((resolve, reject) => {
+            getSolidDataset(performerUrl).then((performerDataset) => {
+                return resolve(getThing(performerDataset, performerUrl));
+            });
+        });
+    }
+
+    const parseBasicMessagePerformerUnknown: (mt: Thing, perfomerThing: Thing) => IMessage = (mt, performerThing) => {
+        return {
+            content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
+            performer: {
+                name: getStringNoLocale(performerThing, FOAF.name),
+                imgSrc: getUrl(performerThing, FOAF.depiction)
+            },
+            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
+        }
+    }
+    const parseBasicMessagePerformerKnown: (mt: Thing, performer: IPerformer) => IMessage = (mt, performer) => {
+        return {
+            content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
+            performer: performer,
+            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
+        }
+    }
 
     useEffect(() => {
         const messageThings = getFilteredThings(dataset, MUD_DIALOGUE.Message);
     
         messageThings.forEach((mt) => {
-            const performerUrl = getUrl(mt, MUD_DIALOGUE.performer);
-            
-            getSolidDataset(performerUrl).then((performerDataset) => {
-                const performerThing = getThing(performerDataset, performerUrl);
+            // parse each message from the data source
+            new Promise<IMessage>((resolve, reject) => {
+                parsePerformer(mt).then((performer) => {
 
-                addMessage({
-                    content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
-                    performer: {
-                        name: getStringNoLocale(performerThing, FOAF.name),
-                        imgSrc: getUrl(performerThing, FOAF.depiction)
-                    },
-                    includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
+                    // read the message itself
+                    let message = parseBasicMessagePerformerUnknown(mt, performer);
+
+                    // may need to read responses from a specific URL, and fetch those, too
+                    const responsesUrl = getUrl(mt, MUD_DIALOGUE.getResponses);
+
+                    if(responsesUrl) {
+                        getSolidDataset(responsesUrl).then((responses) => {
+                            message.getResponses = () => {
+                                let parsedResponses: IMessage[] = [];
+
+                                getFilteredThings(responses, MUD_DIALOGUE.Message).forEach((response) => parsedResponses.push(parseBasicMessagePerformerKnown(response, playerPerformer)));
+
+                                return parsedResponses;
+                            }
+
+                            return resolve(message);
+                        });
+                    }
+                    else return resolve(message);
+
                 });
-            });
+            }).then((message) => addMessage(message));
         });
     }, [dataset]);
 
