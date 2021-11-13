@@ -11,6 +11,7 @@
     "@inrupt/lit-generated-vocab-common": "^0.3.11",
     "@inrupt/solid-client": "1.15.0",
     "@inrupt/solid-ui-react": "2.4.0",
+    "@multi-user-domain/mud-lib": "^1.0.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

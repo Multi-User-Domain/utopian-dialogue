@@ -3520,6 +3520,11 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@multi-user-domain/mud-lib@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@multi-user-domain/mud-lib/-/mud-lib-1.0.0.tgz#8e5bac0eb56ba7583234f1913254fc939308a6a2"
+  integrity sha512-ndQL9z6OORK9GwcdHQzXwjMUt/lMUJl+vFOLZ7MBjdEbi+FL8jGxJe+lFTxur680cS9vVGhRZBjrBCl/ilZOig==
+
 "@next/react-dev-overlay@9.5.2":
   version "9.5.2"
   resolved "https://registry.yarnpkg.com/@next/react-dev-overlay/-/react-dev-overlay-9.5.2.tgz#5d7878782e2819926b0dcd0f880c26ed527e9880"

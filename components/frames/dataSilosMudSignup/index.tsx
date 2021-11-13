@@ -15,6 +15,7 @@ import {
   } from "@inrupt/solid-client";
 import { useSession, DatasetProvider, useDataset } from "@inrupt/solid-ui-react";
 import {RDF, VCARD, FOAF} from "@inrupt/lit-generated-vocab-common";
+import { MUD_DIALOGUE } from "@multi-user-domain/mud-lib";
 
 import { useMudAccount } from "../../../hooks/useMudAccount";
 
@@ -45,21 +46,21 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
     const { addMessage } = useDialogue();
 
     useEffect(() => {
-        const messageThings = getFilteredThings(dataset, "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#Message");
+        const messageThings = getFilteredThings(dataset, MUD_DIALOGUE.Message);
     
         messageThings.forEach((mt) => {
-            const performerUrl = getUrl(mt, "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#performer");
+            const performerUrl = getUrl(mt, MUD_DIALOGUE.performer);
             
             getSolidDataset(performerUrl).then((performerDataset) => {
                 const performerThing = getThing(performerDataset, performerUrl);
 
                 addMessage({
-                    content: <p>{getStringNoLocale(mt, "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#content")}</p>,
+                    content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
                     performer: {
                         name: getStringNoLocale(performerThing, FOAF.name),
                         imgSrc: getUrl(performerThing, FOAF.depiction)
                     },
-                    includeContinuePrompt: getBoolean(mt, "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#includeContinuePrompt")
+                    includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
                 });
             });
         });
