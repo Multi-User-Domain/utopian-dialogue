@@ -5,6 +5,8 @@ import WhereAmI from "../../components/frames/whereAmI";
 import Agora from "../../components/frames/agora";
 import HolyBuilding from "../../components/frames/holyBuilding";
 import Death from "../../components/frames/death";
+import DataSilos from "../../components/frames/dataSilos";
+import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
 
 export interface INarrativeContext {
     activeFrame: ReactElement;
@@ -24,7 +26,9 @@ const frameDictionary = {
     'whereAmI': WhereAmI,
     'agora': Agora,
     'holySpire': HolyBuilding,
-    'death': Death
+    'death': Death,
+    'dataSilos': DataSilos,
+    'dataSilosMudSignup': DataSilosMudSignup
 }
 
 export const NarrativeProvider = ({
