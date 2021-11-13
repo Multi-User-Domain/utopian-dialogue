@@ -9,6 +9,7 @@ export enum Relationships {
     KIND="kind",
     KING="king",
     CO_RULER="coruler",
+    TERRIFIED="terrified",
 }
 
 export enum SelfIdentityLabels {

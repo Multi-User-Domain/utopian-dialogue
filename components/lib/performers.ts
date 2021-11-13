@@ -6,12 +6,15 @@ export enum PerformerNames {
     ARSENE="Arsene",
     AXEL="Axel",
     BURLY="Burly",
+    CAMILLA="Camilla",
     FRANCIS="Francis",
     GUILLAME="Guillame",
     LEOPALD="Leopald",
     MARI="Mari",
     RUPERT="Rupert",
+    SADIQ="Sadiq",
     SIGMUND="Sigmund",
+    TESSA="Tessa",
     TYLER="Tyler",
     ZOE="Zoe"
 }
@@ -42,6 +45,10 @@ export const performers: {[key: string]: IPerformer} = {
         name: PerformerNames.BURLY,
         imgSrc: "../../../public/img/bodyguard.webp",
     },
+    [PerformerNames.CAMILLA]: {
+        name: PerformerNames.CAMILLA,
+        imgSrc: "../../../public/img/camilla.webp",
+    },
     [PerformerNames.FRANCIS]: {
         name: PerformerNames.FRANCIS,
         imgSrc: "../../../public/img/francis.webp",
@@ -62,9 +69,17 @@ export const performers: {[key: string]: IPerformer} = {
         name: PerformerNames.RUPERT,
         imgSrc: "../../../public/img/mayor_rupert.png"
     },
+    [PerformerNames.SADIQ]: {
+        name: PerformerNames.SADIQ,
+        imgSrc: "../../../public/img/sadiq.webp",
+    },
     [PerformerNames.SIGMUND]: {
         name: PerformerNames.SIGMUND,
         imgSrc: "../../../public/img/sigmund.webp"
+    },
+    [PerformerNames.TESSA]: {
+        name: PerformerNames.TESSA,
+        imgSrc: "../../../public/img/tessa.webp",
     },
     [PerformerNames.TYLER]: {
         name: PerformerNames.TYLER,
