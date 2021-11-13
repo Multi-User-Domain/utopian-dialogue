@@ -13,7 +13,9 @@ export default {
     css({ output: 'styles.css', }),
     nodeResolve({ 
         extensions: [".js", ".jsx", ".ts", ".tsx"],
-        module: true
+        module: true,
+        preferBuiltins: false,
+        browser: true
     }),
     replace({
       'process.env.NODE_ENV': JSON.stringify( 'development' )
