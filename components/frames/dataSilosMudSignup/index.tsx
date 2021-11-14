@@ -58,25 +58,36 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
         });
     }
 
+    const resourceFollowup = (urlFollowup) => {
+        if(!urlFollowup) return;
+        parseMessagesFromUrl(urlFollowup);
+    }
+
     const parseBasicMessagePerformerUnknown: (mt: Thing, perfomerThing: Thing) => IMessage = (mt, performerThing) => {
+        const followup = getUrl(mt, MUD_DIALOGUE.selectFollowup);
+        
         return {
             content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
             performer: {
                 name: getStringNoLocale(performerThing, FOAF.name),
                 imgSrc: getUrl(performerThing, FOAF.depiction)
             },
-            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
+            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt),
+            selectFollowup: followup ? () => resourceFollowup(followup) : undefined
         }
     }
     const parseBasicMessagePerformerKnown: (mt: Thing, performer: IPerformer) => IMessage = (mt, performer) => {
+        const followup = getUrl(mt, MUD_DIALOGUE.selectFollowup);
+        
         return {
             content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
             performer: performer,
-            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt)
+            includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt),
+            selectFollowup: followup ? () => resourceFollowup(followup) : undefined
         }
     }
 
-    useEffect(() => {
+    const parseMessagesFromDataset = (dataset) => {
         const messageThings = getFilteredThings(dataset, MUD_DIALOGUE.Message);
     
         messageThings.forEach((mt) => {
@@ -108,6 +119,16 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
                 });
             }).then((message) => addMessage(message));
         });
+    }
+
+    const parseMessagesFromUrl = (url) => {
+        return new Promise<void>((resolve, reject) => {
+            getSolidDataset(url).then((dataset) => resolve(parseMessagesFromDataset(dataset)));
+        });
+    }
+
+    useEffect(() => {
+        parseMessagesFromDataset(dataset);
     }, [dataset]);
 
     return (
