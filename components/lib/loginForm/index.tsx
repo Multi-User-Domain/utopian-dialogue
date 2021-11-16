@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputRightAddon,
   Container,
+  Text
 } from "@chakra-ui/react";
 
 export function LoginForm({
@@ -16,6 +17,7 @@ export function LoginForm({
 
   return (
     <Container fixed="true">
+      <Text marginTop={10} marginBottom={10}>The <b>Identity provider</b> is where your Solid Pod is stored</Text>
       <InputGroup>
         <Input
           label="Identity Provider"
@@ -27,11 +29,12 @@ export function LoginForm({
         <InputRightAddon>
           <LoginButton oidcIssuer={idp} redirectUrl={redirectUrl}>
             <Button variant="contained" color="primary">
-              Log&nbsp;in
+              Log&nbsp;in or Signup
             </Button>
           </LoginButton>
         </InputRightAddon>
       </InputGroup>
+      <Text marginTop={10} marginBottom={10}>If you don't have a Solid Pod yet, the default provider has been set to the creators of Solid, who will host it for free :-)</Text>
     </Container>
   );
 }
