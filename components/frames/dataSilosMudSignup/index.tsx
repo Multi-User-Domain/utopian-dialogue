@@ -148,7 +148,6 @@ export function MisDirection({followLink}: IStoryFrame) : React.ReactElement {
 
     return (
         <>
-        <p>Hello, {webId}! ({session.info.webId} - {session.info.isLoggedIn.toString()})</p>
         <DatasetProvider datasetUrl="https://calum.inrupt.net/public/utopian-dialogue/guillame_intro.ttl">
             <DemoDialogue followLink={followLink} />
         </DatasetProvider>
