@@ -1079,7 +1079,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             getResponses: () => {
                 return [
                     {
-                        msgId: "kingmaker",
                         content: (
                             <>
                             <p>You fill your lungs with air and stand straight.</p>
@@ -1211,7 +1210,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
                     },
                     {
-                        msgId: "agoramaker",
                         content: (
                             <>
                             <p>"This man <b>is</b> an impostor! Worse still he is a leech!"</p>

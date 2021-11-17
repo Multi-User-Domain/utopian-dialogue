@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 
-import usePlayer from "../../../hooks/usePlayer";
 import useDialogue from "../../../hooks/useDialogue";
 
 function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
@@ -37,7 +36,6 @@ function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => 
 
 export function DialogueResponsePrompt({}): React.ReactElement {
 
-    const { webId } = usePlayer();
     const { getResponse, timeline } = useDialogue();
 
     const lastMessage = timeline[timeline.length - 1];
@@ -45,25 +43,23 @@ export function DialogueResponsePrompt({}): React.ReactElement {
     // only show options if the player was not the last performer to speak
     let content = null;
 
-    if(lastMessage.webId != webId) {
-        const responses = lastMessage['getResponses'] ? lastMessage.getResponses() : [];
-        let responseDisplay = [];
+    const responses = lastMessage['getResponses'] ? lastMessage.getResponses() : [];
+    let responseDisplay = [];
 
-        for(let i = 0; i < responses.length; i++) {
+    for(let i = 0; i < responses.length; i++) {
 
-            let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
+        let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
 
-            responseDisplay.push(
-                <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}>{responseContent}</DialogueResponseChoice>
-            );
-        }
-
-        content = (
-            <Container padding={5} marginTop={5}>
-                {...responseDisplay}
-            </Container>
+        responseDisplay.push(
+            <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}>{responseContent}</DialogueResponseChoice>
         );
     }
+
+    content = (
+        <Container padding={5} marginTop={5}>
+            {...responseDisplay}
+        </Container>
+    );
 
     return content;
 }

@@ -2,13 +2,10 @@ import React, { createContext, ReactElement, useState, useEffect } from "react";
 import { IPerformer } from "../../components/lib/performers";
 
 export interface IMessage {
-    webId?: string;
-    msgId?: string;
     performer: IPerformer;
     containerCss?: string;
     content: ReactElement;
     shorthandContent?: ReactElement;
-    urgency?: number;
     read?: boolean;
     includeContinuePrompt?: boolean; //if set to true it will hold other messages until the user selects 'Continue'
     sideEffect?: () => void;
@@ -20,17 +17,11 @@ export interface IDialogueParticipant {
     webId?: string;
     name: string;
     imgSrc: string;
-    isHuman: boolean;
-    indexStart: number;
-    mood: string;
-    currentGoal: string;
-    speak: (lastMsg: IMessage) => IMessage;
 }
 
 export interface IDialogueContext {
     getResponse?: (msg: IMessage) => void;
     timeline?: IMessage[];
-    addParticipant?: (p: IDialogueParticipant) => void;
     addMessage?: (msg: IMessage) => void;
     dialogueEnded?: boolean;
     setDialogueEnded?: (dialogueEnded: boolean) => void;
@@ -46,16 +37,8 @@ export const DialogueProvider = ({
     children
 }: IDialogueContextProps): ReactElement => {
 
-    const [participants, setParticipants] = useState<{ [key: string]: IDialogueParticipant }>({});
     const [timeline, setTimeline] = useState([]);
     const [dialogueEnded, setDialogueEnded] = useState(false);
-
-    const addParticipant = (p: IDialogueParticipant) => {
-        setParticipants(prevParticipants => ({
-            ...prevParticipants,
-            [p.name]: p
-        }));
-    }
 
     const addMessage = (msg) => {
         setTimeline(prevTimeline => (
@@ -71,18 +54,6 @@ export const DialogueProvider = ({
             msg.selectFollowup();
             return;
         }
-
-        // this is the triggering of a new "round" of dialogue
-        // each non-human character is given a chance to speak, the highest priority wins
-        let response = null;
-
-        for(let [name, participant] of Object.entries(participants)) {
-            let newResponse = participant.speak(msg);
-
-            if(newResponse != null && (response == null || newResponse.urgency > response.urgency)) response = newResponse;
-        }
-
-        if(response != null) addMessage(response);
     }
 
     return(
@@ -90,7 +61,6 @@ export const DialogueProvider = ({
             value={{
                 getResponse,
                 timeline,
-                addParticipant,
                 addMessage,
                 dialogueEnded,
                 setDialogueEnded

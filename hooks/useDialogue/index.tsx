@@ -11,7 +11,6 @@ export default function useDialogue() : IDialogueContext {
     const {
         getResponse,
         timeline,
-        addParticipant,
         addMessage,
         dialogueEnded,
         setDialogueEnded
@@ -20,7 +19,6 @@ export default function useDialogue() : IDialogueContext {
     return {
         getResponse,
         timeline,
-        addParticipant,
         addMessage,
         dialogueEnded,
         setDialogueEnded
