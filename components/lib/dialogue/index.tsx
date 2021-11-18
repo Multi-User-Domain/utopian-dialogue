@@ -25,6 +25,10 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
 
     useEffect(() => {
         renderNextMessages();
+
+        return () => {
+            setDisplayMessages([]);
+        }
     }, [timeline]);
 
     // "read" messages are those which have been animated already, we do not animate these
@@ -37,7 +41,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
 
         for(let i = 0; i < timeline.length; i++) {
             let msgValue = timeline[i];
-            let msgDisplay = <DialogueMessage key={i} message={msgValue}>{msgValue.content}</DialogueMessage>;
+            let msgDisplay = <DialogueMessage key={i} message={msgValue}></DialogueMessage>;
         
             if(msgValue.read) messagesRead.push(msgDisplay);
             else {

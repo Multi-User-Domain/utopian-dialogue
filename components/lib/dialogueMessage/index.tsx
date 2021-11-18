@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react";
 
+import axios from 'axios';
+
 import {
     Container,
     Grid,
@@ -13,16 +15,33 @@ import { DialogueResponsePrompt } from "../dialogueResponse";
 
 export interface IDialogueMessage {
     message: IMessage;
-    children: any;
 }
 
-export default function DialogueMessage({message, children}: IDialogueMessage): React.ReactElement {
+export default function DialogueMessage({message}: IDialogueMessage): React.ReactElement {
 
     const [activeCss, setActiveCss] = useState(false);
+    const [content, setContent] = useState(message.content);
 
     useEffect(() => {
         if(message.containerCss) setActiveCss(true);
+
+        return () => {
+            setContent(null);
+        }
     }, []);
+
+    const getRemoteContent: (messageUrl: string) => Promise<React.ReactElement> = (messageUrl) => {
+        return new Promise<React.ReactElement>((resolve, reject) => {
+            axios.get(messageUrl).then(res => { return resolve(<>{res.data}</>) });
+        });
+    }
+
+    if(message.contentUrl) {
+        getRemoteContent(message.contentUrl).then((content) => {
+            message.content = content;
+            setContent(content);
+        });
+    }
 
     let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
 
@@ -41,7 +60,7 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
                 </GridItem>
                 <GridItem colSpan={3} h="100%">
                     <Container paddingLeft={5} paddingTop={15}>
-                        {children}
+                        {content}
                     </Container>
                 </GridItem>
             </Grid>
