@@ -4,7 +4,8 @@ import { IPerformer } from "../../components/lib/performers";
 export interface IMessage {
     performer: IPerformer;
     containerCss?: string;
-    content: ReactElement;
+    content?: ReactElement;
+    contentUrl?: string;
     shorthandContent?: ReactElement;
     read?: boolean;
     includeContinuePrompt?: boolean; //if set to true it will hold other messages until the user selects 'Continue'

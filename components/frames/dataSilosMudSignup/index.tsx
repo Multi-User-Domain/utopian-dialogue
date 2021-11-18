@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { Container, Text, Center, Button } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 
 import {
-    createSolidDataset,
     getThingAll,
     getUrlAll,
     SolidDataset,
@@ -14,7 +13,7 @@ import {
     getBoolean
   } from "@inrupt/solid-client";
 import { useSession, DatasetProvider, useDataset } from "@inrupt/solid-ui-react";
-import {RDF, VCARD, FOAF} from "@inrupt/lit-generated-vocab-common";
+import {RDF, FOAF} from "@inrupt/lit-generated-vocab-common";
 import { MUD_DIALOGUE } from "@multi-user-domain/mud-lib";
 
 import { useMudAccount } from "../../../hooks/useMudAccount";
@@ -64,27 +63,31 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
     }
 
     const parseBasicMessagePerformerUnknown: (mt: Thing, perfomerThing: Thing) => IMessage = (mt, performerThing) => {
-        const followup = getUrl(mt, MUD_DIALOGUE.selectFollowup);
         
+        const followup = getUrl(mt, MUD_DIALOGUE.selectFollowup);
+
         return {
-            content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
+            content: <Text>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</Text>,
+            contentUrl: getUrl(mt, MUD_DIALOGUE.content),
             performer: {
                 name: getStringNoLocale(performerThing, FOAF.name),
                 imgSrc: getUrl(performerThing, FOAF.depiction)
             },
             includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt),
             selectFollowup: followup ? () => resourceFollowup(followup) : undefined
-        }
+        };
     }
     const parseBasicMessagePerformerKnown: (mt: Thing, performer: IPerformer) => IMessage = (mt, performer) => {
+
         const followup = getUrl(mt, MUD_DIALOGUE.selectFollowup);
-        
+
         return {
-            content: <p>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</p>,
+            content: <Text>{getStringNoLocale(mt, MUD_DIALOGUE.content)}</Text>,
+            contentUrl: getUrl(mt, MUD_DIALOGUE.content),
             performer: performer,
             includeContinuePrompt: getBoolean(mt, MUD_DIALOGUE.includeContinuePrompt),
             selectFollowup: followup ? () => resourceFollowup(followup) : undefined
-        }
+        };
     }
 
     const parseMessagesFromDataset = (dataset) => {
@@ -104,11 +107,7 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
                     if(responsesUrl) {
                         getSolidDataset(responsesUrl).then((responses) => {
                             message.getResponses = () => {
-                                let parsedResponses: IMessage[] = [];
-
-                                getFilteredThings(responses, MUD_DIALOGUE.Message).forEach((response) => parsedResponses.push(parseBasicMessagePerformerKnown(response, playerPerformer)));
-
-                                return parsedResponses;
+                                return getFilteredThings(responses, MUD_DIALOGUE.Message).map(response => parseBasicMessagePerformerKnown(response, playerPerformer));
                             }
 
                             return resolve(message);
