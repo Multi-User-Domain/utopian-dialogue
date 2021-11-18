@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { css } from "@emotion/css";
 
@@ -11,6 +11,7 @@ import {
 import { TriangleUpIcon } from "@chakra-ui/icons";
 
 import useDialogue from "../../../hooks/useDialogue";
+import usePlayer from "../../../hooks/usePlayer";
 
 function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
     const containerStyles = css`
@@ -36,30 +37,45 @@ function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => 
 
 export function DialogueResponsePrompt({}): React.ReactElement {
 
-    const { getResponse, timeline } = useDialogue();
+    const { playerPerformer } = usePlayer();
+    const { getResponse, timeline, parseResponses } = useDialogue();
+    const [ responses, setResponses ] = useState([]);
 
-    const lastMessage = timeline[timeline.length - 1];
+    useEffect(() => {
+        const lastMessage = timeline[timeline.length - 1];
 
-    // only show options if the player was not the last performer to speak
-    let content = null;
+        if('responsesUrl' in lastMessage && lastMessage.responsesUrl) {
+            parseResponses(lastMessage.responsesUrl, playerPerformer).then((parsedResponses) => setResponses(parsedResponses));
+        }
+        else if(lastMessage['getResponses']) setResponses(lastMessage.getResponses());
 
-    const responses = lastMessage['getResponses'] ? lastMessage.getResponses() : [];
-    let responseDisplay = [];
+        return () => {
+            setResponses([]);
+        }
+    }, [timeline]);
 
-    for(let i = 0; i < responses.length; i++) {
+    const renderResponseOptions = (responses) => {
+        let responseDisplay = [];
 
-        let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
+        for(let i = 0; i < responses.length; i++) {
 
-        responseDisplay.push(
-            <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}>{responseContent}</DialogueResponseChoice>
-        );
+            let responseContent = responses[i].shorthandContent ? responses[i].shorthandContent : responses[i].content;
+    
+            responseDisplay.push(
+                <DialogueResponseChoice key={i} onClick={() => getResponse(responses[i])}>{responseContent}</DialogueResponseChoice>
+            );
+        }
+
+        return responseDisplay;
     }
 
-    content = (
+    let responseDisplay = renderResponseOptions(responses);
+
+    const content = responseDisplay.length ? (
         <Container padding={5} marginTop={5}>
             {...responseDisplay}
         </Container>
-    );
+    ) : null;
 
     return content;
 }

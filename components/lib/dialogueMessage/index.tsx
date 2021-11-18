@@ -54,7 +54,7 @@ export default function DialogueMessage({message}: IDialogueMessage): React.Reac
         });
     }
 
-    let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
+    let dialogueResponsePrompt = (message.read && (message.getResponses || message.responsesUrl)) ? <DialogueResponsePrompt /> : null;
 
     return (
         <Container className={activeCss ? message.containerCss : null}>
