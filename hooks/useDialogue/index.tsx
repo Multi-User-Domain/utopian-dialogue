@@ -13,7 +13,11 @@ export default function useDialogue() : IDialogueContext {
         timeline,
         addMessage,
         dialogueEnded,
-        setDialogueEnded
+        setDialogueEnded,
+        parsePerformer,
+        parseResponses,
+        addMessagesFromSolidDataset,
+        addMessagesFromUrl,
     } = useContext(DialogueContext);
 
     return {
@@ -21,7 +25,11 @@ export default function useDialogue() : IDialogueContext {
         timeline,
         addMessage,
         dialogueEnded,
-        setDialogueEnded
+        setDialogueEnded,
+        parsePerformer,
+        parseResponses,
+        addMessagesFromSolidDataset,
+        addMessagesFromUrl,
     };
 }
   
