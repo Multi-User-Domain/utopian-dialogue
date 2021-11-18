@@ -112,7 +112,7 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
                     addMessage(message);
                 });
             }
-            else return addMessage(message);
+            else addMessage(message);
         });
     }
 
