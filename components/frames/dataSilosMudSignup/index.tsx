@@ -93,30 +93,26 @@ export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
     const parseMessagesFromDataset = (dataset) => {
         const messageThings = getFilteredThings(dataset, MUD_DIALOGUE.Message);
     
-        messageThings.forEach((mt) => {
+        messageThings.forEach(async (mt) => {
             // parse each message from the data source
-            new Promise<IMessage>((resolve, reject) => {
-                parsePerformer(mt).then((performer) => {
+            let performer = await parsePerformer(mt);
 
-                    // read the message itself
-                    let message = parseBasicMessagePerformerUnknown(mt, performer);
+            // read the message itself
+            let message = parseBasicMessagePerformerUnknown(mt, performer);
 
-                    // may need to read responses from a specific URL, and fetch those, too
-                    const responsesUrl = getUrl(mt, MUD_DIALOGUE.getResponses);
+            // may need to read responses from a specific URL, and fetch those, too
+            const responsesUrl = getUrl(mt, MUD_DIALOGUE.getResponses);
 
-                    if(responsesUrl) {
-                        getSolidDataset(responsesUrl).then((responses) => {
-                            message.getResponses = () => {
-                                return getFilteredThings(responses, MUD_DIALOGUE.Message).map(response => parseBasicMessagePerformerKnown(response, playerPerformer));
-                            }
-
-                            return resolve(message);
-                        });
+            if(responsesUrl) {
+                getSolidDataset(responsesUrl).then((responses) => {
+                    message.getResponses = () => {
+                        return getFilteredThings(responses, MUD_DIALOGUE.Message).map(response => parseBasicMessagePerformerKnown(response, playerPerformer));
                     }
-                    else return resolve(message);
 
+                    addMessage(message);
                 });
-            }).then((message) => addMessage(message));
+            }
+            else return addMessage(message);
         });
     }
 
