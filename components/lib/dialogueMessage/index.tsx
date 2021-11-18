@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { IMessage } from "../../../context/dialogueContext";
 import { DialogueResponsePrompt } from "../dialogueResponse";
+import useDialogue from "../../../hooks/useDialogue";
 
 export interface IDialogueMessage {
     message: IMessage;
@@ -19,14 +20,17 @@ export interface IDialogueMessage {
 
 export default function DialogueMessage({message}: IDialogueMessage): React.ReactElement {
 
+    const { parsePerformer } = useDialogue();
     const [activeCss, setActiveCss] = useState(false);
     const [content, setContent] = useState(message.content);
+    const [performer, setPerformer] = useState(message.performer);
 
     useEffect(() => {
         if(message.containerCss) setActiveCss(true);
 
         return () => {
             setContent(null);
+            setPerformer(null);
         }
     }, []);
 
@@ -43,6 +47,13 @@ export default function DialogueMessage({message}: IDialogueMessage): React.Reac
         });
     }
 
+    if(message.performerUrl) {
+        parsePerformer(message.performerUrl).then((perf) => {
+            message.performer = perf;
+            setPerformer(perf);
+        });
+    }
+
     let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt /> : null;
 
     return (
@@ -53,9 +64,9 @@ export default function DialogueMessage({message}: IDialogueMessage): React.Reac
                 gap={1}
             >
                 <GridItem colSpan={2} h={100} w={100} position="relative" overflow="hidden" borderRadius="50%">
-                    <Image h="auto" w="100%" src={message.performer.imgSrc}/>
+                    <Image h="auto" w="100%" src={performer ? performer.imgSrc : ""}/>
                     <Center marginTop={5}>
-                        <Text>{message.performer.name}</Text>
+                        <Text>{performer ? performer.name : ""}</Text>
                     </Center>
                 </GridItem>
                 <GridItem colSpan={3} h="100%">
