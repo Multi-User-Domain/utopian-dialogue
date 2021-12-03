@@ -18,30 +18,35 @@ export interface IDialogue {
 
 export default function Dialogue({children}: IDialogue): React.ReactElement {
 
-    const { timeline } = useDialogue();
+    // DialogueContext MessageBuffer tells us about the messages in the dialogue globally
+    const { messageBuffer } = useDialogue();
+
+    // our own message display buffer tells us about the messages which are being rendered to the player now
+    // e.g. until the next 'Continue' Prompt
+    const [messageDisplayBuffer, setMessageDisplayBuffer] = useState<IMessage[]>([]);
+
     const messagesEnd = useRef(null);
-    const [displayMessages, setDisplayMessages] = useState([]);
+    // "read" messages are those which have been animated already, we do not animate these
+    const [messagesRead, setMessagesRead] = useState([]);
+    const [animatingMessages, setAnimatingMessages] = useState([]);
     const [continueButton, setContinueButton] = useState(null);
 
     useEffect(() => {
+        continueDialogue();
+    }, [messageBuffer]);
+
+    useEffect(() => {
         renderNextMessages();
-
-        return () => {
-            setDisplayMessages([]);
-        }
-    }, [timeline]);
-
-    // "read" messages are those which have been animated already, we do not animate these
-    let messagesRead = [];
+    }, [messageDisplayBuffer]);
 
     const renderNextMessages = () => {
         // adds all of the unread messages to the displayed messages in the WindupAnimation,
-        // up until it hits the next break (continue button)
+        let messagesRead = [];
         let temp = [];
 
-        for(let i = 0; i < timeline.length; i++) {
-            let msgValue = timeline[i];
-            let msgDisplay = <DialogueMessage key={i} message={msgValue}></DialogueMessage>;
+        for(let i = 0; i < messageDisplayBuffer.length; i++) {
+            let msgValue = messageDisplayBuffer[i];
+            let msgDisplay = <DialogueMessage key={i} message={msgValue}>{msgValue.content}</DialogueMessage>;
         
             if(msgValue.read) messagesRead.push(msgDisplay);
             else {
@@ -50,18 +55,35 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
             }
         }
 
-        setDisplayMessages(temp);
+        setMessagesRead(messagesRead);
+        setAnimatingMessages(temp);
 
     }
 
-    const nextMessage = (msgValue: IMessage) => {
+    // resets the display buffer and populates it with the next messages from the dialogue buffer
+    const continueDialogue = () => {
+
+        let temp: IMessage[] = [];
+
+        for(let i = 0; i < messageBuffer.length; i++) {
+            let message = messageBuffer.shift();
+            temp.push(message);
+            
+            // the display buffer next ends when it finds a message with a continue prompt or a player action
+            if(message.includeContinuePrompt || message.getResponses) break;
+        }
+
+        setMessageDisplayBuffer(temp);
+    }
+
+    const selectContinue = (msgValue: IMessage) => {
         setContinueButton(null);
         if(msgValue.sideEffect) msgValue.sideEffect();
-        renderNextMessages();
+        continueDialogue();
     }
 
     const markAllAsRead = () => {
-        for(let msg of timeline) {
+        for(let msg of messageDisplayBuffer) {
             if(!msg.read) {
                 msg.read = true;
                 //side-effects are carried out when the message has been read
@@ -71,7 +93,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
                     //display continue button
                     setContinueButton(<Container marginTop={5}>
                         <Center>
-                            <Button onClick={() => nextMessage(msg)}>Continue</Button>
+                            <Button onClick={() => selectContinue(msg)}>Continue</Button>
                         </Center>
                     </Container>);
 
@@ -90,7 +112,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
             {messagesRead}
             <WindupChildren onFinished={markAllAsRead}>
                 <OnChar fn={scrollToBottom}>
-                    {displayMessages}
+                    {animatingMessages}
                 </OnChar>
             </WindupChildren>
             {continueButton}

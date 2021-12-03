@@ -10,26 +10,18 @@ import {
 export default function useDialogue() : IDialogueContext {
     const {
         getResponse,
-        timeline,
+        messageBuffer,
         addMessage,
         dialogueEnded,
-        setDialogueEnded,
-        parsePerformer,
-        parseResponses,
-        addMessagesFromSolidDataset,
-        addMessagesFromUrl,
+        setDialogueEnded
     } = useContext(DialogueContext);
 
     return {
         getResponse,
-        timeline,
+        messageBuffer,
         addMessage,
         dialogueEnded,
-        setDialogueEnded,
-        parsePerformer,
-        parseResponses,
-        addMessagesFromSolidDataset,
-        addMessagesFromUrl,
+        setDialogueEnded
     };
 }
   

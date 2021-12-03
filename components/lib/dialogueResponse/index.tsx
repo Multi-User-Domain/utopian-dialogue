@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { css } from "@emotion/css";
 
 import {
     Container,
-    Text,
     Grid,
     GridItem
 } from "@chakra-ui/react";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 
+import {IMessage} from "../../../context/dialogueContext";
 import useDialogue from "../../../hooks/useDialogue";
-import usePlayer from "../../../hooks/usePlayer";
 
 function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => void, children: any}): React.ReactElement {
     const containerStyles = css`
@@ -35,24 +34,13 @@ function DialogueResponseChoice({onClick, children}: {key:number, onClick:() => 
     );
 }
 
-export function DialogueResponsePrompt({}): React.ReactElement {
+interface IDialogueResponsePrompt {
+    message: IMessage;
+}
 
-    const { playerPerformer } = usePlayer();
-    const { getResponse, timeline, parseResponses } = useDialogue();
-    const [ responses, setResponses ] = useState([]);
+export function DialogueResponsePrompt({message}: IDialogueResponsePrompt): React.ReactElement {
 
-    useEffect(() => {
-        const lastMessage = timeline[timeline.length - 1];
-
-        if('responsesUrl' in lastMessage && lastMessage.responsesUrl) {
-            parseResponses(lastMessage.responsesUrl, playerPerformer).then((parsedResponses) => setResponses(parsedResponses));
-        }
-        else if(lastMessage['getResponses']) setResponses(lastMessage.getResponses());
-
-        return () => {
-            setResponses([]);
-        }
-    }, [timeline]);
+    const { getResponse } = useDialogue();
 
     const renderResponseOptions = (responses) => {
         let responseDisplay = [];
@@ -68,6 +56,8 @@ export function DialogueResponsePrompt({}): React.ReactElement {
 
         return responseDisplay;
     }
+
+    let responses = message.getResponses ? message.getResponses() : [];
 
     let responseDisplay = renderResponseOptions(responses);
 
