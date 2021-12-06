@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import { useSession, DatasetProvider, useDataset } from "@inrupt/solid-ui-react";
 
-import { WindupChildren, Pause, Pace, Effect } from "windups";
 import { IStoryFrame } from "../../lib/types";
 
 import { 
   LoginForm
 } from "../../lib/loginForm";
-import useDialogue from "../../../hooks/useDialogue";
+import useRemoteDialogue from "../../../hooks/useRemoteDialogue";
 import Dialogue from "../../lib/dialogue";
 import { DialogueProvider } from "../../../context/dialogueContext";
+import { RemoteDialogueProvider } from "../../../context/remoteDialogueContext";
 
 export function DemoDialogue({followLink}: IStoryFrame) : React.ReactElement {
     const { dataset } = useDataset();
-    const { addMessagesFromSolidDataset } = useDialogue();
+    const { addMessagesFromSolidDataset } = useRemoteDialogue();
 
     useEffect(() => {
         addMessagesFromSolidDataset(dataset);
@@ -43,5 +43,11 @@ export function MisDirection({followLink}: IStoryFrame) : React.ReactElement {
 }
 
 export default function DataSilosMudSignup({followLink} : IStoryFrame) : React.ReactElement {
-    return <DialogueProvider><MisDirection followLink={followLink} /></DialogueProvider>;
+    return (
+        <DialogueProvider>
+            <RemoteDialogueProvider>
+                <MisDirection followLink={followLink} />
+            </RemoteDialogueProvider>
+        </DialogueProvider>
+    );
 }
