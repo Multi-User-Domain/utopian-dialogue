@@ -12,6 +12,8 @@ export default function useDialogue() : IDialogueContext {
         getResponse,
         messageBuffer,
         addMessage,
+        addMessages,
+        nextMessageBuffer,
         dialogueEnded,
         setDialogueEnded
     } = useContext(DialogueContext);
@@ -20,6 +22,8 @@ export default function useDialogue() : IDialogueContext {
         getResponse,
         messageBuffer,
         addMessage,
+        addMessages,
+        nextMessageBuffer,
         dialogueEnded,
         setDialogueEnded
     };

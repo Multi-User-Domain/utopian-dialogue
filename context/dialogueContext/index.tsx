@@ -13,12 +13,6 @@ export interface IMessage {
     selectFollowup?: () => void; // a shortcut to the response mechanism - forces the message to be responded to in a specific way
 }
 
-export interface IRemoteMessage extends IMessage {
-    performerUrl?: string;
-    contentUrl?: string;
-    responsesUrl?: string;
-}
-
 export interface IDialogueParticipant {
     webId?: string;
     name: string;
@@ -29,6 +23,8 @@ export interface IDialogueContext {
     getResponse?: (msg: IMessage) => void;
     messageBuffer?: IMessage[];
     addMessage?: (msg: IMessage) => void;
+    addMessages?: (...messages: IMessage[]) => void;
+    nextMessageBuffer?: () => void;
     dialogueEnded?: boolean;
     setDialogueEnded?: (dialogueEnded: boolean) => void;
 };
@@ -56,8 +52,25 @@ export const DialogueProvider = ({
         ));
     }
 
+    const addMessages = (...messages) => {
+        setMessageBuffer(prevBuffer => (
+            [...prevBuffer, ...messages]
+        ));
+    }
+
+    const nextMessageBuffer = () => {
+        for(let msg of messageBuffer) {
+            messageBuffer.shift();
+
+            if(msg.includeContinuePrompt || msg.getResponses) break;
+        }
+
+        setMessageBuffer(messageBuffer);
+    }
+
     const getResponse = (msg) => {
         // the conversation lead (player) has said something
+        nextMessageBuffer();
         addMessage(msg);
 
         if(msg.selectFollowup) {
@@ -72,6 +85,8 @@ export const DialogueProvider = ({
                 getResponse,
                 messageBuffer,
                 addMessage,
+                addMessages,
+                nextMessageBuffer,
                 dialogueEnded,
                 setDialogueEnded
             }}

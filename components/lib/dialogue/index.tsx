@@ -65,7 +65,13 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
 
         let temp: IMessage[] = [];
 
-        for(let i = 0; i < messageBuffer.length; i++) {
+        // decide whether to clear old messages or not
+        if(messageDisplayBuffer.length) {
+            let last = messageDisplayBuffer[messageDisplayBuffer.length - 1];
+            if(!last.includeContinuePrompt && !last.getResponses) temp = Array.from(messageDisplayBuffer);
+        }
+
+        while(messageBuffer.length) {
             let message = messageBuffer.shift();
             temp.push(message);
             
