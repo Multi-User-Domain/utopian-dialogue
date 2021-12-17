@@ -107,10 +107,6 @@ function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
 
     return (
         <Container>
-            <InvestigationFrame title="Keys">
-                <p>A set of keys and a circular RFID fob attached by a keyring.</p>
-                <GameFeedback theme="success" text="Mysterious Keys added to inventory."/>
-            </InvestigationFrame>
             <InvestigationFrame title="Mobile Phone">
                 <p>You don’t remember the passcode. There is still some battery, around 10%.</p>
                 <p>You try some combinations of passcodes, the first things that come to your head.</p>
@@ -137,14 +133,6 @@ function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
                 <p>There is a name.</p>
                 <LibraryCard callback={() => {setWalletDone(true)}} />
             </InvestigationFrame>
-            <InvestigationFrame title="Deck of Cards">
-                <p>The deck cover is unmarked. You open the packet.</p>
-                <Pause ms={SHORT_PAUSE} />
-                <p>It's vaguely like a tarot deck.</p>
-                <p>There are many cards, with images and sometimes with text.</p>
-                <p>You sense great power in these cards.</p>
-                <GameFeedback theme="success" text="Deck of Cards added to inventory." />
-            </InvestigationFrame>
             {continueContent}
         </Container>
     );
@@ -160,7 +148,7 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
             <Text fontStyle="italic">How long was I out?</Text>
             <InvestigationFrame title="Continue">
                 <p>You are lying on the grass.</p>
-                <p>In your lap there is a set of keys and a mobile phone. Beside you there is a thin leather wallet and a deck of cards.</p>
+                <p>In your lap there is a mobile phone. Beside you there is a thin leather wallet.</p>
                 <WhoAmIOptions followLink={followLink}/>
             </InvestigationFrame>
         </WindupChildren>
