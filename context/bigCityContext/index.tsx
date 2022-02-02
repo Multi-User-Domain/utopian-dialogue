@@ -50,7 +50,8 @@ export const BigCityProvider = ({
 }): ReactElement => {
 
     const [world, setWorld] = useState({
-        name: 'Big City'
+        name: 'Big City',
+        daysSinceGreatPop: 4
     });
     const [locations, setLocations] = useState([
         {
