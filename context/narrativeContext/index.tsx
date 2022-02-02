@@ -3,10 +3,10 @@ import Home from "../../components/frames/home"
 import WhoAmI from "../../components/frames/whoAmI";
 import WhereAmI from "../../components/frames/whereAmI";
 import Agora from "../../components/frames/agora";
-import HolyBuilding from "../../components/frames/holyBuilding";
-import Death from "../../components/frames/death";
-import DataSilos from "../../components/frames/dataSilos";
-import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
+//import HolyBuilding from "../../components/frames/holyBuilding";
+//import Death from "../../components/frames/death";
+//import DataSilos from "../../components/frames/dataSilos";
+//import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
 
 export interface INarrativeContext {
     activeFrame: ReactElement;
@@ -25,10 +25,10 @@ const frameDictionary = {
     'whoAmI': WhoAmI,
     'whereAmI': WhereAmI,
     'agora': Agora,
-    'holySpire': HolyBuilding,
-    'death': Death,
-    'dataSilos': DataSilos,
-    'dataSilosMudSignup': DataSilosMudSignup
+    //'holySpire': HolyBuilding,
+    //'death': Death,
+    //'dataSilos': DataSilos,
+    //'dataSilosMudSignup': DataSilosMudSignup
 }
 
 export const NarrativeProvider = ({
