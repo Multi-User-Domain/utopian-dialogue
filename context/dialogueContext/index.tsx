@@ -27,6 +27,7 @@ export interface IDialogueContext {
     nextMessageBuffer?: () => void;
     dialogueEnded?: boolean;
     setDialogueEnded?: (dialogueEnded: boolean) => void;
+    selectRandomFrom?: (arr: any[]) => any;
 };
 
 export interface IDialogueContextProps {
@@ -79,6 +80,10 @@ export const DialogueProvider = ({
         }
     }
 
+    const selectRandomFrom = (arr: any[]) => {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
     return(
         <DialogueContext.Provider
             value={{
@@ -88,7 +93,8 @@ export const DialogueProvider = ({
                 addMessages,
                 nextMessageBuffer,
                 dialogueEnded,
-                setDialogueEnded
+                setDialogueEnded,
+                selectRandomFrom,
             }}
         >
             {children}

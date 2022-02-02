@@ -15,7 +15,8 @@ export default function useDialogue() : IDialogueContext {
         addMessages,
         nextMessageBuffer,
         dialogueEnded,
-        setDialogueEnded
+        setDialogueEnded,
+        selectRandomFrom
     } = useContext(DialogueContext);
 
     return {
@@ -25,7 +26,8 @@ export default function useDialogue() : IDialogueContext {
         addMessages,
         nextMessageBuffer,
         dialogueEnded,
-        setDialogueEnded
+        setDialogueEnded,
+        selectRandomFrom
     };
 }
   
