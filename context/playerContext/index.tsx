@@ -1,15 +1,21 @@
 import React, { createContext, ReactElement, useState } from "react";
 import { IPerformer } from "../../components/lib/performers";
 
+export interface IRelationship {
+    label: string,
+    strength?: number
+}
+
 export interface IPlayerContext {
     webId?: string;
     setName?: (string) => void;
     setImage?: (string) => void;
     playerPerformer?: IPerformer;
-    relationships?: {[object: string]: string[]};
+    relationships?: {[object: string]: IRelationship[]};
     hasRelationshipPair?: (object: string, label: string) => boolean;
-    addRelationship?: (object: string, labels: string[]) => void;
-    removeRelationship?: (object: string, labels: string[]) => void;
+    getRelationshipPair?: (object: string, label: string) => IRelationship;
+    addRelationship?: (object: string, newRelationship: IRelationship) => void;
+    removeRelationship?: (object: string, newRelationship: IRelationship) => void;
 };
 
 export const PlayerContext = createContext<IPlayerContext>({});
@@ -23,7 +29,7 @@ export const PlayerProvider = ({
         name: "",
         imgSrc: "../../../public/img/playerProfile/3.webp"
     });
-    const [relationships, setRelationships] = useState({});
+    const [relationships, setRelationships] = useState<{[object: string]: IRelationship[]}>({});
 
     const setName = (value: string) => {
         playerPerformer.name = value;
@@ -35,29 +41,46 @@ export const PlayerProvider = ({
         setPlayerPerformer(playerPerformer);
     }
 
-    const concatWithoutDuplicates = (arr1, arr2) => {
-        return Array.from(new Set([...arr1,...arr2]));
-    }
+    const getRelationshipPair = (object: string, label: string) : IRelationship => {
+        if(!(object in relationships)) return null
 
-    const addRelationship = (object, labels) => {
-        // merge with pre-existing relationships
-        if(object in relationships) {
-            labels = concatWithoutDuplicates(labels, relationships[object])
+        for(let i = 0; i < relationships[object].length; i++) {
+            let r = relationships[object][i];
+            if(r.label.includes(label)) return r;
         }
 
-        relationships[object] = labels;
+        return null;
+    }
+
+    const addRelationship = (object, newRelationship) => {
+        // merge with pre-existing relationships
+        if(object in relationships) {
+
+            let r = getRelationshipPair(object, newRelationship.label);
+            // update strength. Add them together if we can, else choose the one which is defined
+            let str = r.strength ? (newRelationship.strength ? r.strength + newRelationship.strength : r.strength) : newRelationship.strength;
+
+            if(r != null) {
+                relationships[object][newRelationship.label] = {
+                    label: newRelationship.label,
+                    strength: str
+                }
+            }
+        }
+        else relationships[object] = [newRelationship];
+
         setRelationships({...relationships});
     }
 
-    const removeRelationship = (object, labels) => {
-        if(!(object in relationships)) return;
+    const removeRelationship = (object, relationship) => {
+        if(!hasRelationshipPair(object, relationship.label)) return;
 
-        relationships[object] = relationships[object].filter(x => !labels.includes(x));
+        relationships[object] = relationships[object].filter(x => relationship.label.includes(x.label));
         setRelationships({...relationships});
     }
 
     const hasRelationshipPair = (object, label) => {
-        return (object in relationships && relationships[object].includes(label));
+        return (object in relationships && getRelationshipPair(object, label) != null);
     }
 
     return(
@@ -70,7 +93,8 @@ export const PlayerProvider = ({
                 relationships,
                 addRelationship,
                 removeRelationship,
-                hasRelationshipPair
+                hasRelationshipPair,
+                getRelationshipPair
             }}
         >
             {children}
