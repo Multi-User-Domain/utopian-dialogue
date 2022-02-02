@@ -16,6 +16,7 @@ export interface IPlayerContext {
     getRelationshipPair?: (object: string, label: string) => IRelationship;
     addRelationship?: (object: string, newRelationship: IRelationship) => void;
     removeRelationship?: (object: string, newRelationship: IRelationship) => void;
+    buildRelationshipObject?: (label: string, strength: number) => IRelationship;
 };
 
 export const PlayerContext = createContext<IPlayerContext>({});
@@ -83,6 +84,13 @@ export const PlayerProvider = ({
         return (object in relationships && getRelationshipPair(object, label) != null);
     }
 
+    const buildRelationshipObject = (label, strength) => {
+        return {
+            'label': label,
+            'strength': strength
+        }
+    }
+
     return(
         <PlayerContext.Provider
             value={{
@@ -94,7 +102,8 @@ export const PlayerProvider = ({
                 addRelationship,
                 removeRelationship,
                 hasRelationshipPair,
-                getRelationshipPair
+                getRelationshipPair,
+                buildRelationshipObject
             }}
         >
             {children}

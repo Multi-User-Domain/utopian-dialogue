@@ -17,7 +17,8 @@ export default function usePlayer() : IPlayerContext {
         addRelationship,
         removeRelationship,
         hasRelationshipPair,
-        getRelationshipPair
+        getRelationshipPair,
+        buildRelationshipObject
     } = useContext(PlayerContext);
 
     return {
@@ -29,7 +30,8 @@ export default function usePlayer() : IPlayerContext {
         addRelationship,
         removeRelationship,
         hasRelationshipPair,
-        getRelationshipPair
+        getRelationshipPair,
+        buildRelationshipObject
     };
 }
   
