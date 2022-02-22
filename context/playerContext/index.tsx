@@ -13,6 +13,8 @@ export interface IPlayerContext {
     playerPerformer?: IPerformer;
     relationships?: {[object: string]: IRelationship[]};
     hasRelationshipPair?: (object: string, label: string) => boolean;
+    hasRelationshipStrongerThan?: (object: string, label: string, strength: number) => boolean;
+    hasRelationshipWeakerThan?: (object: string, label: string, strength: number) => boolean;
     getRelationshipPair?: (object: string, label: string) => IRelationship;
     addRelationship?: (object: string, newRelationship: IRelationship) => void;
     removeRelationship?: (object: string, newRelationship: IRelationship) => void;
@@ -84,6 +86,14 @@ export const PlayerProvider = ({
         return (object in relationships && getRelationshipPair(object, label) != null);
     }
 
+    const hasRelationshipStrongerThan = (object, label, strength) => {
+        return hasRelationshipPair(object, label) && getRelationshipPair(object, label).strength >= strength;
+    }
+
+    const hasRelationshipWeakerThan = (object, label, strength) => {
+        return hasRelationshipPair(object, label) && getRelationshipPair(object, label).strength <= strength;
+    }
+
     const buildRelationshipObject = (label, strength) => {
         return {
             'label': label,
@@ -102,6 +112,8 @@ export const PlayerProvider = ({
                 addRelationship,
                 removeRelationship,
                 hasRelationshipPair,
+                hasRelationshipStrongerThan,
+                hasRelationshipWeakerThan,
                 getRelationshipPair,
                 buildRelationshipObject
             }}
