@@ -33,13 +33,25 @@ INCLUDE relationships.ink
           "Like... knowing who you are?" # Douglas
           ~ player_has_greensight = true
           -> do_you_remember
-
+          
+    = mari_introduces_agora
+      Mari addresses you: "We've been meeting here, for several days, since the Great Pop"
+      
+      "Once we woke up we needed to figure out again how to live, we were all disoriented and without purpose"
+      
+      "We call this the Agora. Here we ask the question 'How do we want to live together?' and then we delegate and organise to make the answers reality"
+      
+      -> pre_meeting_questions
+    
     = agora_meeting
     
         <em>Your choices are affecting how other characters view you, and how you view them</em>
     
-        {mari_trusting >= 0: Mari addresses you: "We've been meeting here, for several days, since the Great Pop. We call this the Agora, it's where we ask 'How do we want to live together'"}
-        {mari_trusting < 0: Douglas address you: "We've been meeting here at the Agora, it's a governance of sorts. We've been piecing together what life was like, before the Great Pop. Perhaps then you will be the key to recovering the Old World, and rebuilding it!"}
+        {mari_trusting >= 0: -> mari_introduces_agora}
+        
+        Douglas address you. "We've been meeting here, for several days, since the Great Pop"
+        "It's a governance of sorts. Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like, before the Great Pop"
+        "But now that you're here, maybe we can shift our focus to recovering the Old World, and rebuilding it!"
         
         -> pre_meeting_questions
         
@@ -171,25 +183,28 @@ INCLUDE relationships.ink
     
     = debt_discussion
     
-        "What is in the ledger?" Douglas asks
+        "What <em>is</em> in the ledger?" Douglas asks
         
-        "<b>Debts</b>". She pronounces the word with clear distaste. "Obligations to pay, forced by the state. You need to find a way to pay them, and until you do you are not free"
+        "<b>Debts</b>". She pronounces the word with enunciated distaste. "Obligations to pay, forced by the state. You need to find a way to pay them, and pay them regularly, and until you do you are not free"
         
-        There is a concerned mumbling, at the thought of "unfree"
+        "Taxes and currency are how we direct ourselves to a common goal!" Rupert complains
+        
+        There is a concerned mumbling
         
         "The debts are taken from us, paid to men like <em>him</em>, as a way to manipulate our activities into funding their enterprise"
         
-        "That <em>enterprise</em> is serving the community" Rupert protests
-        "The debts are to eachother, in principle"
-        "You are all naturally self-interested, and you act in order to serve yourself! However we each can provide for things that the other needs, and so it follows that we offer things to each other in <b>exchange</b>, need for need"
-        "By paying eachother using my <em>currency</em>, you are able to transfer the debt to me, knowing safely that it is <em>guaranteed</em> by the vitality of my force. You can trust that the debt is <em>protected</em>"
+        <em>My</em> enterprise?! I suppose that you'd prefer that <em>you</em> were mayor, then
+        
+        "By paying eachother using my <em>currency</em>, you are able to transfer the debt to me, Safe in the knowledge that it is <em>guaranteed</em> by the vitality of my force"
         
         Burly is radiating pride when Rupert discusses the vitality of his force
         
-        "In return, you pay me a portion of that debt back each month, and respect my order. This forms our <b>social contract</b>, and ensures that we don't descend into chaos"
+        "In return, you pay me a portion of that debt back each month, and respect my order. This forms the basis of our <b>social contract</b>, and ensures that we don't descend into chaos"
+        
+        "Our debts could be to eachother, in principle. To our <em>shared</em> enterprise" # Mari
         
         * "Without a powerful state, it is a war of all against all"
-          "We are selfish by nature, and will not provide for eachother unless we are to gain"
+          "We are selfish by nature and won't provide for eachother unless we are to gain in doing so"
           "Friends, we <em>need</em> a powerful state, to bind us into the common interest, to serve the collective will"
           
           ~ mari_trusting -= 1
@@ -197,17 +212,21 @@ INCLUDE relationships.ink
           
           "To serve the collective will, and <em>me</em>, its' arbritor!" Rupert adds eagerly
           -> debt_challenge
-        * "There is only a need for this trust if there is hostility"
-          "We are motivated by <em>care</em>, and we regularly care for eachother beyond our immediate selves. There are any number of ways that we can pool resources, and we really only need <b>trust</b>, when we are not <em>caring</em> of the person to whom we are <em>giving</em>"
+        * "We do not need a state to establish trust"
+          "We are motivated by <em>care</em>, we regularly care for eachother beyond our immediate selves.
+          "There are any number of ways that we can pool resources, and we really only need <b>trust</b> if we have a reason not to trust the other to whom we are <em>giving</em>"
           
           ~ mari_trusting += 1
           ~ rupert_trusting -= 2
           
           "Sedition!" Burly complains
           
+          "I think that we could organise our society to establish trust in giving" Mari agrees pensively
+          
+          "Sedition!"
           "I will <em>not</em> let you subvert my sacred right to distribute wealth!"
           
-          ** They have to be stopped!
+          ** Rupert has to be stopped!
               ~ player_courageous += 1
               ~ mari_trusting += 1
               
@@ -219,7 +238,7 @@ INCLUDE relationships.ink
               *** Sing!
                  From the deep pool of resistance which goes down to your very core and into the abyss of your soul, a voice calls out
                  
-                 "NOOO!" it roars, fading softly into silence, before rising once more as a soft melody:
+                 "NOOO!" it roars with your voice, fading softly into silence, before rising once more as a soft melody:
                  
                  "We'll be eating soup of stone til what we grow is what we own.."
                  "But we won't steal from the land what's freely given"
@@ -227,16 +246,17 @@ INCLUDE relationships.ink
                  "And even if we're just one pistol against an army of policemen, I <em>insist</em> that we are many and they are few"
                  "If we don't stand up now then we might never and we'll never know again our freedom taken"
                  
-                 "Enough!" Rupert calls, cutting your song short
+                 "Enough!" Rupert calls and puts you off, just as you were gearing up for the second verse
                  
                  -> debt_challenge
           ** Let it go
             -> debt_challenge
           
     = debt_challenge
-      "You are all already in debt, you have just forgotten about it. But you still need to pay it. Your ancestors made the social contract, and so you are bound to it"
+      "You are all already in debt!"
+      "Just because you've <b>forgotten</b> about it, doesn't mean you don't have to pay it!"
       
-      "Our existence is a debt to God" # Francis
+      "Our very existence is a debt to God" # Francis
       
       "And it is repaid in service of the Nation" # Rupert
       
@@ -281,9 +301,10 @@ INCLUDE relationships.ink
       "This man... was our KING!"
       There is a collective gasp.
       "It is God's will that he rule over us. When we excercise our activity to his will, we are also exercising our activity to God's will!"
-      <em>They're buying it!</em> you think to yourself
+      
       Rupert is grinning very widely
-      It must be the sensational <em>authority</em> that you're projecting.
+      
+      They seem to be buying it! It must be the sensational <em>authority</em> that you're projecting.
       ~ player_authority += 1
       
       Slowly, the crowd turns in your favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.
@@ -309,11 +330,13 @@ INCLUDE relationships.ink
       "You've done well today, old sport!"
       "Your ambition is remarkable"
       He turns to the crowd and hushes them to silence
-      "In my grace, I will allow this meeting to continue, as my <em>court</em>!"
-      "You there, fetch me a throne!"
+      "In my grace, I will allow this meeting to continue. Henceforth my <em>court</em> is in open session!"
+      "You there, peasant! Fetch me a throne!"
       
       Douglas finds a nearby picnic bench and heaves it to the centre of the ampitheatre
-      As Rupert takes a seat Burly eagerly bounds over to his side. Rupert beckons you to stand by his left
+      As Rupert takes a seat Burly eagerly bounds over to his side
+      
+      The new King beckons you to stand on his left
       
       * [Join Rupert loyally]
         
@@ -391,16 +414,16 @@ INCLUDE relationships.ink
     = introduce_leopald
       "Are we ready for this?"
       Douglas gestures around him
-      "We - our ancestors - surely built this city, and it's impressive to be sure, but we don't even remember <em>how</em> we did it"
+      "We - our ancestors - surely built this city, and we don't even remember <em>how</em> we did it"
       {rupert_exiled: You said that we are masters of our own destiny}{not rupert_exiled: We may be the masters of our own destiny}. But how can we ensure that we are not just masters of our own peril, if not by following from tradition?" # Douglas
       
       "Yes!" a man shouts, all in a rush.
       "These are my concerns exactly"
       
-      "My name is <b>Leopald</b>, and I am a general in the {ruler == "Rupert": Royal} <em>army</em>"
+      "My name is <b>Leopald</b>. I am a general in the {ruler == "Rupert": Royal} <em>army</em>"
       
       "Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but a week from now? A month?"
-      "It's been <b>{days_since_great_pop} days</b> since the Big Pop. I've flicked through some of the <b>history books</b> I found down by the library. Do you know what I saw?"
+      "It's been a meagre <b>{days_since_great_pop} days</b> since the Big Pop. I've flicked through some of the <b>history books</b> I found down by the library. Do you know what I saw?"
       
       "I've only flicked through and looked at the pictures but..."
       "I saw a lot of pain and suffering. Soldiers and wars, famines and plagues. Most of it was <em>man-made</em>"
@@ -431,7 +454,7 @@ INCLUDE relationships.ink
         
         "There are a wide variety of <b>dangerous people</b> who would do us harm. To an extent we are all potentially dangerous. The only way to ensure that we are all civil is to coerce us in line"
         
-        { ruler == "Rupert": "To maintain the Kings' peace, some force must be necessary" Rupert agrees with a certain macabre tone. { player_has_greensight: It is not genuine } }
+        { ruler == "Rupert": "To maintain the Kings' peace, some force must be necessary" Rupert agrees with a sympathetic tone. }
         ~ player_values_order = true
         
         -> prison_dilemma
@@ -467,7 +490,7 @@ INCLUDE relationships.ink
         
       * [Say Nothing]
         "Pish!" Mari complains
-        { not asked_about_old_world_state: "I read up on some history too, and they <em>had</em> a State apparatus }
+        { not asked_about_old_world_state: "I read up on some history too, and they <em>had</em> a State apparatus" }
         "Since when was <b>organised violence</b> a part of 'how we want to live together'?"
         
         -> prison_dilemma
@@ -959,6 +982,9 @@ INCLUDE relationships.ink
   * "No! These are my friends!"
   * "No! My liege, we must protect <b>free speech</b>!"
   * Accept their imprisonment
-
+    There is a brief scuffle, but the Royalists come out on top
+    
+    ~ mari_imprisoned = true
+    ~ andrew_imprisoned = true
 
 -> END
