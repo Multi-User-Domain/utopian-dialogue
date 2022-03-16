@@ -500,8 +500,7 @@ INCLUDE relationships.ink
   
   "It only takes one <b>murderer</b> to spoil a <b>picnic</b>" # Leopald
   
-  { player_has_greensight: Leopald introduced himself as a <b>general</b>. He is a military man and sees society through a military lens }
-  { player_has_greensight: You perceive a similar quality in Mari's perspective }
+  { player_has_greensight: Leopald introduced himself as a <b>general</b>, you recall. He is a military man and sees society through a military lens }
   
   -> murderer_question
   
@@ -509,12 +508,9 @@ INCLUDE relationships.ink
   
   * "I do not believe that it's in our nature to kill one another"
     "And yet it does happen" Leopald refutes
-    -> murderer_question
   * "Should we not try to prevent murder from happening by targetting its' causes?"
-  
-    "Certainly. But this objective is remote and difficult to reach. We have to ask ourselves, what do we do with the murderers who exist in the meantime, and how do we <b>deter</b> them from murdering"
     
-    "Which murderers?" Mari complains, evidently frustrated by the hypotheticals at play
+    - "Which murderers?" Mari complains, evidently frustrated by the hypotheticals at play
     
     -> prison_introduction
     
@@ -522,21 +518,23 @@ INCLUDE relationships.ink
   
   = prison_introduction
   
-    "When I woke I was in a collosal building, <b>'{city_name} Prison'</b>. I was with others, we realised we were <b>guards</b> there"
-    "Its' purpose was to hold <b>prisoners</b>, to keep them away from society and cleanse them of their demons" # Craig
+    "When I woke I was in a collosal building, <b>'{city_name} Prison'</b>"
+    "Myself and others, we were dressed the same. We were armed, and I think that our purpose was to keep people locked inside" # Craig
   
-    "I was a prisoner there. They were locking us up in there. <em>Human beings</em> locked into tiny cells. It makes me feel sick"
-    "Some of the guards let us out" # Andrew
+    "I was a prisoner there. <em>Human beings</em> locked into tiny cells. It makes me feel sick"
     
-    { player_has_greensight: He has visions of traumatic memories locked away. He pushes them to the back of his mind }
+    * How did you get out?
+      "Some of the guards let us out" # Andrew
+    * [Say nothing]
     
-    "The prisoners were locked away for the good of society. And for their <em>own</em> good, too. You need to be <b>rehabilitated</b> before you're ready to rejoin society"
+    - A look of anger flashes across his face. "The prisoners were locked away for the good of society. And for their <em>own</em> good, too. You should have been confirmed as <b>rehabilitated</b> before you were allowed to rejoin society"
     
-    "I don't see how any of that could have been for my own good. And I'm not going back in there"
-    There is some distress in his voice
+    "I don't see how any of that could have been for my own good. And I'm <em>not</em> going back in there"
+    There is much distress in his voice
     
-    "Perhaps they were not <em>always</em> right then, clearly. But neither surely were they <em>always</em> wrong?" # Zoe
-    The statement is intended to relieve the tension.
+    Many of the Agora members attempt to relieve the tension
+    
+    "Perhaps they were not <em>always</em> right then, clearly. But neither surely were they <em>always</em> wrong?"
     
     * "The prison was primarily a tool of oppression"
     
@@ -589,7 +587,7 @@ INCLUDE relationships.ink
     
     * "We should replace the prison with something more focussed on <em>reform</em>"
       "The old ways were necessarily cruel"
-      "Or else it would not have been an effective detterant"
+      "Or else prison would not have been an effective detterant"
       "Clearly at least an <em>element</em> of our nature is sinful"
       "To shape the society that we wish to live in we must punish wrongdoing and reward goodness"
       
@@ -606,6 +604,7 @@ INCLUDE relationships.ink
       "You <em>believe?</em> So you don't know" # Mari
       
       "What else would their aim be? It's our aim, isn't it?"
+      He seems a little irritated
       
       "I think that the prison might not <em>always</em> be necessary, perhaps we can use it sparingly"
       "But it can be a powerful tool, in order to shape <em>our citizens</em> to be the way we want them to be"
@@ -623,7 +622,7 @@ INCLUDE relationships.ink
       
       Leopald is nodding emphatically
       
-      Mari and Andrew are significantly less pleased
+      Andrew and Mari are significantly less pleased
       
       ~ andrew_trusting -= 1
       ~ mari_trusting -= 3
@@ -658,7 +657,8 @@ INCLUDE relationships.ink
       ~ rupert_trusting += 1
       ~ player_loyal_to_rupert = true
       
-      "My liege" Leopald begins, kneeling and bowing his head to mimic your reverance
+      "My liege" Leopald begins, kneeling and bowing his head in reverance.
+      <em>He is mimicking my action</em>, you realise
       
       -> leopald_imprison_dissidents
       
@@ -760,11 +760,11 @@ INCLUDE relationships.ink
     -> leopald_insists_on_statehood
 
   = leopald_insists_on_statehood
-    "My comrades and peers, I share in your vision of creating a utopian society, really I do"
+    "My comrades and peers, I share in your vision of creating a utopian society. Really I do"
     "I felt that a prison apparatus would be necessary it is true, necessary to protect our vision from those who would do it ill"
     "But there is a greater threat to us than the sin of individuals - and that is the threat of <b>armed gangs</b>"
     "What is the worth of all we will build, if someone decided to <em>take</em> it from us?"
-    "Naturally - and to protect ourselves - it is imperative that we form our own armed group - a <b>state</b> - staffed by our trustworthy Utopianists, and capable of protecting our vision"
+    "Naturally - and to protect ourselves - it is imperative that we form our own armed group - a <b>state</b> - staffed by our trustworthy Utopianists. Capable of protecting our vision"
     
     ~ prison = "abolished"
     
