@@ -1407,13 +1407,548 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const murdererQuestion = () => {
-        return [
+        const followup = () => {
+            addMessage({
+                content: <p>"Which murderers?".<Pause ms={SHORT_PAUSE * 1.5} /> She is evidently frustrated by the hypotheticals at play</p>,
+                performer: performers[PerformerNames.MARI],
+                includeContinuePrompt: true
+            });
 
+            prisonIntroduction();
+        }
+
+        return [
+            {
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>"And yet it does happen" Leopald refutes<Pause ms={SHORT_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    followup();
+                },
+                shorthandContent: <p>"I do not believe that it's in our nature to kill one another"</p>,
+                performer: playerPerformer
+            },
+            {
+                includeContinuePrompt: true,
+                selectFollowup: followup,
+                shorthandContent: <p>"Should we not try to prevent murder from happening by targetting its' causes?"</p>,
+                performer: playerPerformer
+            },
+            {
+                content: <p>"And what would we do with these 'murderers'"?<Pause ms={SHORT_PAUSE * 1.5} /></p>,
+                includeContinuePrompt: true,
+                selectFollowup: prisonIntroduction,
+                shorthandContent: <p>"And what would we do with these 'murderers'"?</p>,
+                performer: playerPerformer
+            }
         ]
     }
 
     const prisonIntroduction = () => {
-        
+        addMessage({
+            content: (
+                <>
+                <p>"When I woke I was in a collosal building, called <b>'{world.name} Prison'</b>.<Pause ms={SHORT_PAUSE} /></p>
+                <p>"Myself and others, we were dressed the same.<Pause ms={SHORT_PAUSE * 0.75} /> We were armed, and <Pace ms={SLOW_PACE * 3}>I think</Pace> that our purpose was to keep people locked inside"</p>
+                </>  
+            ),
+            performer: performers[PerformerNames.CRAIG],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"I was a prisoner there"<Pause ms={SHORT_PAUSE} /></p>
+                <p>"<em>Human beings</em> locked into tiny cells"<Pause ms={SHORT_PAUSE} /></p>
+                <p>"It makes me feel sick"<Pause ms={SHORT_PAUSE * 0.5} /></p>
+                </>  
+            ),
+            performer: performers[PerformerNames.ANDREW],
+            getResponses: () => [
+                {
+                    shorthandContent: <p>"How did you get out?"</p>,
+                    performer: playerPerformer,
+                    selectFollowup: () => {
+                        addMessage({
+                            content: <p>"Some of the guards let us out"</p>,
+                            performer: performers[PerformerNames.ANDREW],
+                            includeContinuePrompt: true
+                        });
+
+                        prisonIntroductionPartTwo();
+                    }
+                },
+                {
+                    content: <></>,
+                    shorthandContent: <p>[Say Nothing]</p>,
+                    performer: playerPerformer,
+                    selectFollowup: prisonIntroductionPartTwo
+                }
+            ]
+        });
+    }
+
+    const prisonIntroductionPartTwo = () => {
+        addMessage({
+            content: (
+                <>
+                <p>A look of anger flashes across his face.<Pause ms={SHORT_PAUSE} /></p>
+                <p>"The prisoners were locked away for the good of society.<Pause ms={SHORT_PAUSE * 0.3} /> And for their <Pace ms={SLOW_PACE * 3}><em>own</em> good</Pace><Pause ms={SHORT_PAUSE * 0.1} />, too.<Pause ms={SHORT_PAUSE} /></p>
+                <p>"You should have been confirmed as <b>rehabilitated</b> before you were allowed to rejoin society"</p>
+                </>  
+            ),
+            performer: performers[PerformerNames.CRAIG],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"I don't see how any of that could have been for my own good."<Pause ms={SHORT_PAUSE} /></p>
+                <p>"And I'm <em>not</em> going back in there"<Pause ms={SHORT_PAUSE} /></p>
+                <Text color={INTUITION_COLOUR}>There is much distress in his voice</Text>
+                </>  
+            ),
+            performer: performers[PerformerNames.ANDREW],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>Many of the Agora members attempt to relieve the tension, and express sympathy with either view.<Pause ms={SHORT_PAUSE * 2} /></p>,
+            performer: playerPerformer
+        })
+
+        addMessage({
+            content: <p>"Perhaps they were not <Pace ms={SLOW_PACE * 3}><em>always</em></Pace> right then, clearly.<Pause ms={SHORT_PAUSE} /> But neither surely were they <Pace ms={SLOW_PACE * 3}><em>always</em></Pace> wrong?"</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            getResponses: prisonResolutionChoices
+        });
+    }
+
+    const prisonResolutionChoices = () => {
+        return [
+            {
+                shorthandContent: <p>"The prison was primarily a tool of oppression"</p>,
+                performer: playerPerformer,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>"Yes.<Pause ms={SHORT_PAUSE * 0.8} /> The <b>old ways</b> are something to be overcome"</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    prisonAbolition();
+                },
+                sideEffect: () => {
+                    addRelationship(PerformerNames.MARI, buildRelationshipObject(Relationships.TRUST, 1));
+                    addRelationship(PerformerNames.ANDREW, buildRelationshipObject(Relationships.TRUST, 1));
+                    addRelationship("self", buildRelationshipObject(SelfIdentityLabels.REVOLUTIONARY, 2));
+                    addRelationship(PerformerNames.DOUGLAS, buildRelationshipObject(Relationships.HOPE_SURROGATE, -1));
+                    addRelationship(PerformerNames.RUPERT, buildRelationshipObject(Relationships.TRUST, -1));
+                }
+            },
+            {
+                shorthandContent: <p>"The prison was not necessary, it was cruel"</p>,
+                performer: playerPerformer,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <Text color={INTUITION_COLOUR}><em>Andrew visibly appreciates your solidarity</em></Text>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true
+                    });
+
+                    prisonAbolition();
+                },
+                sideEffect: () => {
+                    addRelationship(PerformerNames.ANDREW, buildRelationshipObject(Relationships.TRUST, 2));
+                    addRelationship("self", buildRelationshipObject(SelfIdentityLabels.REVOLUTIONARY, 1));
+                }
+            },
+            {
+                content: (
+                    <>
+                    <p>"We do not need a prison.<Pause ms={SHORT_PAUSE * 0.5} /> We can resolve conflicts collectively"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"Locking someone up only serves to alienate them from society further.<Pause ms={SHORT_PAUSE * 0.5} /> It's sweeping a problem under the rug, instead of dealing with it"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"Before we build this kind of system, we should ask ourselves<Pace ms={SLOW_PACE * 3}>...</Pace><Pause ms={SHORT_PAUSE * 0.3} /> what do we want it to achieve?"</p>
+                    </>
+                ),
+                shorthandContent: <p>"We do not need a prison. We can resolve conflicts collectively"</p>,
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>Andrew is the first to make a suggestion.<Pause ms={SHORT_PAUSE * 1.2} /> "It should be <em>restorative</em> as much as possible<Pause ms={SHORT_PAUSE * 0.5} />, focussed on allowing me to repair the relationships I may have damaged"</p>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"It should be focussed on <Pace ms={SLOW_PACE * 4}><em>preventing</em></Pace> the behaviour from happening again"</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>Other suggestions are made by many in the discussion</p>,
+                        performer: performers[PerformerNames.ALICIA]
+                    });
+
+                    addMessage({
+                        content: <p>Douglas has started to take notes</p>,
+                        performer: performers[PerformerNames.DOUGLAS],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p><Pace ms={SLOW_PACE * 3}>"...</Pace>Decisions will be made collectively and based on consent<Pace ms={SLOW_PACE * 3}>...</Pace> with a circle being delegated to <em>implement</em> the process."</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+                    
+                    addMessage({
+                        content: <p>This is found to be acceptable by the majority of the agora.<Pause ms={SHORT_PAUSE} /> Andrew and several others volunteered to be a part of this circle<Pause ms={SHORT_PAUSE * 0.8} />, their actions under the supervision and authority of the agora as a whole.</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>Leopald is at first adamently opposed to the suggestions<Pace ms={SLOW_PACE * 3}>...</Pace> when all of a sudden he is convinced.</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"Yes, yes<Pace ms={SLOW_PACE * 3}>...</Pace> I see the value in what you are saying now, {PerformerNames.MARI}"<Pause ms={SHORT_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    addMessage({
+                        content: <p>"And the body which you are leading, Andrew, will be responsible for establishing our new<Pace ms={SLOW_PACE * 3}>...</Pace> <em>egalitarian</em> infrastructure"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"And naturally, of course, another body will be needed to<Pace ms={SLOW_PACE * 3}>...</Pace> <em>enforce</em> our new regime"<Pause ms={SHORT_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    addMessage({
+                        content: <p>"To deal with those who would oppose us.<Pause ms={SHORT_PAUSE} /> To protect ourselves"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    if(world[World.RULER] == PerformerNames.RUPERT) attemptAbolishPrisonRupertKing();
+                    else organisedViolenceDilemma();
+                },
+                sideEffect: () => {
+                    setWorldItem(World.PRISON, PrisonStates.RESTORATIVE)
+                }
+            },
+            {
+                content: (
+                    <>
+                    <p>"The old ways were necessarily cruel<Pace ms={SLOW_PACE * 3}>...</Pace> or else prison would not have been an effective detterant"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"Clearly at least an <em>element</em> of our nature is sinful"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"To shape the society that we wish to live in we must punish wrongdoing and reward goodness"</p>
+                    </>
+                ),
+                includeContinuePrompt: true,
+                shorthandContent: <p>"We should replace the prison with something more focussed on <em>reform</em>"</p>,
+                performer: playerPerformer,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <Text color={INTUITION_COLOUR}>You feel a little tense about your use of the word cruel</Text>,
+                        performer: playerPerformer,
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.ANDREW, buildRelationshipObject(Relationships.TRUST, -1));
+                            addRelationship(PerformerNames.LEOPALD, buildRelationshipObject(Relationships.TRUST, 1));
+                        },
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"The old society<Pace ms={SLOW_PACE * 3}>...</Pace> used to reward goodness?<Pause ms={SHORT_PAUSE} /> Did you see this in the history books, Leopald?<Pause ms={SHORT_PAUSE * 0.6} /> Could you tell use more?"</p>,
+                        performer: performers[PerformerNames.DOUGLAS],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"I<Pace ms={SLOW_PACE * 3}>...</Pace> er<Pace ms={SLOW_PACE * 3}>...</Pace> I don't know if I could say for definite.<Pause ms={SHORT_PAUSE * 0.6} /> As I say, I just skimmed the pages.<Pause ms={SHORT_PAUSE} /> I believe this was always their aim"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true,
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.DOUGLAS, buildRelationshipObject(Relationships.HOPE_SURROGATE, 1));
+                        }
+                    });
+
+                    addMessage({
+                        content: <p>"You <em>believe?</em><Pause ms={SHORT_PAUSE} /> So you don't know"</p>,
+                        performer: performers[PerformerNames.MARI],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: (
+                            <>
+                            <p>"What else would their aim be?<Pause ms={SHORT_PAUSE * 0.6} /> It's our aim, isn't it?"</p><Pause ms={SHORT_PAUSE} />
+                            <Text color={INTUITION_COLOUR}>He seems a little irritated</Text>
+                            </>
+                        ),
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"I think that the prison might not <Pace ms={SLOW_PACE * 4}><em>always</em></Pace> be necessary, perhaps we can use it sparingly"<Pause ms={LONG_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    addMessage({
+                        content: <p>"But it can be a powerful tool, in order to shape <em>our citizens</em> to be the way we want them to be"<Pause ms={LONG_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"Naturally<Pace ms={SLOW_PACE * 3}>...</Pace> it will require enforcement - such that we form a <b>state</b><Pause ms={SHORT_PAUSE} />, capable of pursuing - and protecting - our <b>utopian vision</b>"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    if(world[World.RULER] == PerformerNames.RUPERT) attemptAbolishPrisonRupertKing();
+                    else organisedViolenceDilemma();
+                },
+                sideEffect: () => {
+                    setWorldItem(World.PRISON, PrisonStates.REFORM);
+                }
+            },
+            {
+                content: <p>"Within each of us is a <b>beast</b>.<Pause ms={LONG_PAUSE} /> We are <b>selfish</b><Pause ms={SHORT_PAUSE * 0.4} />, <b>sinful</b> beings always seeking to maximise our own gain<Pause ms={SHORT_PAUSE * 0.4} />, and we have a great proclivity to violence"</p>,
+                shorthandContent: <p>"The prison was absolutely necessary, it is a <em>deterrant</em>"</p>,
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>"We <em>must</em> use the prison, to ensure <b>order</b>.<Pause ms={SHORT_PAUSE * 0.5} /> Without it would be chaos"</p>,
+                        performer: playerPerformer,
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>Leopald is nodding emphatically<Pause ms={LONG_PAUSE} /></p>,
+                        performer: performers[PerformerNames.LEOPALD]
+                    });
+
+                    addMessage({
+                        content: <p>Andrew and Mari are significantly less pleased</p>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true,
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.ANDREW, buildRelationshipObject(Relationships.TRUST, -1));
+                            addRelationship(PerformerNames.MARI, buildRelationshipObject(Relationships.TRUST, -3));
+                        }
+                    });
+
+                    addMessage({
+                        content: <p><Pace ms={SLOW_PACE * 3}>.....</Pace>Your arguments sway the agora.<Pause ms={SHORT_PAUSE} /> The prison is here to stay!</p>,
+                        performer: performers[PerformerNames.ANDREW],
+                        includeContinuePrompt: true
+                    });
+
+                    addMessage({
+                        content: <p>"And this, of course<Pause ms={SHORT_PAUSE * 0.2} />, implies that we must create a <b>strong state</b> capable of maintaining order"</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true,
+                        selectFollowup: organisedViolenceDilemma
+                    });
+                },
+                sideEffect: () => {
+                    setWorldItem(World.PRISON, PrisonStates.DETERRANT);
+                    addRelationship(PerformerNames.LEOPALD, buildRelationshipObject(Relationships.TRUST, 1));
+                    addRelationship("self", buildRelationshipObject(Values.ORDER, 2));
+                }
+            }
+        ];
+    }
+
+    const prisonAbolition = () => {
+        addMessage({
+            content: <p>"We should try to resolve all of our issues face-to-face"<Pause ms={LONG_PAUSE} /></p>,
+            performer: playerPerformer
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"We should focus on restorative justice<Pause ms={SHORT_PAUSE * 0.3} />, and on solving the issues which cause transgressions"<Pause ms={LONG_PAUSE * 0.8} /></p>
+                <p>"If it comes to it<Pause ms={SHORT_PAUSE * 0.3} />, we can discuss transgressions and punishments collectively to find solutions"</p>
+                </>
+            ),
+            performer: playerPerformer,
+            sideEffect: () => {
+                addRelationship("self", buildRelationshipObject(SelfIdentityLabels.REVOLUTIONARY, 2));
+            },
+            includeContinuePrompt: true
+        });
+
+        if(world[World.RULER] == PerformerNames.RUPERT) attemptAbolishPrisonRupertKing();
+        else prisonAbolitionResolved();
+    }
+
+    const attemptAbolishPrisonRupertKing = () => {
+        addMessage({
+            content: <p>"The prison will <em>not</em> be abolished.<Pause ms={SHORT_PAUSE * 0.5} /> Or reformed, for that matter. Your king has thus spoken"<Pause ms={SHORT_PAUSE} /></p>,
+            performer: performers[PerformerNames.RUPERT],
+            getResponses: () => [
+                {
+                    content: (
+                        <>
+                        <p>You bow low and make exaggerated apologies for your myopic imprudence.<Pause ms={SHORT_PAUSE} /></p>
+                        <p>Rupert appreciates this greatly and he tips his head as a token of his forgiveness.</p>
+                        </>
+                    ),
+                    performer: playerPerformer,
+                    shorthandContent: <p>[Accept the King's decision]</p>,
+                    sideEffect: () => {
+                        //~ rupert_trusting += 1
+                        //~ player_loyal_to_rupert = true
+                    },
+                    selectFollowup: () => {
+                        addMessage({
+                            content: <p>"My liege" Leopald begins<Pause ms={SHORT_PAUSE * 0.6} />, kneeling and bowing his head in reverance.<Pause ms={SHORT_PAUSE * 1.75} /></p>,
+                            performer: performers[PerformerNames.LEOPALD]
+                        });
+
+                        addMessage({
+                            content: <p><em>He is mimicking my action</em>, you realise</p>,
+                            performer: playerPerformer,
+                            includeContinuePrompt: true
+                        });
+
+                        leopaldImprisonDissidents();
+                    }
+                },
+                //TODO: turning Rupert into a cat? Trying to say no and failing?
+            ]
+        });
+    }
+
+    const prisonAbolitionResolved = () => {
+        addMessage({
+            content: <p>Leopald eyes each of you coldly<Pause ms={SHORT_PAUSE * 0.3} />, but he does not speak for a long while.<Pause ms={LONG_PAUSE} /></p>,
+            performer: performers[PerformerNames.LEOPALD]
+        });
+
+        addMessage({
+            content: <p>The others are anticipating what he might say.</p>,
+            performer: performers[PerformerNames.MARI],
+            includeContinuePrompt: true,
+            selectFollowup: leopaldInsistsOnStatehood
+        });
+    }
+
+    const leopaldInsistsOnStatehood = () => {
+        addMessage({
+            content: <p>"My comrades and peers<Pause ms={SHORT_PAUSE * 0.3} />, I share in your vision of creating a utopian society.<Pause ms={SHORT_PAUSE * 0.4} /> Really I do"</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"I felt that a prison apparatus would be necessary it is true<Pause ms={SHORT_PAUSE * 0.5} />, necessary to protect our vision from those who would do it ill"</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"But there is a greater threat to us than the sin of individuals<Pace ms={SLOW_PACE * 2}>...</Pace> and that is the threat of <b>armed gangs</b>"</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>"What is the worth of all we will build<Pause ms={SHORT_PAUSE * 0.5} />, if someone decided to <em>take</em> it from us?"<Pause ms={LONG_PAUSE} /></p>,
+            performer: performers[PerformerNames.LEOPALD]
+        });
+
+        addMessage({
+            content: <p>"Naturally<Pace ms={SLOW_PACE * 3}>...</Pace> - and to protect ourselves<Pause ms={SHORT_PAUSE * 0.5} /> - it is imperative that we form our own armed group<Pause ms={SHORT_PAUSE * 0.5} /> - a <b>state</b><Pause ms={SHORT_PAUSE * 0.3} /> - staffed by our trustworthy Utopianists. <Pause ms={SHORT_PAUSE} />Capable of protecting our vision"</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true,
+            sideEffect: () => setWorldItem(World.PRISON, PrisonStates.ABOLISHED),
+            selectFollowup: organisedViolenceDilemma
+        });
+    }
+
+    const leopaldImprisonDissidents = () => {
+
+    }
+
+    const organisedViolenceDilemma = () => {
+        addMessage({
+            content: <p>"What say you?!"<Pause ms={SHORT_PAUSE} /></p>,
+            performer: performers[PerformerNames.LEOPALD],
+            getResponses: () => {
+                let choices = [];
+
+                if(world[World.GOVERNANCE] == GovernanceStates.AGORA) {
+                    choices.push({
+                        content: (
+                            <>
+                            <p>"There are times when violence is necessary<Pause ms={SHORT_PAUSE * 0.7} />, for example in self-defence it is justified"</p>
+                            </>
+                        ),
+                        performer: playerPerformer,
+                        shorthandContent: <p>"Violence is justifiable out of necessity, but organised violence would hamper the freedom of our agora"</p>,
+                        selectFollowup: () => {
+                            addMessage({
+                                content: (
+                                    <>
+                                    <p>"But this simple fact does not mean that we will abandon our dreams of a direct democracy without tyranny"<Pause ms={SHORT_PAUSE * 1.5} /></p>
+                                    <p>"The agora is the <em>only</em> state apparatus that we need"</p>
+                                    </>
+                                ),
+                                performer: playerPerformer,
+                                includeContinuePrompt: true
+                            });
+
+                            coupDilemma();
+                        }
+                    });
+                }
+
+                choices.push({
+                    sideEffect: () => setWorldItem(World.ARMOURY_DESTROYED, true),
+                    shorthandContent: <p>"We must destroy the armoury, lest it become a <b>threat</b> to our nonviolent utopia!"</p>,
+                    performer: playerPerformer,
+                    selectFollowup: coupDilemma
+                });
+
+                choices.push({
+                    content: <p>"I believe that Leopald is right in the need of an established state<Pause ms={SHORT_PAUSE * 0.5} />, to protect us from the threat of <b>mob rule</b>"</p>,
+                    shorthandContent: <p>Violence is exclusively the right of an estbalished state which will be kept in check by representation</p>,
+                    performer: playerPerformer,
+                    selectFollowup: () => {
+                        //TODO: Mari speaks here
+                        //"What makes this 'state' any different from any other armed mob?!" Mari demands
+
+                        coupDilemma();
+                    }
+                });
+
+                return choices
+            }
+        });
+    }
+
+    const coupDilemma = () => {
+
     }
 
     let content = null;

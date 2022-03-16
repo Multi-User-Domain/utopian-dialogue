@@ -25,7 +25,9 @@ export enum ReligiousIdeals {
 
 export enum PrisonStates {
     ABOLISHED = "abolished",
-    DETERRANT = "deterrant"
+    DETERRANT = "deterrant",
+    REFORM = "reform",
+    RESTORATIVE = "restorative",
 }
 
 export interface ILocation {
