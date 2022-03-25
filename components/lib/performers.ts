@@ -10,8 +10,10 @@ export enum PerformerNames {
     CRAIG="Craig",
     DEVELOPER="Developer",
     DOUGLAS="Douglas",
+    ELENI="Eleni",
     FRANCIS="Francis",
     GUILLAME="Guillame",
+    HEINRICH="Heinrich",
     LEOPALD="Leopald",
     MARI="Mari",
     RUPERT="Rupert",
@@ -65,6 +67,10 @@ export const performers: {[key: string]: IPerformer} = {
         name: PerformerNames.DOUGLAS,
         imgSrc: "../../../public/img/douglas.webp",
     },
+    [PerformerNames.ELENI]: {
+        name: PerformerNames.ELENI,
+        imgSrc: "../../../public/img/eleni.webp",
+    },
     [PerformerNames.FRANCIS]: {
         name: PerformerNames.FRANCIS,
         imgSrc: "../../../public/img/francis.webp",
@@ -72,6 +78,10 @@ export const performers: {[key: string]: IPerformer} = {
     [PerformerNames.GUILLAME]: {
         name: PerformerNames.GUILLAME,
         imgSrc: "../../../public/img/guillame.webp",
+    },
+    [PerformerNames.HEINRICH]: {
+        name: PerformerNames.HEINRICH,
+        imgSrc: "../../../public/img/heinrich.webp",
     },
     [PerformerNames.LEOPALD]: {
         name: PerformerNames.LEOPALD,
