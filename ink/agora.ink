@@ -820,10 +820,12 @@ INCLUDE relationships.ink
     
     -> coup_dilemma
    * "Let us instead empty the armoury to arm the mob!"
-     "There will be no <b>armed minority</b>, because instead we will arm the <b>majority</b>! There will never be a <b>coup</b>, because we will <b>outgun</b> them!"
+     "There will be no <b>armed minority</b>, because instead we will arm the <b>majority</b>! There will never be another <b>coup</b>, because we will always <b>outgun</b> them!"
+     "Hurrah!" Andrew cheers
+     
      "Long live the People! May their aim be ever true!"
      
-     "Hurrah!" Andrew cheers. He is emphatically in agreement with your aims. { governance == "agora": Most of the others seem less sure, but you are betting that your armed 'mob' will carry enough to take over }
+     Some it is clear are emphatically in agreement with your aims. { governance == "agora": Most of the others seem less sure, but you are betting that your armed 'mob' will carry enough to carry the day }
      
      -> coup_dilemma
     
@@ -857,7 +859,7 @@ INCLUDE relationships.ink
     "I don't believe you could find <b>ONE</b> fool to follow you Leopald, let alone a dozen!"
     
     Leopald is looking at you from behind a poker face
-    "Arsene" he requests at a raised voice
+    "Arsene". His voice is raised
     
     A man steps out from beyond the bush, he is carrying a carbine rifle
     You feel a lump in the back of your throat
@@ -908,6 +910,7 @@ INCLUDE relationships.ink
     
     Leopald glances at you nervously, as if reading your mind
     "There are many more of us!" he announces. "Those of you who comply will be amply rewarded. Resist and you will be crushed"
+    
     He looks about the faces in the crumbling Agora
     "We will be reinstating the police force, and returning them to their former prestige"
     { douglas_hope_represent <= 0: "We will be restoring the order and rationality of the <em>Old World</em>" }

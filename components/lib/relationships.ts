@@ -13,6 +13,7 @@ export enum Relationships {
     IMPRISONED="imprisoned",
     KIND="kind",
     KING="king",
+    MINION="minion",
     NOSTALGIA="nostalgia",
     TERRIFIED="terrified",
     TRUST="trust",

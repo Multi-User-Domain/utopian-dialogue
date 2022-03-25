@@ -1935,12 +1935,82 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     shorthandContent: <p>Violence is exclusively the right of an estbalished state which will be kept in check by representation</p>,
                     performer: playerPerformer,
                     selectFollowup: () => {
-                        //TODO: Mari speaks here
-                        //"What makes this 'state' any different from any other armed mob?!" Mari demands
+                        
+                        addMessage({
+                            content: <p>"What makes this 'state' any different from any other armed mob?!"</p>,
+                            performer: performers[PerformerNames.MARI],
+                            includeContinuePrompt: true,
+                            sideEffect: () => addRelationship(PerformerNames.MARI, buildRelationshipObject(Relationships.TRUST, -1))
+                        });
+
+                        addMessage({
+                            content: <p>"<b>Representation</b>"<Pause ms={LONG_PAUSE} /></p>,
+                            performer: playerPerformer
+                        });
+
+                        addMessage({
+                            content: <p>"The armed group will be <b>organised</b><Pause ms={SHORT_PAUSE * 0.75} />, and structured on discipline and <b>self-restraint</b>.<Pause ms={SHORT_PAUSE} /> We will vote from those among us who will represent us in the leadership positions of this organisation<Pause ms={SHORT_PAUSE} />, and in so doing we'll keep it in check"</p>,
+                            performer: playerPerformer,
+                            includeContinuePrompt: true
+                        });
+
+                        addMessage({
+                            content: <p>As the majority think over your proposition<Pause ms={SHORT_PAUSE * 0.75} />, it seems to be becoming popular.</p>,
+                            performer: playerPerformer,
+                            includeContinuePrompt: true,
+                            sideEffect: () => {
+                                setWorldItem(World.GOVERNANCE, GovernanceStates.REPRESENTATIVE_DEMOCRACY);
+                                setWorldItem(World.RULER, null);
+                            }
+                        });
+
+                        addMessage({
+                            content: <p>It soon surfaces that Leopald in particular is not content.</p>,
+                            performer: performers[PerformerNames.LEOPALD],
+                            includeContinuePrompt: true
+                        });
 
                         coupDilemma();
                     }
                 });
+
+                choices.push({
+                    content: (
+                        <>
+                        <p>"There will be no <b>armed minority</b><Pause ms={SHORT_PAUSE * 0.5} />, because instead we will arm the <b>majority</b>!</p><Pause ms={LONG_PAUSE} />
+                        <p>"There will never be another <b>coup</b><Pause ms={SHORT_PAUSE * 0.5} />, because we will always <b>outgun</b> them!"</p>
+                        </>
+                    ),
+                    shorthandContent: <p>"Let us instead empty the armoury to arm the mob!"</p>,
+                    performer: playerPerformer,
+                    includeContinuePrompt: true,
+                    selectFollowup: () => {
+
+                        addMessage({
+                            content: <p>"Hurrah!" Andrew cheers<Pause ms={LONG_PAUSE} /></p>,
+                            performer: performers[PerformerNames.ANDREW]
+                        });
+    
+                        addMessage({
+                            content: <p>"Long live the People! May their aim be ever true!"</p>,
+                            performer: performers[PerformerNames.AXEL],
+                            includeContinuePrompt: true
+                        });
+
+                        addMessage({
+                            content: (
+                                <>
+                                <p>Some it is clear are emphatically in agreement with your aims.</p><Pause ms={LONG_PAUSE} />
+                                <p>Most of the others seem less sure<Pause ms={SHORT_PAUSE * 0.5} />, but you are betting that your armed 'mob' will carry enough to carry the day</p>
+                                </>
+                            ),
+                            performer: performers[PerformerNames.ANDREW],
+                            includeContinuePrompt: true
+                        });
+
+                        coupDilemma();
+                    }
+                })
 
                 return choices
             }
@@ -1948,6 +2018,304 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const coupDilemma = () => {
+        addMessage({
+            content: (
+                <Container className={colourFadeAnimationCss("black", "red", 5)}>
+                    <p>"I already left for the <b>arsenal</b> this morning" {PerformerNames.LEOPALD} reveals..</p><Pause ms={SHORT_PAUSE} />
+                    <p>"I went with some <Pace ms={SLOW_PACE * 0.4}><b>likeminded individuals</b></Pace>, and we armed ourselves <Pace ms={SLOW_PACE * 0.4}>to the </Pace><Pace ms={SLOW_PACE * 0.35}>teeth</Pace>. <Pause ms={SHORT_PAUSE} />These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"</p>
+                </Container>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>You notice a rustling in the bushes<Pause ms={LONG_PAUSE * 1.5} /></p>,
+            performer: performers[PerformerNames.ARSENE]
+        });
+
+        addMessage({
+            content: (
+                <Container color="red">
+                    <p>"The utopia we wish to build must be built on virtue <Pace ms={SLOW_PACE * 0.6}><em>and</em></Pace> terror, in equal measure"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"Will you stand in our way, and fall by the sword of virtue, or repent,<Pause ms={SHORT_PAUSE * 0.75} /> and live?!"<Pause ms={LONG_PAUSE * 0.5} /></p>
+                </Container>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            getResponses: () => [
+                {
+                    content: <p>So then.. you are surrounded<Pause ms={SHORT_PAUSE * 0.75} /></p>,
+                    shorthandContent: <p>You believe Leopald has an armed force in waiting</p>,
+                    performer: performers[PerformerNames.ARSENE],
+                    getResponses: leopaldHasYouSurrounded
+                },
+                {
+                    content: (
+                        <>
+                        <p>You scoff.<Pause ms={SHORT_PAUSE * 0.5} /> "Oh yeah?!"</p><Pause ms={SHORT_PAUSE} />
+                        <p>"I don't believe you could find <Pace ms={SLOW_PACE * 3}><b>ONE</b></Pace> fool to follow you Leopald<Pause ms={SHORT_PAUSE * 0.25} />, let alone a dozen!"</p>
+                        </>
+                    ),
+                    shorthandContent: <p>You are sure that Leopald is bluffing</p>,
+                    performer: playerPerformer,
+                    includeContinuePrompt: true,
+                    selectFollowup: () => {
+                        addMessage({
+                            content: <p>Leopald is looking at you from behind a poker face</p>,
+                            performer: performers[PerformerNames.LEOPALD],
+                            includeContinuePrompt: true
+                        });
+
+                        addMessage({
+                            content: <p>"{PerformerNames.ARSENE}". His voice is raised</p>,
+                            performer: performers[PerformerNames.LEOPALD],
+                            includeContinuePrompt: true
+                        });
+
+                        addMessage({
+                            content: <p>A man steps out from beyond the bush<Pause ms={SHORT_PAUSE * 0.5} />, he is carrying a carbine rifle.<Pause ms={SHORT_PAUSE} /></p>,
+                            performer: performers[PerformerNames.ARSENE]
+                        });
+
+                        addMessage({
+                            content: <p>You feel a lump in the back of your throat.<Pause ms={LONG_PAUSE} /></p>,
+                            performer: playerPerformer,
+                            getResponses: () => [{
+                                content: <p>"What does <b>one man</b> prove?!<Pause ms={SHORT_PAUSE * 0.75} /> Even with a rifle.<Pause ms={LONG_PAUSE} /> I could take him"</p>,
+                                shorthandContent: <p>One man.. well that doesn't prove anything</p>,
+                                performer: playerPerformer,
+                                includeContinuePrompt: true,
+                                selectFollowup: () => {
+                                    if(hasRelationshipPair(PerformerNames.BURLY, Relationships.MINION)) {
+                                        addMessage({
+                                            content: <p>"You could take him boss"</p>,
+                                            performer: performers[PerformerNames.BURLY],
+                                            includeContinuePrompt: true
+                                        });
+
+                                        addMessage({
+                                            content: <p>"Yeah<Pause ms={SHORT_PAUSE * 0.5} />, I could take him."</p>,
+                                            performer: playerPerformer,
+                                            includeContinuePrompt: true
+                                        });
+                                    }
+
+                                    addMessage({
+                                        content: <p>"Would you like to try?" the gruesome looking man asks.<Pause ms={SHORT_PAUSE} /> Something about the way he says it is quite intense</p>,
+                                        performer: performers[PerformerNames.ARSENE],
+                                        includeContinuePrompt: true
+                                    });
+
+                                    playerSilent();
+                                }
+                            },
+                            {
+                                content: <Text color={INTUITION_COLOUR}><em>OK, he might be telling the truth</em></Text>,
+                                shorthandContent: <p>OK, he might be telling the truth</p>,
+                                performer: playerPerformer,
+                                getResponses: leopaldHasYouSurrounded
+                            }]
+                        });
+                    }
+                }
+            ]
+        });
+    }
+
+    const leopaldHasYouSurrounded = () => {
+        let choices: IMessage[] = [
+            {
+                content: (
+                    <>
+                    <p>You are willing with great ferocity to speak<Pause ms={SHORT_PAUSE * 0.5} />, the energy builds and builds until finally the words burst from your lips<Pace ms={SLOW_PACE}>...</Pace></p>
+                    <p>"Have mercy!"</p>
+                    </>
+                ),
+                shorthandContent: <p>There's only one thing for it (PANIC)</p>,
+                performer: playerPerformer,
+                sideEffect: () => addRelationship("self", buildRelationshipObject(SelfIdentityLabels.COURAGEOUS, -3)),
+                selectFollowup: playerSilent
+            }
+        ];
+
+        if (hasRelationshipStrongerThan("self", SelfIdentityLabels.COURAGEOUS, 0)) {
+            choices.push({
+                content: (
+                    <>
+                    <p><Text color={INTUITION_COLOUR}><em>"I'm not scared!"</em></Text> you tell yourself convincingly.<Pause ms={LONG_PAUSE} /></p>
+                    <p>"I'm not scared of you!"</p>
+                    </>
+                ),
+                shorthandContent: <p>You're not scared!</p>,
+                performer: playerPerformer,
+                includeContinuePrompt: true,
+                selectFollowup: () => {
+                    addMessage({
+                        content: <p>Leopald is looking at you with a sort of gleeful look of a toddler<Pause ms={SHORT_PAUSE * 0.5} />, he is thoroughly enjoying your defiance and it has taken him by surprise</p>,
+                        performer: performers[PerformerNames.LEOPALD],
+                        includeContinuePrompt: true
+                    });
+
+                    playerSilent();
+                }
+            });
+        }
+
+        choices.push({
+            shorthandContent: <p>Your face goes a ghostly white. You remain still as stone</p>,
+            performer: playerPerformer,
+            selectFollowup: playerSilent
+        });
+        
+        choices.push({
+            shorthandContent: <p>You remain silent, stoicly</p>,
+            performer: playerPerformer,
+            sideEffect: () => addRelationship("self", buildRelationshipObject(SelfIdentityLabels.COURAGEOUS, 1)),
+            selectFollowup: playerSilent
+        });
+
+        return choices;
+    }
+    
+    const playerSilent = () => {
+        addMessage({
+            content: <p>{PerformerNames.MARI} has turned on her heels and ran away.<Pause ms={SHORT_PAUSE} /> {PerformerNames.LEOPALD} laughs smugly as she runs<Pause ms={LONG_PAUSE} /></p>,
+            performer: performers[PerformerNames.MARI]
+        });
+
+        addMessage({
+            content: <p>He licks his lips{hasRelationshipPair("self", SelfIdentityLabels.HAS_GREENSIGHT) ? <Text color={INTUITION_COLOUR}>He has been eager for this moment<Pause ms={SHORT_PAUSE * 0.6} />, he is revelling in it</Text> : null}</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>{PerformerNames.LEOPALD}'s co-conspirators have begun to step out from the line of bushes.<Pause ms={SHORT_PAUSE} /> You count seven in total<Pause ms={LONG_PAUSE} /></p>,
+            performer: performers[PerformerNames.ELENI]
+        });
+
+        addMessage({
+            content: <p><em>A coup, with seven soldiers?!</em> you wonder</p>,
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>Leopald glances at you nervously, as if reading your mind</p><Pause ms={SHORT_PAUSE} />
+                <p>"There are many more of us!" he announces.<Pause ms={SHORT_PAUSE} /> "Those of you who comply will be amply rewarded.<Pause ms={SHORT_PAUSE} /> Resist and you will be crushed"</p>
+                </>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>He looks about the faces in the crumbling Agora</p><Pause ms={SHORT_PAUSE} />
+                <p>"We will be reinstating the police force<Pause ms={SHORT_PAUSE * 0.5} />, and returning them to their former prestige"</p>
+                {hasRelationshipWeakerThan(PerformerNames.DOUGLAS, Relationships.HOPE_SURROGATE, 0) ? <p><Pause ms={SHORT_PAUSE} />"We will be restoring the order and rationality of the <Pace ms={SLOW_PACE * 3}><em>Old World</em></Pace>"</p> : null}
+                </>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>He turns to face you now.<Pause ms={SHORT_PAUSE} /> "{playerPerformer.name}<Pause ms={SHORT_PAUSE * 0.2} />, you are under arrest<Pause ms={SHORT_PAUSE * 0.2} />, for your crimes against the Big City Republic"</p><Pause ms={SHORT_PAUSE} />
+                <p>"Round up the other <b>troublemakers</b> and throw them in the prison" he commands the soldiers</p><Pause ms={SHORT_PAUSE * 1.3} />
+                <p>"We'll decide what to do with them later"</p>
+                </>
+            ),
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>A soldier grabs you by your arm and roughly jerks you in front of him, his rifle to your back.</p>,
+            performer: performers[PerformerNames.ARSENE],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>Another ties your wrists together.</p><Pause ms={SHORT_PAUSE} />
+                <p>They drive you from the agora and through the park, to the gates.</p><Pause ms={LONG_PAUSE} />
+                </>
+            ),
+            performer: performers[PerformerNames.ELENI]
+        });
+        
+        addMessage({
+            content: <p>Andrew is taken prisoner as well<Pause ms={SHORT_PAUSE * 0.5} />, you are dimly aware</p>,
+            performer: performers[PerformerNames.ANDREW],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>By the gates there are two more armed guards.<Pause ms={SHORT_PAUSE} /> They watch on nervously as a crowd is gathering outside. {hasRelationshipPair("self", SelfIdentityLabels.HAS_GREENSIGHT) ? <Text color={INTUITION_COLOUR}><Pause ms={LONG_PAUSE} />It seems that word has been spreading</Text> : null }</p>,
+            performer: performers[PerformerNames.HEINRICH],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>"Disperse!" he shouts into a crowd that does not hear him.</p><Pause ms={SHORT_PAUSE * 1.2} />
+                <p>"Disperse!"</p>
+                </>
+            ),
+            performer: performers[PerformerNames.ARSENE],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>A troop approaches over the horizon, making a lot of noise.<Pause ms={SHORT_PAUSE * 1.2} /> You cannot see how many there are, maybe three dozen<Pause ms={LONG_PAUSE} /></p>,
+            performer: performers[PerformerNames.ZOE]
+        });
+
+        addMessage({
+            content: <p>They are calling people onto the street to join them<Pause ms={SHORT_PAUSE} />, and they're full of energy</p>,
+            performer: performers[PerformerNames.ZOE],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>You spot {PerformerNames.MARI} at the head of the crowd.<Pause ms={SHORT_PAUSE} /> <Text color={INTUITION_COLOUR}><em>She must be spreading the word</em></Text><Pause ms={SHORT_PAUSE} /></p>,
+            performer: performers[PerformerNames.MARI],
+            getResponses: () => {
+                const callout = <p>"{PerformerNames.MARI}!" you call out, but {PerformerNames.ARSENE} <em>SLAMS</em><Effect fn={() => shakeEffect("shake-hard shake-constant")} /><Pause ms={SHAKE_TIMEOUT * 0.5} /> the butt of his rifle into your stomach and you keel over in pain.</p>
+
+                return [
+                    {
+                        content: callout,
+                        performer: playerPerformer,
+                        selectFollowup: battle,
+                        shorthandContent: <Text>[Call for help]</Text>
+                    },
+                    {
+                        content: callout,
+                        performer: playerPerformer,
+                        selectFollowup: battle,
+                        shorthandContent: <Text>[Shout a warning]</Text>
+                    },
+                    {
+                        content: <></>,
+                        performer: playerPerformer,
+                        selectFollowup: battle,
+                        shorthandContent: <Text>[Say nothing]</Text>
+                    }
+                ];
+            }
+        });
+    }
+
+    const battle = () => {
 
     }
 
