@@ -30,7 +30,7 @@ export const PlayerProvider = ({
     const [webId, setWebId] = useState("_:player");
     const [playerPerformer, setPlayerPerformer] = useState<IPerformer>({
         name: "",
-        imgSrc: "../../../public/img/playerProfile/3.webp"
+        imgSrc: "../../../public/img/playerProfile/7.webp"
     });
     const [relationships, setRelationships] = useState<{[object: string]: IRelationship[]}>({});
 
@@ -60,10 +60,11 @@ export const PlayerProvider = ({
         if(object in relationships) {
 
             let r = getRelationshipPair(object, newRelationship.label);
-            // update strength. Add them together if we can, else choose the one which is defined
-            let str = r.strength ? (newRelationship.strength ? r.strength + newRelationship.strength : r.strength) : newRelationship.strength;
 
             if(r != null) {
+                // update strength. Add them together if we can, else choose the one which is defined
+                let str = r.strength ? (newRelationship.strength ? r.strength + newRelationship.strength : r.strength) : newRelationship.strength;
+
                 relationships[object][newRelationship.label] = {
                     label: newRelationship.label,
                     strength: str
