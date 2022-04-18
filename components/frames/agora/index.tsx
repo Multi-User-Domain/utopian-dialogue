@@ -45,7 +45,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         addMessage({
             content: (
                 <>
-                <p>"Salutations!" Says a young lady, with a beaming smile. "My name is Mari- "</p>
+                <p>"Salutations!" Says a young lady with a beaming smile. "My name is Mari- "</p>
                 <Pause ms={SHORT_PAUSE * 0.5} />
                 </>
             ),
@@ -53,7 +53,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
 
         addMessage({
-            content: <p>"Do you remember who you are?!" a man interrupts her. He is addressing you<Pause ms={SHORT_PAUSE * 0.5} /></p>,
+            content: <p>"Do you remember who you are?!"<br/> He is addressing you<Pause ms={SHORT_PAUSE * 0.5} /></p>,
             performer: performers[PerformerNames.DOUGLAS],
             sideEffect: () => {
                 addRelationship(PerformerNames.DOUGLAS, buildRelationshipObject(Relationships.NOSTALGIA, 2));
@@ -66,6 +66,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             performer: performers[PerformerNames.MARI],
             getResponses: () => doYouRememberResponses(false)
         });
+
+        agoraMeeting();
     }, []);
 
     const doYouRememberResponses = (hasGreensight: boolean) => {
@@ -74,7 +76,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 performer: playerPerformer,
                 selectFollowup: () => {
                     addMessage({
-                        content: <p>"Really?<Pause ms={SHORT_PAUSE} /> Wow!<Pause ms={LONG_PAUSE}/> Then perhaps there is some hope for all of us"</p>,
+                        content: <p>"Really?<Pause ms={SHORT_PAUSE} /> Wow!<Pause ms={SHORT_PAUSE * 0.3}/> Then perhaps there is some hope for all of us"</p>,
                         performer: performers[PerformerNames.DOUGLAS]
                     });
 
@@ -85,8 +87,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>{selectRandomFrom(["Mari mumbles disapprovingly", "Mari seems disrupted by your statement", "Mari is frowning"])}</p>,
-                        performer: performers[PerformerNames.DOUGLAS],
+                        content: <p>{selectRandomFrom(["*Mumbles disapprovingly*", "Mari seems disrupted by your statement", "Mari is frowning"])}</p>,
+                        performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
 
@@ -103,10 +105,12 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 performer: playerPerformer,
                 selectFollowup: () => {
                     addMessage({
-                        content: <p>Douglas seems disappointed by this</p>,
+                        content: <p>He seems disappointed by this</p>,
                         performer: performers[PerformerNames.DOUGLAS],
                         includeContinuePrompt: true
                     });
+
+                    addRelationship(PerformerNames.MARI, buildRelationshipObject(Relationships.TRUST, 1));
 
                     agoraMeeting();
                 },
@@ -146,7 +150,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         if(hasRelationshipStrongerThan(PerformerNames.MARI, Relationships.TRUST, 0)) {
             addMessage({
-                content: <p>Mari addresses you. "We've been meeting here, for several days, since the Great Pop"</p>,
+                content: <p>Mari addresses you. "We've been meeting here for the last few days, ever since the Great Pop"</p>,
                 performer: performers[PerformerNames.MARI],
                 includeContinuePrompt: true
             });
@@ -166,19 +170,19 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         }
         else {
             addMessage({
-                content: <p>Douglas address you. "We've been meeting here, for several days, since the Great Pop"</p>,
+                content: <p>Douglas address you. "We've been meeting here for the last few days, ever since the Great Pop"</p>,
                 performer: performers[PerformerNames.DOUGLAS],
                 includeContinuePrompt: true
             });
 
             addMessage({
-                content: <p>"It's a governance of sorts. <Pause ms={SHORT_PAUSE} />Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like, before the Great Pop"</p>,
+                content: <p>"It's a governance of sorts. <Pause ms={SHORT_PAUSE} />Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like<Pace ms={SLOW_PACE * 0.6}>...</Pace> you know, before"</p>,
                 performer: performers[PerformerNames.DOUGLAS],
                 includeContinuePrompt: true
             });
 
             addMessage({
-                content: <p>"But now that you're here,<Pause ms={SHORT_PAUSE * 0.2}/> maybe we can shift our focus to recovering the Old World, and rebuilding it!"</p>,
+                content: <p>"Now that you're here,<Pause ms={SHORT_PAUSE * 0.2}/> maybe we can set about recovering the Old World, and rebuilding it<Pace ms={SLOW_PACE}>...</Pace> <em>exactly</em> as it was!"</p>,
                 performer: performers[PerformerNames.DOUGLAS],
                 includeContinuePrompt: true,
                 getResponses: preMeetingQuestions
@@ -193,14 +197,19 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         let askedHowMany = askedQuestions.includes(1);
 
         if(!askedQuestions.includes(0)) {
-            askedQuestions.push(0);
-
             choices.push({
-                content: <p>"How long since the Great Pop?"</p>,
+                content: <p>"How long has it been since the Great Pop?"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    askedQuestions.push(0);
+
                     addMessage({
-                        content: <p>"Have you just woken up?" A woman says with evident surprise</p>,
+                        content: (
+                            <>
+                            <p>"What?<Pause ms={SHORT_PAUSE} /> Have you only just woken up?"</p><Pause ms={SHORT_PAUSE * 0.5} />
+                            <p>Evidently this surprises her</p>
+                            </>
+                        ),
                         performer: performers[PerformerNames.ALICIA],
                         includeContinuePrompt: true
                     });
@@ -214,13 +223,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             });
         }
 
-        if(!askedQuestions.includes(1)) {
-            askedQuestions.push(1);
-
+        if(!askedHowMany) {
             choices.push({
                 content: <p>"How many people are here, in attendance?"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    askedQuestions.push(1);
+
                     addMessage({
                         content: <p>"Around fifty, in total"</p>,
                         performer: performers[PerformerNames.MARI],
@@ -231,12 +240,12 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         }
 
         if(askedHowMany && !askedQuestions.includes(2)) {
-            askedQuestions.push(2);
-
             choices.push({
                 content: <p>"And how many people, in the city?"</p>,
                 performer: playerPerformer,
                 selectFollowup: () => {
+                    askedQuestions.push(2);
+
                     addMessage({
                         content: <p>"A lot more than that"<Pause ms={SHORT_PAUSE} /></p>,
                         performer: performers[PerformerNames.ALICIA]
@@ -252,14 +261,16 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         }
 
         if(!askedQuestions.includes(3)) {
-            askedQuestions.push(3);
-
             choices.push({
                 content: <p>"Is the city governed here, in the Agora?"</p>,
                 performer: playerPerformer,
+                includeContinuePrompt: true,
                 selectFollowup: () => {
+                    askedQuestions.push(3);
+
                     addMessage({
                         content: <p>Nobody seems sure how to answer this.</p>,
+                        performer: performers[PerformerNames.NULL_PERFORMER],
                         includeContinuePrompt: true
                     });
 
@@ -270,7 +281,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"Not in an everday sense" {PerformerNames.MARI} admits.<Pause ms={LONG_PAUSE} /> "But it's becoming known as the central place <Pace ms={SLOW_PACE * 4}>to engage in the city politics</Pace>"</p>,
+                        content: <p>"Not in an everday sense" {PerformerNames.MARI} admits.<Pause ms={LONG_PAUSE} /> "But it's becoming known as the central place <Pace ms={SLOW_PACE * 0.33}>to engage in the city politics</Pace>"</p>,
                         performer: performers[PerformerNames.MARI],
                         getResponses: () => preMeetingQuestions(askedQuestions)
                     });
@@ -280,7 +291,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         choices.push({
             content: <p>...</p>,
-            perfomer: playerPerformer,
+            performer: playerPerformer,
             selectFollowup: rupertIntroduction,
             shorthandContent: <p>No more questions</p>
         });
@@ -318,33 +329,10 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             getResponses: () => {
                 const ledgers = <p>"Ledgers<Pace ms={SLOW_PACE}>...</Pace> of property records, debts"</p>;
 
-                const smugRupert = (player: boolean) => {
-                    const subject = player ? "your" : "Mari's";
-                    const reaction = player ? "Your ribcage is saw from his effort" : "Mari holds her ribcage and frowns deeply";
-
-                    addMessage({
-                        content: <p>"And the most recent ones<Pace ms={SLOW_PACE * 4}>...</Pace> Signed and stamped by Yours Truly"<Pause ms={SHORT_PAUSE * 0.25} /> Rupert adds smugly</p>,
-                        performer: performers[PerformerNames.RUPERT],
-                        includeContinuePrompt: true
-                    });
-
-                    addMessage({
-                        content: <p>Douglas is reading the ledgers keenly over {subject} shoulder,<Pause ms={SHORT_PAUSE * 1.5} /></p>,
-                        performer: performers[PerformerNames.DOUGLAS]
-                    });
-
-                    addMessage({
-                        content: <p>But a tall guardsman wrestles the ledger from {subject} grip roughly.<Pause ms={SHORT_PAUSE} /> {reaction}</p>,
-                        performer: performers[PerformerNames.BURLY],
-                        includeContinuePrompt: true,
-                        selectFollowup: followup
-                    });
-                }
-
                 return [
                     {
                         content: (
-                            <p>It is a thick ledger<Pace ms={SLOW_PACE * 4}> of semi-organised documents</Pace><Pause ms={SHORT_PAUSE * 0.75} /> bound in leather. <Pause ms={SHORT_PAUSE * 0.5} />The documents are pertaining to credits and debts owed the local City Mayoral,<Pause ms={SHORT_PAUSE * 0.5} /> and to property records.</p>
+                            <p>It is a thick ledger<Pace ms={SLOW_PACE * 0.33}> of semi-organised documents</Pace><Pause ms={SHORT_PAUSE * 0.75} /> bound in leather. <Pause ms={SHORT_PAUSE * 0.5} />The documents are pertaining to credits and debts owed the local City Mayoral,<Pause ms={SHORT_PAUSE * 0.5} /> and to property records.</p>
                         ),
                         performer: playerPerformer,
                         selectFollowup: () => {
@@ -359,7 +347,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     },
                     {
                         content: <></>,
-                        performer: playerPerformer,
+                        performer: performers[PerformerNames.NULL_PERFORMER],
                         selectFollowup: () => {
                             addMessage({
                                 content: (
@@ -380,59 +368,89 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 ]
             }
         });
+    }
 
-        const followup = () => {
-            addMessage({
-                content: <p>"Your gathering here is illegal!" shrieks the tall guardsman,<Pause ms={SHORT_PAUSE * 0.5} /> who is wearing a fiercely bright orange and white blouse.</p>,
-                performer: performers[PerformerNames.BURLY],
-                getResponses: () => {
-                    return [
-                        {
-                            selectFollowup: burlyWho,
-                            sideEffect: () => {
-                                addRelationship(PerformerNames.BURLY, buildRelationshipObject(Relationships.TRUST, -1));
-                            },
-                            content: <p>"Who are you?"</p>,
-                            includeContinuePrompt: true,
-                            performer: playerPerformer
+    const smugRupert = (player: boolean) => {
+        const subject = player ? "your" : "Mari's";
+        const performer = player ? playerPerformer : performers[PerformerNames.MARI];
+        const reaction = player ? "Your ribcage is saw from his effort" : "Mari holds her ribcage and frowns deeply";
+
+        addMessage({
+            content: <p>"And the most recent ones<Pace ms={SLOW_PACE * 0.33}>...</Pace> Signed and stamped by Yours Truly"<Pause ms={SHORT_PAUSE * 0.25} /> Rupert adds smugly</p>,
+            performer: performers[PerformerNames.RUPERT],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>Douglas is reading the ledgers keenly over {subject} shoulder<Pause ms={SHORT_PAUSE * 1.5} /></p>,
+            performer: performers[PerformerNames.DOUGLAS]
+        });
+
+        addMessage({
+            content: <p>The tall guardsman wrestles the ledger from {subject} grip roughly.<Pause ms={SHORT_PAUSE * 1.5} /></p>,
+            performer: performers[PerformerNames.BURLY]
+        });
+
+        addMessage({
+            content: <p>{reaction}</p>,
+            performer: performer,
+            includeContinuePrompt: true,
+            selectFollowup: smugRupertFollowup
+        });
+    }
+
+    const smugRupertFollowup = () => {
+
+        addMessage({
+            content: <p>"Your gathering here is illegal!" shrieks the tall guardsman,<Pause ms={SHORT_PAUSE * 0.5} /> who is wearing a fiercely bright orange and white blouse.</p>,
+            performer: performers[PerformerNames.BURLY],
+            getResponses: () => {
+                return [
+                    {
+                        selectFollowup: burlyWho,
+                        sideEffect: () => {
+                            addRelationship(PerformerNames.BURLY, buildRelationshipObject(Relationships.TRUST, -1));
                         },
-                        {
-                            selectFollowup: () => {
-                                addRelationship(PerformerNames.BURLY, buildRelationshipObject(Relationships.TRUST, -2));
-                                addRelationship("self", buildRelationshipObject(SelfIdentityLabels.COURAGEOUS, 1));
+                        content: <p>"Who are you?"</p>,
+                        includeContinuePrompt: true,
+                        performer: playerPerformer
+                    },
+                    {
+                        selectFollowup: () => {
+                            addRelationship(PerformerNames.BURLY, buildRelationshipObject(Relationships.TRUST, -2));
+                            addRelationship("self", buildRelationshipObject(SelfIdentityLabels.COURAGEOUS, 1));
 
-                                if(hasRelationshipPair("self", SelfIdentityLabels.HAS_GREENSIGHT)) {
-                                    addMessage({
-                                        content: <Text color={GREENSIGHT_TEXT_COLOUR}>This man's aura has become tense <Pause ms={SHORT_PAUSE * 0.25} />and carries the potential of violence</Text>,
-                                        performer: playerPerformer,
-                                        includeContinuePrompt: true
-                                    });
-                                }
-
-                                burlyWho();
-                            },
-                            content: <p>"Illegal? Says who?"</p>,
-                            includeContinuePrompt: true,
-                            performer: playerPerformer
-                        },
-                        {
-                            selectFollowup: () => {
+                            if(hasRelationshipPair("self", SelfIdentityLabels.HAS_GREENSIGHT)) {
                                 addMessage({
-                                    content: <p>"Who are you?"</p>,
-                                    performer: performers[PerformerNames.MARI],
+                                    content: <Text color={GREENSIGHT_TEXT_COLOUR}>This man's aura has become tense <Pause ms={SHORT_PAUSE * 0.25} />and carries the potential of violence</Text>,
+                                    performer: playerPerformer,
                                     includeContinuePrompt: true
                                 });
+                            }
 
-                                burlyWho();
-                            },
-                            content: <></>,
-                            shorthandContent: <p>[Say nothing]</p>,
-                            performer: playerPerformer
-                        }
-                    ]
-                }
-            });
-        }
+                            burlyWho();
+                        },
+                        content: <p>"Illegal? Says who?"</p>,
+                        includeContinuePrompt: true,
+                        performer: playerPerformer
+                    },
+                    {
+                        selectFollowup: () => {
+                            addMessage({
+                                content: <p>"Who are you?"</p>,
+                                performer: performers[PerformerNames.MARI],
+                                includeContinuePrompt: true
+                            });
+
+                            burlyWho();
+                        },
+                        content: <></>,
+                        shorthandContent: <p>[Say nothing]</p>,
+                        performer: playerPerformer
+                    }
+                ]
+            }
+        });
     }
 
     const burlyWho = () => {
@@ -485,7 +503,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>Mari stands up onto the platform in the centre of the arena and calls out to the crowd.</p>
-                <p>"Good people!<Pause ms={LONG_PAUSE} /> what do we need a false mayor for?<Pause ms={SHORT_PAUSE * 1.25} /> and why do we need this ledger of his,<Pause ms={SHORT_PAUSE * 0.5} /> marking our names <Pace ms={SLOW_PACE * 5}>with debts and with credits?"</Pace></p>
+                <p>"Good people!<Pause ms={LONG_PAUSE} /> What do we need a false mayor for?<Pause ms={SHORT_PAUSE * 1.25} /> and why do we need this ledger of his,<Pause ms={SHORT_PAUSE * 0.5} /> marking our names <Pace ms={SLOW_PACE * 0.25}>with debts and with credits?"</Pace></p>
                 <Pause ms={SHORT_PAUSE * 1.5} />
                 </>
             ),
@@ -503,13 +521,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     const discussionAboutDebt = () => {
         addMessage({
-            content: <p><Pace ms={SLOW_PACE * 5}>"What <em>is</em> in the ledger?"</Pace> Douglas asks</p>,
+            content: <p><Pace ms={SLOW_PACE * 0.25}>"What <em>is</em> in the ledger?"</Pace> Douglas asks</p>,
             performer: performers[PerformerNames.DOUGLAS],
             includeContinuePrompt: true
         });
 
         addMessage({
-            content: <p>"<b>Debts</b>". She pronounces the word with enunciated distaste.<Pause ms={SHORT_PAUSE * 1.5} /> "Obligations to pay, forced by the state.<Pause ms={SHORT_PAUSE * 1.5} /> You need to find a way to pay them, <Pace ms={SLOW_PACE * 5}>and pay them regularly</Pace><Pause ms={SHORT_PAUSE * 0.5} />, and as long as you have them you are not free"</p>,
+            content: <p>"<b>Debts</b>". She pronounces the word with enunciated distaste.<Pause ms={SHORT_PAUSE * 1.5} /> "Obligations to pay, forced by the state.<Pause ms={SHORT_PAUSE * 1.5} /> You need to find a way to pay them, <Pace ms={SLOW_PACE * 0.3}>and pay them regularly</Pace><Pause ms={SHORT_PAUSE * 0.5} />, and as long as you have them you are not free"</p>,
             performer: performers[PerformerNames.MARI],
             includeContinuePrompt: true
         });
@@ -527,13 +545,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
 
         addMessage({
-            content: <p>"<em>My</em> enterprise?!<Pause ms={SHORT_PAUSE} /> I suppose that you'd prefer that <em>you</em> were mayor, then<Pause ms={LONG_PAUSE} /></p>,
+            content: <p>"<em>My</em> enterprise?!<Pause ms={SHORT_PAUSE} /> I suppose that you'd prefer that <em>you</em> were mayor, then?"<Pause ms={SHORT_PAUSE} /></p>,
             performer: performers[PerformerNames.RUPERT],
             includeContinuePrompt: true
         });
 
         addMessage({
-            content: <p>"By paying eachother using my <em>currency</em>,<Pause ms={SHORT_PAUSE * 0.1} /> you are able to transfer the debt to me.<Pause ms={SHORT_PAUSE} /> Safe in the knowledge that it is <Pace ms={SLOW_PACE * 4}><em>guaranteed</em></Pace> by the vitality of my force"<Pause ms={LONG_PAUSE} /></p>,
+            content: <p>"By paying eachother using my <em>currency</em>,<Pause ms={SHORT_PAUSE * 0.1} /> you are able to transfer the debt to me.<Pause ms={SHORT_PAUSE} /> Safe in the knowledge that it is <Pace ms={SLOW_PACE * 0.33}><em>guaranteed</em></Pace> by the vitality of my force"<Pause ms={LONG_PAUSE} /></p>,
             performer: performers[PerformerNames.RUPERT]
         });
 
@@ -547,7 +565,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>"In return, you pay me a portion of that debt back each month,<Pause ms={SHORT_PAUSE * 0.2} /> and respect my order"<Pause ms={LONG_PAUSE} /></p>
-                <p>This forms the basis of our <b>social contract</b><Pause ms={SHORT_PAUSE} /><Pace ms={SLOW_PACE * 3}>... </Pace>and ensures that we don't descend into chaos"</p>
+                <br/>
+                <p>"This forms the basis of our <b>social contract</b><Pause ms={SHORT_PAUSE} /><Pace ms={SLOW_PACE * 0.4}>... </Pace>and ensures that we don't descend into chaos"</p>
                 </>
             ),
             performer: performers[PerformerNames.RUPERT],
@@ -564,7 +583,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                             <>
                             <p>"Without a powerful state, it is a war of all against all"<Pause ms={SHORT_PAUSE} /></p>
                             <p>"We are selfish by nature and will not provide for eachother unless we are to gain in doing so"<Pause ms={LONG_PAUSE} /></p>
-                            <p>"Friends, <Pace ms={SLOW_PACE * 4}>we <em>need</em> a powerful state,</Pace><Pause ms={SHORT_PAUSE} /> to bind us into the common interest<Pause ms={SHORT_PAUSE * 0.5} />, to serve the collective will"</p>
+                            <p>"Friends, <Pace ms={SLOW_PACE * 0.33}>we <em>need</em> a powerful state,</Pace><Pause ms={SHORT_PAUSE} /> to bind us into the common interest<Pause ms={SHORT_PAUSE * 0.5} />, to serve the collective will"</p>
                             </>
                         ),
                         sideEffect: () => {
@@ -597,7 +616,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         },
                         selectFollowup: () => {
                             addMessage({
-                                content: <p>"Sedition!"<Pause ms={SHORT_PAUSE * 0.5} /> Burly complains<Pause ms={LONG_PAUSE} /></p>,
+                                content: <p>"Sedition!"<Pause ms={SHORT_PAUSE * 0.5} /><Pause ms={SHORT_PAUSE * 3} /></p>,
                                 performer: performers[PerformerNames.BURLY]
                             });
 
@@ -610,7 +629,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                 content: (
                                     <>
                                     <p><Pace ms={FAST_PACE}>"Sedition!"</Pace><Pause ms={LONG_PAUSE} /></p>
-                                    <p>"I will <Pace ms={SLOW_PACE * 3}><em>not</em></Pace> let you subvert my sacred right to distribute wealth!"<Pause ms={LONG_PAUSE} /></p>
+                                    <p>"I will <Pace ms={SLOW_PACE * 0.4}><em>not</em></Pace> let you subvert my sacred right to distribute wealth!"<Pause ms={LONG_PAUSE} /></p>
                                     </>
                                 ),
                                 performer: performers[PerformerNames.RUPERT],
@@ -618,7 +637,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                     {
                                         content: (
                                             <>
-                                            <Text color={INTUITION_COLOUR}><em>You must <Pace ms={SLOW_PACE * 2}>not</Pace> allow them to take your collective property!</em></Text><Pause ms={SHORT_PAUSE} />
+                                            <Text color={INTUITION_COLOUR}><em>You must <Pace ms={SLOW_PACE}>not</Pace> allow them to take your collective property!</em></Text><Pause ms={SHORT_PAUSE} />
                                             <p>A voice calls from deep within you</p><Pause ms={SHORT_PAUSE} />
                                             <p>You know now what you have to do</p><Pause ms={SHORT_PAUSE} />
                                             </>
@@ -633,7 +652,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                                 content: (
                                                     <>
                                                     <p>Deep inside the pool of your soul a primordial force of Resistance wants to make itself known<Pause ms={LONG_PAUSE} /></p>
-                                                    <p><Pace ms={SLOW_PACE * 2}>"NOOOOOOOO!"</Pace> it roars with your voice, <Pace ms={SLOW_PACE * 3}>fading softly into silence</Pace></p>
+                                                    <p><Pace ms={SLOW_PACE * 0.6}>"NOOOOOOOO!"</Pace> it roars with your voice, <Pace ms={SLOW_PACE * 0.33}>fading softly into silence</Pace></p>
                                                     </>
                                                 ),
                                                 includeContinuePrompt: true,
@@ -644,7 +663,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                                             <>
                                                             <p>"We'll be eating soup of stone,<Pause ms={SHORT_PAUSE * 0.5} /> til what we grow is what we own.."<Pause ms={SHORT_PAUSE} /></p>
                                                             <p>"But we won't steal from the land what's freely given"<Pause ms={SHORT_PAUSE} /></p>
-                                                            <p><Pace ms={SLOW_PACE * 3}>"Tear up the deeds to the land</Pace><Pause ms={SHORT_PAUSE * 0.25} />, <Pace ms={FAST_PACE * 0.5}>throw the debts into the furnace,</Pace> debts to <Pace ms={SLOW_PACE * 3}><em>God</em></Pace> to the <Pace ms={SLOW_PACE * 3}><em>banks</em></Pace> and to the <Pace ms={SLOW_PACE * 3}><em>landlord</em></Pace>"<Pause ms={SHORT_PAUSE} /></p>
+                                                            <p><Pace ms={SLOW_PACE * 0.33}>"Tear up the deeds to the land</Pace><Pause ms={SHORT_PAUSE * 0.25} />, <Pace ms={FAST_PACE * 0.5}>throw the debts into the furnace,</Pace>"<Pause ms={SHORT_PAUSE} /></p>
+                                                            <p>"Debts to <Pace ms={SLOW_PACE * 0.4}><em>God</em></Pace> to the <Pace ms={SLOW_PACE * 0.4}><em>banks</em></Pace> and to the <Pace ms={SLOW_PACE * 0.4}><em>landlord</em></Pace>"<Pause ms={SHORT_PAUSE} /></p>
                                                             </>
                                                         ),
                                                         performer: playerPerformer,
@@ -654,7 +674,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                                                     addMessage({
                                                         content: (
                                                             <>
-                                                            <p>"And even if we're just one pistol<Pause ms={SHORT_PAUSE * 0.25} /> against an army of policemen<Pause ms={SHORT_PAUSE * 0.3} />, I <Pace ms={SLOW_PACE * 3}><em>insist</em></Pace> that we are many<Pause ms={SHORT_PAUSE * 0.25} /> and they are few"<Pause ms={SHORT_PAUSE} /></p>
+                                                            <p>"And even if we're just one pistol<Pause ms={SHORT_PAUSE * 0.25} /> against an army of policemen<Pause ms={SHORT_PAUSE * 0.3} />, I <Pace ms={SLOW_PACE * 0.4}><em>insist</em></Pace> that we are many<Pause ms={SHORT_PAUSE * 0.25} /> and they are few"<Pause ms={SHORT_PAUSE} /></p>
                                                             <p>"If we don't stand up now then we might never and we'll never know again our freedom taken"<Pause ms={SHORT_PAUSE} /></p>
                                                             </>
                                                         ),
@@ -837,7 +857,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         addMessage({
             content: (
                 <>
-                <Pace ms={SLOW_PACE * 2}><Text>They seem to be buying it!</Text></Pace><Pause ms={SHORT_PAUSE} />
+                <Pace ms={SLOW_PACE * 0.6}><Text>They seem to be buying it!</Text></Pace><Pause ms={SHORT_PAUSE} />
                 <Text color="#FFBF00">It must be the sensational <em>authority</em> that you're projecting.</Text>
                 </>
             ),
@@ -996,7 +1016,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         addMessage({
             content: (
                 <>
-                <p>"Get 'em men!"</p>
+                <p>"Get 'em, men!"</p>
                 <p>He lifts a proud fist into the air to accompany the command.</p>
                 <Pause ms={LONG_PAUSE} />
                 <p>Nothing happens.</p>
@@ -1122,7 +1142,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <>
                 <p>"Are we ready for this?"</p><Pause ms={SHORT_PAUSE} />
                 <p>{PerformerNames.DOUGLAS} gestures around him</p><Pause ms={SHORT_PAUSE} />
-                <p>"We <Pause ms={SHORT_PAUSE * 0.3} /><Pace ms={FAST_PACE * 0.5}>- our ancestors - </Pace><Pause ms={SHORT_PAUSE * 0.3} />surely built this city,<Pause ms={SHORT_PAUSE * 0.5} />, and we don't even remember <em>how</em> we did it"</p>
+                <p>"We <Pause ms={SHORT_PAUSE * 0.3} /><Pace ms={FAST_PACE * 0.5}>- our ancestors - </Pace><Pause ms={SHORT_PAUSE * 0.3} />surely built this city,<Pause ms={SHORT_PAUSE * 0.5} /> and we don't even remember <em>how</em> we did it"</p>
                 </>
             ),
             performer: performers[PerformerNames.DOUGLAS],
@@ -1153,7 +1173,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
 
         addMessage({
-            content: <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE * 1.25}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?"</p>,
+            content: <p>"Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but<Pace ms={SLOW_PACE}>...</Pace> a week from now? <Pause ms={SHORT_PAUSE} />A month?"</p>,
             performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
@@ -1291,7 +1311,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                             content: (
                                 <>
                                 <p>Rupert begins to cough uncontrollably.</p><Pause ms={SHORT_PAUSE * 1.5} />
-                                <p>"And what about the <Pace ms={SLOW_PACE * 3}><em>tyranny</em></Pace> of <b>sedition</b>?!<Pause ms={SHORT_PAUSE * 0.25} /> No. <Pause ms={SHORT_PAUSE * 0.25} />Unacceptable"</p>
+                                <p>"And what about the <Pace ms={SLOW_PACE * 0.4}><em>tyranny</em></Pace> of <b>sedition</b>?!<Pause ms={SHORT_PAUSE * 0.25} /> No. <Pause ms={SHORT_PAUSE * 0.25} />Unacceptable"</p>
                                 </>
                             ),
                             performer: performers[PerformerNames.RUPERT],
@@ -1305,13 +1325,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                         });
 
                         addMessage({
-                            content: <p>"But there may be times where we <Pace ms={SLOW_PACE * 4}><em>have</em></Pace> to use force, to defend our liberty" a man complains</p>,
+                            content: <p>"But there may be times where we <Pace ms={SLOW_PACE * 0.33}><em>have</em></Pace> to use force, to defend our liberty" a man complains</p>,
                             performer: performers[PerformerNames.ANDREW],
                             includeContinuePrompt: true
                         });
 
                         addMessage({
-                            content: <p> "We can always use force later, if we have to.<Pause ms={SHORT_PAUSE} /> But we cannot un-use force" another observes<Pause ms={LONG_PAUSE} /></p>,
+                            content: <p> "We can always use force later, if we have to.<Pause ms={SHORT_PAUSE} /> But we cannot un-use force" the priest observes<Pause ms={LONG_PAUSE} /></p>,
                             performer: performers[PerformerNames.FRANCIS]
                         });
 
@@ -1334,7 +1354,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 content: (
                     <>
                     <p>"The violence of the State is detestable!"</p><Pause ms={SHORT_PAUSE} />
-                    <p>"Since when was <Pace ms={SLOW_PACE * 4}><b>organised violence</b></Pace> a part of 'how we want to live together'?"</p>
+                    <p>"Since when was <Pace ms={SLOW_PACE * 0.33}><b>organised violence</b></Pace> a part of 'how we want to live together'?"</p>
                     </>
                 ),
                 includeContinuePrompt: true,
@@ -1355,13 +1375,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
                 if(!askedAboutWorldState) {
                     addMessage({
-                        content: <p>"I read up on some history too, and they <Pace ms={SLOW_PACE * 4}><em>had</em></Pace> a State apparatus<Pace ms={SLOW_PACE * 1.5}>...</Pace><Pause ms={LONG_PAUSE} /></p>,
+                        content: <p>"I read up on some history too, and they <Pace ms={SLOW_PACE * 0.33}><em>had</em></Pace> a State apparatus<Pace ms={SLOW_PACE * 1.5}>...</Pace><Pause ms={LONG_PAUSE} /></p>,
                         performer: performers[PerformerNames.MARI]
                     });
                 }
 
                 addMessage({
-                    content: <p>"Since when was <Pace ms={SLOW_PACE * 4}><b>organised violence</b></Pace> a part of 'how we want to live together'?"</p>,
+                    content: <p>"Since when was <Pace ms={SLOW_PACE * 0.33}><b>organised violence</b></Pace> a part of 'how we want to live together'?"</p>,
                     performer: performers[PerformerNames.MARI],
                     includeContinuePrompt: true
                 });
@@ -1452,7 +1472,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>"When I woke I was in a collosal building, called <b>'{world.name} Prison'</b>.<Pause ms={SHORT_PAUSE} /></p>
-                <p>"Myself and others, we were dressed the same.<Pause ms={SHORT_PAUSE * 0.75} /> We were armed, and <Pace ms={SLOW_PACE * 3}>I think</Pace> that our purpose was to keep people locked inside"</p>
+                <p>"Myself and others, we were dressed the same.<Pause ms={SHORT_PAUSE * 0.75} /> We were armed, and <Pace ms={SLOW_PACE * 0.4}>I think</Pace> that our purpose was to keep people locked inside"</p>
                 </>  
             ),
             performer: performers[PerformerNames.CRAIG],
@@ -1497,7 +1517,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             content: (
                 <>
                 <p>A look of anger flashes across his face.<Pause ms={SHORT_PAUSE} /></p>
-                <p>"The prisoners were locked away for the good of society.<Pause ms={SHORT_PAUSE * 0.3} /> And for their <Pace ms={SLOW_PACE * 3}><em>own</em> good</Pace><Pause ms={SHORT_PAUSE * 0.1} />, too.<Pause ms={SHORT_PAUSE} /></p>
+                <p>"<Pace ms={FAST_PACE}>The prisoners were locked away for the good of society!</Pace><Pause ms={SHORT_PAUSE} /> And for their <Pace ms={SLOW_PACE * 0.4}><em>own</em> good</Pace><Pause ms={SHORT_PAUSE * 0.1} />, too.<Pause ms={SHORT_PAUSE} /></p>
                 <p>"You should have been confirmed as <b>rehabilitated</b> before you were allowed to rejoin society"</p>
                 </>  
             ),
@@ -1519,11 +1539,11 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         addMessage({
             content: <p>Many of the Agora members attempt to relieve the tension, and express sympathy with either view.<Pause ms={SHORT_PAUSE * 2} /></p>,
-            performer: playerPerformer
+            performer: performers[PerformerNames.NULL_PERFORMER]
         })
 
         addMessage({
-            content: <p>"Perhaps they were not <Pace ms={SLOW_PACE * 3}><em>always</em></Pace> right then, clearly.<Pause ms={SHORT_PAUSE} /> But neither surely were they <Pace ms={SLOW_PACE * 3}><em>always</em></Pace> wrong?"</p>,
+            content: <p>"Perhaps they were not <Pace ms={SLOW_PACE * 0.4}><em>always</em></Pace> right then, clearly.<Pause ms={SHORT_PAUSE} /> But neither surely were they <Pace ms={SLOW_PACE * 0.4}><em>always</em></Pace> wrong?"</p>,
             performer: performers[PerformerNames.LEOPALD],
             getResponses: prisonResolutionChoices
         });
@@ -1573,7 +1593,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     <>
                     <p>"We do not need a prison.<Pause ms={SHORT_PAUSE * 0.5} /> We can resolve conflicts collectively"</p><Pause ms={SHORT_PAUSE} />
                     <p>"Locking someone up only serves to alienate them from society further.<Pause ms={SHORT_PAUSE * 0.5} /> It's sweeping a problem under the rug, instead of dealing with it"</p><Pause ms={SHORT_PAUSE} />
-                    <p>"Before we build this kind of system, we should ask ourselves<Pace ms={SLOW_PACE * 3}>...</Pace><Pause ms={SHORT_PAUSE * 0.3} /> what do we want it to achieve?"</p>
+                    <p>"Before we build this kind of system, we should ask ourselves<Pace ms={SLOW_PACE * 0.4}>...</Pace><Pause ms={SHORT_PAUSE * 0.3} /> what do we want it to achieve?"</p>
                     </>
                 ),
                 shorthandContent: <p>"We do not need a prison. We can resolve conflicts collectively"</p>,
@@ -1587,7 +1607,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"It should be focussed on <Pace ms={SLOW_PACE * 4}><em>preventing</em></Pace> the behaviour from happening again"</p>,
+                        content: <p>"It should be focussed on <Pace ms={SLOW_PACE * 0.33}><em>preventing</em></Pace> the behaviour from happening again"</p>,
                         performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
@@ -1604,7 +1624,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p><Pace ms={SLOW_PACE * 3}>"...</Pace>Decisions will be made collectively and based on consent<Pace ms={SLOW_PACE * 3}>...</Pace> with a circle being delegated to <em>implement</em> the process."</p>,
+                        content: <p><Pace ms={SLOW_PACE * 0.4}>"...</Pace>Decisions will be made collectively and based on consent<Pace ms={SLOW_PACE * 0.4}>...</Pace> with a circle being delegated to <em>implement</em> the process."</p>,
                         performer: performers[PerformerNames.MARI],
                         includeContinuePrompt: true
                     });
@@ -1616,24 +1636,24 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>Leopald is at first adamently opposed to the suggestions<Pace ms={SLOW_PACE * 3}>...</Pace> when all of a sudden he is convinced.</p>,
+                        content: <p>Leopald is at first adamently opposed to the suggestions<Pace ms={SLOW_PACE * 0.4}>...</Pace> when all of a sudden he is convinced.</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
 
                     addMessage({
-                        content: <p>"Yes, yes<Pace ms={SLOW_PACE * 3}>...</Pace> I see the value in what you are saying now, {PerformerNames.MARI}"<Pause ms={SHORT_PAUSE} /></p>,
+                        content: <p>"Yes, yes<Pace ms={SLOW_PACE * 0.4}>...</Pace> I see the value in what you are saying now, {PerformerNames.MARI}"<Pause ms={SHORT_PAUSE} /></p>,
                         performer: performers[PerformerNames.LEOPALD]
                     });
 
                     addMessage({
-                        content: <p>"And the body which you are leading, Andrew, will be responsible for establishing our new<Pace ms={SLOW_PACE * 3}>...</Pace> <em>egalitarian</em> infrastructure"</p>,
+                        content: <p>"And the body which you are leading, Andrew, will be responsible for establishing our new<Pace ms={SLOW_PACE * 0.4}>...</Pace> <em>egalitarian</em> infrastructure"</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
 
                     addMessage({
-                        content: <p>"And naturally, of course, another body will be needed to<Pace ms={SLOW_PACE * 3}>...</Pace> <em>enforce</em> our new regime"<Pause ms={SHORT_PAUSE} /></p>,
+                        content: <p>"And naturally, of course, another body will be needed to<Pace ms={SLOW_PACE * 0.4}>...</Pace> <em>enforce</em> our new regime"<Pause ms={SHORT_PAUSE} /></p>,
                         performer: performers[PerformerNames.LEOPALD]
                     });
 
@@ -1653,7 +1673,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             {
                 content: (
                     <>
-                    <p>"The old ways were necessarily cruel<Pace ms={SLOW_PACE * 3}>...</Pace> or else prison would not have been an effective detterant"</p><Pause ms={SHORT_PAUSE} />
+                    <p>"The old ways were necessarily cruel<Pace ms={SLOW_PACE * 0.4}>...</Pace> or else prison would not have been an effective detterant"</p><Pause ms={SHORT_PAUSE} />
                     <p>"Clearly at least an <em>element</em> of our nature is sinful"</p><Pause ms={SHORT_PAUSE} />
                     <p>"To shape the society that we wish to live in we must punish wrongdoing and reward goodness"</p>
                     </>
@@ -1673,13 +1693,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"The old society<Pace ms={SLOW_PACE * 3}>...</Pace> used to reward goodness?<Pause ms={SHORT_PAUSE} /> Did you see this in the history books, Leopald?<Pause ms={SHORT_PAUSE * 0.6} /> Could you tell use more?"</p>,
+                        content: <p>"The old society<Pace ms={SLOW_PACE * 0.4}>...</Pace> used to reward goodness?<Pause ms={SHORT_PAUSE} /> Did you see this in the history books, Leopald?<Pause ms={SHORT_PAUSE * 0.6} /> Could you tell use more?"</p>,
                         performer: performers[PerformerNames.DOUGLAS],
                         includeContinuePrompt: true
                     });
 
                     addMessage({
-                        content: <p>"I<Pace ms={SLOW_PACE * 3}>...</Pace> er<Pace ms={SLOW_PACE * 3}>...</Pace> I don't know if I could say for definite.<Pause ms={SHORT_PAUSE * 0.6} /> As I say, I just skimmed the pages.<Pause ms={SHORT_PAUSE} /> I believe this was always their aim"</p>,
+                        content: <p>"I<Pace ms={SLOW_PACE * 0.4}>...</Pace> er<Pace ms={SLOW_PACE * 0.4}>...</Pace> I don't know if I could say for definite.<Pause ms={SHORT_PAUSE * 0.6} /> As I say, I just skimmed the pages.<Pause ms={SHORT_PAUSE} /> I believe this was always their aim"</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true,
                         sideEffect: () => {
@@ -1705,7 +1725,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"I think that the prison might not <Pace ms={SLOW_PACE * 4}><em>always</em></Pace> be necessary, perhaps we can use it sparingly"<Pause ms={LONG_PAUSE} /></p>,
+                        content: <p>"I think that the prison might not <Pace ms={SLOW_PACE * 0.33}><em>always</em></Pace> be necessary, perhaps we can use it sparingly"<Pause ms={LONG_PAUSE} /></p>,
                         performer: performers[PerformerNames.LEOPALD]
                     });
 
@@ -1716,7 +1736,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p>"Naturally<Pace ms={SLOW_PACE * 3}>...</Pace> it will require enforcement - such that we form a <b>state</b><Pause ms={SHORT_PAUSE} />, capable of pursuing - and protecting - our <b>utopian vision</b>"</p>,
+                        content: <p>"Naturally<Pace ms={SLOW_PACE * 0.4}>...</Pace> it will require enforcement - such that we form a <b>state</b><Pause ms={SHORT_PAUSE} />, capable of pursuing - and protecting - our <b>utopian vision</b>"</p>,
                         performer: performers[PerformerNames.LEOPALD],
                         includeContinuePrompt: true
                     });
@@ -1756,7 +1776,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     });
 
                     addMessage({
-                        content: <p><Pace ms={SLOW_PACE * 3}>.....</Pace>Your arguments sway the agora.<Pause ms={SHORT_PAUSE} /> The prison is here to stay!</p>,
+                        content: <p><Pace ms={SLOW_PACE * 0.4}>.....</Pace>Your arguments sway the agora.<Pause ms={SHORT_PAUSE} /> The prison is here to stay!</p>,
                         performer: performers[PerformerNames.ANDREW],
                         includeContinuePrompt: true
                     });
@@ -1817,6 +1837,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     shorthandContent: <p>[Accept the King's decision]</p>,
                     sideEffect: () => {
                         //~ rupert_trusting += 1
+                        addRelationship(PerformerNames.RUPERT, buildRelationshipObject(Relationships.TRUST, 1));
                         //~ player_loyal_to_rupert = true
                     },
                     selectFollowup: () => {
@@ -1867,7 +1888,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
 
         addMessage({
-            content: <p>"But there is a greater threat to us than the sin of individuals<Pace ms={SLOW_PACE * 2}>...</Pace> and that is the threat of <b>armed gangs</b>"</p>,
+            content: <p>"But there is a greater threat to us than the sin of individuals<Pace ms={SLOW_PACE * 0.6}>...</Pace> and that is the threat of <b>armed gangs</b>"</p>,
             performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true
         });
@@ -1878,7 +1899,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         });
 
         addMessage({
-            content: <p>"Naturally<Pace ms={SLOW_PACE * 3}>...</Pace> - and to protect ourselves<Pause ms={SHORT_PAUSE * 0.5} /> - it is imperative that we form our own armed group<Pause ms={SHORT_PAUSE * 0.5} /> - a <b>state</b><Pause ms={SHORT_PAUSE * 0.3} /> - staffed by our trustworthy Utopianists. <Pause ms={SHORT_PAUSE} />Capable of protecting our vision"</p>,
+            content: <p>"Naturally<Pace ms={SLOW_PACE * 0.4}>...</Pace> - and to protect ourselves<Pause ms={SHORT_PAUSE * 0.5} /> - it is imperative that we form our own armed group<Pause ms={SHORT_PAUSE * 0.5} /> - a <b>state</b><Pause ms={SHORT_PAUSE * 0.3} /> - staffed by our trustworthy Utopianists. <Pause ms={SHORT_PAUSE} />Capable of protecting our vision"</p>,
             performer: performers[PerformerNames.LEOPALD],
             includeContinuePrompt: true,
             sideEffect: () => setWorldItem(World.PRISON, PrisonStates.ABOLISHED),
@@ -1896,6 +1917,9 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             performer: performers[PerformerNames.LEOPALD],
             getResponses: () => {
                 let choices = [];
+
+                console.log("Debugging - here you should be seeing AGORA with the appropriate choice of governance");
+                console.log(world[World.GOVERNANCE]);
 
                 if(world[World.GOVERNANCE] == GovernanceStates.AGORA) {
                     choices.push({
@@ -2053,7 +2077,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                     content: (
                         <>
                         <p>You scoff.<Pause ms={SHORT_PAUSE * 0.5} /> "Oh yeah?!"</p><Pause ms={SHORT_PAUSE} />
-                        <p>"I don't believe you could find <Pace ms={SLOW_PACE * 3}><b>ONE</b></Pace> fool to follow you Leopald<Pause ms={SHORT_PAUSE * 0.25} />, let alone a dozen!"</p>
+                        <p>"I don't believe you could find <Pace ms={SLOW_PACE * 0.4}><b>ONE</b></Pace> fool to follow you Leopald<Pause ms={SHORT_PAUSE * 0.25} />, let alone a dozen!"</p>
                         </>
                     ),
                     shorthandContent: <p>You are sure that Leopald is bluffing</p>,
@@ -2216,7 +2240,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 <>
                 <p>He looks about the faces in the crumbling Agora</p><Pause ms={SHORT_PAUSE} />
                 <p>"We will be reinstating the police force<Pause ms={SHORT_PAUSE * 0.5} />, and returning them to their former prestige"</p>
-                {hasRelationshipWeakerThan(PerformerNames.DOUGLAS, Relationships.HOPE_SURROGATE, 0) ? <p><Pause ms={SHORT_PAUSE} />"We will be restoring the order and rationality of the <Pace ms={SLOW_PACE * 3}><em>Old World</em></Pace>"</p> : null}
+                {hasRelationshipWeakerThan(PerformerNames.DOUGLAS, Relationships.HOPE_SURROGATE, 0) ? <p><Pause ms={SHORT_PAUSE} />"We will be restoring the order and rationality of the <Pace ms={SLOW_PACE * 0.4}><em>Old World</em></Pace>"</p> : null}
                 </>
             ),
             performer: performers[PerformerNames.LEOPALD],
@@ -2349,13 +2373,13 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         let topContent = <p>You leave the park behind.</p>;
 
-        switch(world[World.GOVERNANCE]){
+        /*switch(world[World.GOVERNANCE]){
             case GovernanceStates.MONARCHY:
                 topContent = <p>{PerformerNames.RUPERT} leads his procession out of the park, followed by tens of his newly loyal subjects. Others are wandering around the old arena aimlessly. The agora is dead.</p>;
                 break;
             case GovernanceStates.MILITARY_CONSULATE:
                 break;
-        }
+        }*/
 
         content = (
             <>

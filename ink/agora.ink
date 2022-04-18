@@ -8,7 +8,8 @@ INCLUDE relationships.ink
 
     "Salutations!" Says a young lady, with a beaming smile. "My name is Mari- " # Mari
     
-    "Do you remember who you are?!" a man interrupts her. "I don't remember who I am, perhaps you know?" # Douglas
+    "Do you remember who you are?!". He is addressing you
+    "I don't remember who I am, perhaps you know?" # Douglas
     
     "Of course they don't, Douglas. None of us do" # Mari
     
@@ -28,6 +29,7 @@ INCLUDE relationships.ink
           
         * [{"I don't remember who I am" | "No, I don't remember"}]
             Douglas seems disappointed by this
+            ~ mari_trusting += 1
             ->agora_meeting
         * "I am gifted with the Greensight, I see things that others do not"
           "Like... knowing who you are?" # Douglas
@@ -35,7 +37,7 @@ INCLUDE relationships.ink
           -> do_you_remember
           
     = mari_introduces_agora
-      Mari addresses you: "We've been meeting here, for several days, since the Great Pop"
+      Mari addresses you: "We've been meeting here for the last few days, ever since the Great Pop"
       
       "Once we woke up we needed to figure out again how to live, we were all disoriented and without purpose"
       
@@ -49,7 +51,7 @@ INCLUDE relationships.ink
     
         {mari_trusting >= 0: -> mari_introduces_agora}
         
-        Douglas address you. "We've been meeting here, for several days, since the Great Pop"
+        Douglas address you. "We've been meeting here for the last few days, ever since the Great Pop"
         "It's a governance of sorts. Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like, before the Great Pop"
         "But now that you're here, maybe we can shift our focus to recovering the Old World, and rebuilding it!"
         
@@ -59,8 +61,8 @@ INCLUDE relationships.ink
     
         VAR asked_how_many = false
         
-        * How long since the Great Pop?
-            "Have you just woken up?"
+        * How long has it been since the Great Pop?
+            "What? Have you only just woken up?"
             Evidently this surprises her
             # Alicia
             
