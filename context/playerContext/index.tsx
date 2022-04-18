@@ -49,7 +49,8 @@ export const PlayerProvider = ({
 
         for(let i = 0; i < relationships[object].length; i++) {
             let r = relationships[object][i];
-            if(r.label.includes(label)) return r;
+            console.log(r.label.normalize() + ' == ' + label.normalize() + '? ' + r.label.normalize() == label.normalize());
+            if(r.label.normalize() == label.normalize()) return r;
         }
 
         return null;
@@ -57,6 +58,8 @@ export const PlayerProvider = ({
 
     const addRelationship = (object, newRelationship) => {
         // merge with pre-existing relationships
+        console.log("adding " + object + " relationship " + newRelationship.label + " (" + newRelationship.strength + ")")
+
         if(object in relationships) {
 
             let r = getRelationshipPair(object, newRelationship.label);
@@ -73,6 +76,8 @@ export const PlayerProvider = ({
         }
         else relationships[object] = [newRelationship];
 
+        console.log(relationships);
+
         setRelationships({...relationships});
     }
 
@@ -84,6 +89,8 @@ export const PlayerProvider = ({
     }
 
     const hasRelationshipPair = (object, label) => {
+        console.log("is object " + object + " in player relationships? " + (object in relationships));
+        console.log("getRelationshipPair returns " + getRelationshipPair(object, label));
         return (object in relationships && getRelationshipPair(object, label) != null);
     }
 
