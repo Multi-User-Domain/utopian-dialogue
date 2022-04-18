@@ -53,7 +53,8 @@ export const BigCityProvider = ({
 
     const [world, setWorld] = useState({
         name: 'Big City',
-        daysSinceGreatPop: 4
+        daysSinceGreatPop: 4,
+        "GOVERNANCE": GovernanceStates.AGORA
     });
     const [locations, setLocations] = useState([
         {
