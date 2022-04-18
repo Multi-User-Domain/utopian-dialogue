@@ -80,9 +80,8 @@ export const DialogueProvider = ({
         nextMessageBuffer();
         addMessage(msg);
 
-        if(msg.selectFollowup) {
+        if(msg.selectFollowup && !msg.includeContinuePrompt) {
             msg.selectFollowup();
-            return;
         }
     }
 
