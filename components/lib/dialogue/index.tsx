@@ -86,6 +86,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
     const selectContinue = (msgValue: IMessage) => {
         setContinueButton(null);
         if(msgValue.sideEffect) msgValue.sideEffect();
+        if(msgValue.selectFollowup) msgValue.selectFollowup();
         continueDialogue();
     }
 
