@@ -1,8 +1,8 @@
 import React, { createContext, ReactElement, useState } from "react";
-import { IPerformer } from "../../components/lib/performers";
+import { IPerformer, performers, PerformerNames } from "../../components/lib/performers";
 
 export interface IMessage {
-    performer?: IPerformer;
+    performer: IPerformer;
     containerCss?: string;
     content?: ReactElement;
     shorthandContent?: ReactElement;
@@ -48,6 +48,12 @@ export const DialogueProvider = ({
     const [dialogueEnded, setDialogueEnded] = useState<boolean>(false);
 
     const addMessage = (msg) => {
+        if(msg.performer == null) {
+            console.warn("addMessage received a message not passing a performer. Setting to the null performer for now");
+            console.log(msg);
+            msg.performer = performers[PerformerNames.NULL_PERFORMER]
+        }
+
         setMessageBuffer(prevBuffer => (
             [...prevBuffer, msg]
         ));
