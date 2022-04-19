@@ -26,6 +26,15 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
 
     let dialogueResponsePrompt = (message.read && message.getResponses) ? <DialogueResponsePrompt message={message}/> : null;
 
+    const imageDisplay = message.performer.imgSrc ? (
+        <GridItem colSpan={2} h={100} w={100} position="relative" overflow="hidden" borderRadius="50%">
+            <Image h="auto" w="100%" src={message.performer.imgSrc}/>
+            <Center marginTop={5}>
+                <Text>{message.performer.name}</Text>
+            </Center>
+        </GridItem>
+    ) : null;
+
     return (
         <Container className={activeCss ? message.containerCss : null}>
             <Grid
@@ -33,13 +42,8 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
                 templateColumns="repeat(5, 1fr)"
                 gap={1}
             >
-                <GridItem colSpan={2} h={100} w={100} position="relative" overflow="hidden" borderRadius="50%">
-                    <Image h="auto" w="100%" src={message.performer.imgSrc}/>
-                    <Center marginTop={5}>
-                        <Text>{message.performer.name}</Text>
-                    </Center>
-                </GridItem>
-                <GridItem colSpan={3} h="100%">
+                {imageDisplay}
+                <GridItem colSpan={message.performer.imgSrc ? 3 : 5} h="100%">
                     <Container paddingLeft={5} paddingTop={15}>
                         {children}
                     </Container>

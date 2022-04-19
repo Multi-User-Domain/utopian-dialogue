@@ -26,10 +26,11 @@ export default function DialogueRelationshipPrompt({tarot, children}: IDialogueR
 
     const acceptTarot = () => {
         addRelationship("self", [tarot.name]);
+        nextMessageBuffer();
     }
 
     const rejectTarot = () => {
-        
+        nextMessageBuffer();
     }
 
     let header = tarot.imgSrc ? (
