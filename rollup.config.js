@@ -4,8 +4,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import css from 'rollup-plugin-css-only';
-import serve from "rollup-plugin-serve";
-import livereload from "rollup-plugin-livereload";
 
 export default {
   input: "./index.tsx",
@@ -34,15 +32,7 @@ export default {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
         include: /node_modules/
     }),
-    typescript({ tsconfig: "./tsconfig.json" }),
-    serve({
-        open: true,
-        verbose: true,
-        contentBase: ["", "public"],
-        host: "localhost",
-        port: 3000,
-    }),
-    livereload({ watch: "dist" }),
+    typescript({ tsconfig: "./tsconfig.json" })
   ],
   external: [],
   paths: {
