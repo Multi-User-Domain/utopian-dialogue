@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, Button, Center, Container } from "@chakra-ui/react";
+import { Text, Button, Center, Container, Image } from "@chakra-ui/react";
 import { css } from "@emotion/css";
 
 import { WindupChildren, Pause, Pace, Effect } from "windups";
@@ -45,6 +45,17 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         addMessage({
             content: (
                 <>
+                <Text fontSize='5xl'>Welcome to Big City Agora</Text>
+                <Image src="../../../public/img/Agora.jpeg" />
+                </>
+            ),
+            performer: performers[PerformerNames.NULL_PERFORMER],
+            includeContinuePrompt: true
+        })
+
+        addMessage({
+            content: (
+                <>
                 <p>"Salutations!" Says a young lady with a beaming smile. "My name is Mari- "</p>
                 <Pause ms={SHORT_PAUSE * 0.5} />
                 </>
@@ -66,8 +77,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             performer: performers[PerformerNames.MARI],
             getResponses: () => doYouRememberResponses(false)
         });
-
-        agoraMeeting();
     }, []);
 
     const doYouRememberResponses = (hasGreensight: boolean) => {
@@ -2345,7 +2354,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     let content = null;
 
-    const introText = (
+    /*const introText = (
         <>
         <p>You follow the path which leads downhill, taking care on the slope.</p>
         <p>You come upon a large circular clearing enclosed by the remains of ancient stonework steps, steep and incomplete.</p>
@@ -2358,7 +2367,8 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         <Pause ms={LONG_PAUSE} />
         <p>The others have been awake for longer, they are discussing what they are supposed to do next.</p>
         </>
-    );
+    );*/
+    const introText = null;
 
     if(!dialogueStarted) content = (
         <>
