@@ -2354,7 +2354,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     let content = null;
 
-    /*const introText = (
+    const introText = (
         <>
         <p>You follow the path which leads downhill, taking care on the slope.</p>
         <p>You come upon a large circular clearing enclosed by the remains of ancient stonework steps, steep and incomplete.</p>
@@ -2367,8 +2367,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
         <Pause ms={LONG_PAUSE} />
         <p>The others have been awake for longer, they are discussing what they are supposed to do next.</p>
         </>
-    );*/
-    const introText = null;
+    );
 
     if(!dialogueStarted) content = (
         <>
