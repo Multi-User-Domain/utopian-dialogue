@@ -63,7 +63,7 @@ export function DialogueResponsePrompt({message}: IDialogueResponsePrompt): Reac
 
     const content = responseDisplay.length ? (
         <Container padding={5} marginTop={5}>
-            {...responseDisplay}
+            {responseDisplay}
         </Container>
     ) : null;
 
