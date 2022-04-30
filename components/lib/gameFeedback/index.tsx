@@ -1,10 +1,8 @@
 import React from "react";
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 
 import {
-    Container,
-    Center,
-    Button
+    Container
 } from "@chakra-ui/react";
 
 import "./gameFeedback.css";
