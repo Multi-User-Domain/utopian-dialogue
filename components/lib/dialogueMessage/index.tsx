@@ -6,17 +6,27 @@ import {
     Center,
     Text,
     GridItem,
-    Image
+    Image,
+    IconButton
 } from "@chakra-ui/react";
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import { useSkip } from "windups";
 import { IMessage } from "../../../context/dialogueContext";
 import { DialogueResponsePrompt } from "../dialogueResponse";
 
 export interface IDialogueMessage {
     message: IMessage;
+    firstMessageInSeq: boolean; // set to true if the message is the first (or the only message) in a sequence
     children: any;
 }
 
-export default function DialogueMessage({message, children}: IDialogueMessage): React.ReactElement {
+const SkipButton = () => {
+    const skip = useSkip();
+
+    return <IconButton aria-label="skip-button" onClick={skip} color="primary"><ArrowRightIcon /></IconButton>;
+};
+
+export default function DialogueMessage({message, firstMessageInSeq, children}: IDialogueMessage): React.ReactElement {
 
     const [activeCss, setActiveCss] = useState(false);
 
@@ -35,6 +45,15 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
         </GridItem>
     ) : null;
 
+    const skipButton = (!firstMessageInSeq || message.excludeSkipPrompt || message.read) ? null :
+        <GridItem colSpan={1} h="100%">
+            <SkipButton />
+        </GridItem>;
+
+    let messageColSpan = 5;
+    if(message.performer.imgSrc) messageColSpan -= 2;
+    if(firstMessageInSeq) messageColSpan -= 1;
+
     return (
         <Container className={activeCss ? message.containerCss : null}>
             <Grid
@@ -43,11 +62,12 @@ export default function DialogueMessage({message, children}: IDialogueMessage): 
                 gap={1}
             >
                 {imageDisplay}
-                <GridItem colSpan={message.performer.imgSrc ? 3 : 5} h="100%">
+                <GridItem colSpan={messageColSpan} h="100%">
                     <Container paddingLeft={5} paddingTop={15}>
                         {children}
                     </Container>
                 </GridItem>
+                {skipButton}
             </Grid>
             {dialogueResponsePrompt}
         </Container>
