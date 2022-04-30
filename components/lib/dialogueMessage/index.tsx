@@ -23,7 +23,7 @@ export interface IDialogueMessage {
 const SkipButton = () => {
     const skip = useSkip();
 
-    return <IconButton aria-label="skip-button" onClick={skip} color="primary"><ArrowRightIcon /></IconButton>;
+    return <IconButton aria-label="skip-button" onClick={skip} color="primary" marginLeft={7}><ArrowRightIcon /></IconButton>;
 };
 
 export default function DialogueMessage({message, firstMessageInSeq, children}: IDialogueMessage): React.ReactElement {
