@@ -50,7 +50,7 @@ export const NarrativeProvider = ({
     }
 
     useEffect(() => {
-        setFrame("agora");
+        setFrame("home");
     }, []);
 
     return(
