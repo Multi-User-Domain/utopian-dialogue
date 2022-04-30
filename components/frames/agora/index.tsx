@@ -123,7 +123,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
                     agoraMeeting();
                 },
-                shorthandContent: <Text>{selectRandomFrom(["No, I don't remember", "I don't remember who I am"])}</Text>
+                shorthandContent: <Text>{selectRandomFrom(["\"No, I don't remember\"", "\"I don't remember who I am\""])}</Text>
             }
         ];
 
