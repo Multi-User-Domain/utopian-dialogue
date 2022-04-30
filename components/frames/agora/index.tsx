@@ -1917,7 +1917,7 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const leopaldImprisonDissidents = () => {
-
+        
     }
 
     const organisedViolenceDilemma = () => {
@@ -2349,7 +2349,99 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const battle = () => {
+        let mariCallsTo = hasRelationshipStrongerThan(PerformerNames.MARI, Relationships.TRUST, 0) ? playerPerformer.name : PerformerNames.ANDREW;
 
+        addMessage({
+            content: <p>"{mariCallsTo}!" she calls, rushing forward to help.<Pause ms={SHORT_PAUSE} /> Where she treads the crowd follows, despite the danger.<Pause ms={SHORT_PAUSE * 0.4} /> {PerformerNames.LEOPALD} and his followers have caught up, rifles pointed into the crowd.</p>,
+            performer: performers[PerformerNames.MARI],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>They will not fire. <Pause ms={SHORT_PAUSE * 0.75} />That would be madness.</p>,
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            containerCss: fadeOutTransition(1 + (playerPerformer.name.length * 0.5)),
+            content: <p><b>BOOM!</b><Effect fn={() => shakeEffect("shake-horizontal shake-constant")} /><Pause ms={SHORT_PAUSE * 0.33} /> a rifle sounds.<Pause ms={SHORT_PAUSE} /> The echo rings through your body into a terrible abyss.</p>,
+            performer: performers[PerformerNames.LEOPALD],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            containerCss: fadeInTransition(1 + (playerPerformer.name.length * 0.1)),
+            content: (
+                <>
+                <p>"{playerPerformer.name}?"</p><Pause ms={SHORT_PAUSE * 0.33} />
+                <p>"{playerPerformer.name}?"</p><Pause ms={SHORT_PAUSE * 0.33} />
+                <p>"Are you alright?"</p>
+                <p>You flutter back into consciousness, and the world seems to flutter with you.</p><Pause ms={SHORT_PAUSE * 0.2} />
+                <p>Andrew is stood over you. He is holding a rifle.<Pause ms={SHORT_PAUSE * 0.33} /> There is blood across his chest</p>
+                </>
+            ),
+            performer: performers[PerformerNames.ANDREW],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>You look about you, dizzy.<Pause ms={SHORT_PAUSE * 0.2} /> There are bodies strewn everywhere.<Pause ms={SHORT_PAUSE * 0.33} /></p>
+                <p>You see Leopalds first, and his guards.</p><Pause ms={SHORT_PAUSE * 0.33} />
+                <p>You see other faces, some you recognise dimly, others the faces of complete strangers.</p>
+                </>
+            ),
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>You see Mari, her face pale and her eyes icy. The life has left them.<Pause ms={SHORT_PAUSE * 1.75} /></p>,
+            performer: performers[PerformerNames.MARI]
+        });
+
+        addMessage({
+            content: <p>You cannot hear what Andrew is saying.</p>,
+            performer: performers[PerformerNames.ANDREW],
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            content: <p>All the death you around you is making a racket, and you are being bounced back and forth.<Pause ms={SHORT_PAUSE} /></p>,
+            performer: playerPerformer
+        });
+
+        addMessage({
+            content: (
+                <>
+                <p>Someone is helping you to your feet and guiding you away, back to the Agora.<Pause ms={SHORT_PAUSE} /></p>
+                <p>The birds are chirping.<Pause ms={SHORT_PAUSE * 0.2} /> It's so peaceful here</p>
+                </>
+            ),
+            performer: playerPerformer,
+            includeContinuePrompt: true
+        });
+
+        addMessage({
+            containerCss: fadeInTransition(1 + (playerPerformer.name.length * 0.3)),
+            content: <p>"When you are recovered enough there will be a meeting in the Agora to discuss what happened"</p>,
+            performer: performers[PerformerNames.ANDREW],
+            includeContinuePrompt: true
+        });
+
+        theEnd();
+    }
+
+    const theEnd = () => {
+        addMessage({
+            content: <p>The End</p>,
+            performer: performers[PerformerNames.NULL_PERFORMER],
+            includeContinuePrompt: true
+        });
+
+        setDialogueEnded(true);
     }
 
     let content = null;
