@@ -16,7 +16,7 @@ export interface INarrativeContext {
 export const NarrativeContext = createContext<INarrativeContext>({activeFrame: null});
 
 // a dictionary of React Element import routes. Register your frames here!
-const frameDictionary = {
+export const FRAME_DICTIONARY = {
     // TODO: code-splitting will improve performance for this design greatly at scale
     // however it involves using another format from IIEF or UMD
     // look into using ESM format (had difficulties bundling this)
@@ -38,11 +38,11 @@ export const NarrativeProvider = ({
     const [activeFrame, setActiveFrame] = useState<ReactElement>(null);
 
     const getActiveFrameElement: (name: string) => ReactElement = (name: string) => {
-        return frameDictionary[name]({followLink: setFrame});
+        return FRAME_DICTIONARY[name]({followLink: setFrame});
     }
 
     const setFrame = (name: string) => {
-        if(name in frameDictionary) {
+        if(name in FRAME_DICTIONARY) {
             setActiveFrame(getActiveFrameElement(name));
             return;
         }
