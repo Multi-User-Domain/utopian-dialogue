@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Text, Button, Center, Container, Image } from "@chakra-ui/react";
-import { css } from "@emotion/css";
 
 import { WindupChildren, Pause, Pace, Effect } from "windups";
 import { IStoryFrame } from "../../lib/types";

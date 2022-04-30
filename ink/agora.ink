@@ -975,9 +975,9 @@ INCLUDE relationships.ink
 
 == leopald_imprison_dissidents ==
   "It is evident to us all, of course, the wise benevolence in which your prisons operate. We see that they are as much a service for the imprisoned themselves as for society at large"
-      "But it pains me to admit the scale of <b>dissidence</b> which exists in the hearts of some here today"
-      
-      { player_has_greensight: the space has become very tense }
+  "But it pains me to admit the scale of <b>dissidence</b> which exists in the hearts of some who are here today"
+  
+  { player_has_greensight: the space has become very tense }
 
   He points to Mari and Andrew in turn, slowly. "THEM!" he shouts
   "These heretical MALCONTENTS, my liege! They would see you overthrown!"
