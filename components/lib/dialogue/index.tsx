@@ -47,7 +47,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
         for(let i = 0; i < messageDisplayBuffer.length; i++) {
             let msgValue = messageDisplayBuffer[i];
             let msgContent = msgValue.content ? msgValue.content : msgValue.shorthandContent;
-            let msgDisplay = <DialogueMessage key={i} message={msgValue}>{msgContent}</DialogueMessage>;
+            let msgDisplay = <DialogueMessage key={i} message={msgValue} firstMessageInSeq={i == 0}>{msgContent}</DialogueMessage>;
         
             if(msgValue.read) messagesRead.push(msgDisplay);
             else {
