@@ -13,7 +13,8 @@ import {
     TabPanels, 
     Tab, 
     TabPanel, 
-    Text
+    Text,
+    Input
 } from "@chakra-ui/react";
 
 import { FRAME_DICTIONARY } from "../../../context/narrativeContext";
@@ -22,7 +23,7 @@ import useBigCity from "../../../hooks/useBigCity";
 
 export default function DevTools({isOpen, onClose=null} : {isOpen: boolean, onClose: () => void}): React.ReactElement {
     const { setFrame } = useNarrative();
-    const { world } = useBigCity();
+    const { world, setWorldItem } = useBigCity();
     
     const goToFrame = (idx: string) => {
         setFrame(idx);
@@ -37,7 +38,15 @@ export default function DevTools({isOpen, onClose=null} : {isOpen: boolean, onCl
     // render world data into a JSON-object like display
     const worldData = [<Text key={0}>&#123;</Text>];
     Object.keys(world).forEach((key) => {
-        worldData.push(<Text key={key} paddingLeft="2em">{key}: {world[key]}</Text>);
+        worldData.push(
+            <>
+            <Text key={key} paddingLeft="2em">{key}: </Text>
+            <Input
+                label="Name"
+                value={world[key]}
+                onChange={(e) => setWorldItem(key, e.target.value)}/>
+            </>
+        );
     });
     worldData.push(<Text key={Object.keys(world).length}>&#125;</Text>);
 
