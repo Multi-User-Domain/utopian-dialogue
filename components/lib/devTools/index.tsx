@@ -39,13 +39,13 @@ export default function DevTools({isOpen, onClose=null} : {isOpen: boolean, onCl
     const worldData = [<Text key={0}>&#123;</Text>];
     Object.keys(world).forEach((key) => {
         worldData.push(
-            <>
-            <Text key={key} paddingLeft="2em">{key}: </Text>
+            <div key={key}>
+            <Text paddingLeft="2em">{key}: </Text>
             <Input
                 label="Name"
                 value={world[key]}
                 onChange={(e) => setWorldItem(key, e.target.value)}/>
-            </>
+            </div>
         );
     });
     worldData.push(<Text key={Object.keys(world).length}>&#125;</Text>);
