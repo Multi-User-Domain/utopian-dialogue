@@ -173,7 +173,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             addMessage({
                 content: <p>"We call this the Agora. Here we ask the question 'How do we want to live together?' and then we delegate and organise to make the answers reality"</p>,
                 performer: performers[PerformerNames.MARI],
-                includeContinuePrompt: true,
                 getResponses: preMeetingQuestions
             });
         }
@@ -193,7 +192,6 @@ function AgoraDialogue({followLink} : IStoryFrame) : React.ReactElement {
             addMessage({
                 content: <p>"Now that you're here,<Pause ms={SHORT_PAUSE * 0.2}/> maybe we can set about recovering the Old World, and rebuilding it<Pace ms={SLOW_PACE}>...</Pace> <em>exactly</em> as it was!"</p>,
                 performer: performers[PerformerNames.DOUGLAS],
-                includeContinuePrompt: true,
                 getResponses: preMeetingQuestions
             });
         }

@@ -49,6 +49,11 @@ export const DialogueProvider = ({
     const [dialogueEnded, setDialogueEnded] = useState<boolean>(false);
 
     const addMessage = (msg) => {
+        if(msg.includeContinuePrompt && msg.getResponses) {
+            console.error("addMessage received a message with both includeContinuePrompt and getResponses");
+            console.error(msg);
+        }
+
         if(msg.performer == null) {
             console.warn("addMessage received a message not passing a performer. Setting to the null performer for now");
             console.log(msg);
