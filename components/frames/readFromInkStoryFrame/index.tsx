@@ -22,13 +22,36 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     const inkStory = new InkJs.Story(storyJson);
 
-    const getNext = () => {
-        let s: string = inkStory.Continue();
+    const getPerformerFromContent = (content) => {
+        return performers[PerformerNames.NULL_PERFORMER]
+    }
+
+    const getResponses = (choices) => {
+        let responses: IMessage[] = [];
+
+        for(let i = 0; i < choices.length; i++) {
+            let choice = choices[i];
+
+            responses.push({
+                shorthandContent: choice.text,
+                performer: getPerformerFromContent(choice.text),
+                selectFollowup: () => getNext(inkStory.ChooseChoiceIndex(i))
+            });
+        }
+
+        return responses;
+    }
+
+    const getNext = (s: string = null) => {
+        if(s == null) s = inkStory.Continue();
+
+        let hasChoices: boolean = inkStory.currentChoices.length > 0;
 
         addMessage({
             content: <Text>{s}</Text>,
-            performer: performers[PerformerNames.NULL_PERFORMER],
-            includeContinuePrompt: true,
+            performer: getPerformerFromContent(s),
+            includeContinuePrompt: hasChoices ? false : true,
+            getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
             selectFollowup: inkStory.canContinue ? getNext : null
         });
     }
