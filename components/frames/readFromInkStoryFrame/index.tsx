@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import InkJs from 'inkjs';
-import { Container } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 
-import { WindupChildren } from "windups";
 import { IStoryFrame } from "../../lib/types";
+import Dialogue from "../../../components/lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
@@ -22,16 +22,24 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     const inkStory = new InkJs.Story(storyJson);
 
+    const getNext = () => {
+        let s: string = inkStory.Continue();
+
+        addMessage({
+            content: <Text>{s}</Text>,
+            performer: performers[PerformerNames.NULL_PERFORMER],
+            includeContinuePrompt: true,
+            selectFollowup: inkStory.canContinue ? getNext : null
+        });
+    }
+
     useEffect(() => {
-        
-    });
+        getNext();
+    }, []);
 
     return (
-        <Container>
-            <WindupChildren>
-                <p>{inkStory.ContinueMaximally()}</p>
-            </WindupChildren>
-        </Container>
+        <Dialogue>
+        </Dialogue>
     );
     
 }
