@@ -7,6 +7,7 @@ import Agora from "../../components/frames/agora";
 //import Death from "../../components/frames/death";
 //import DataSilos from "../../components/frames/dataSilos";
 //import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
+import ReadFromInkStoryFrame from "../../components/frames/readFromInkStoryFrame";
 
 export interface INarrativeContext {
     activeFrame: ReactElement;
@@ -28,7 +29,8 @@ export const FRAME_DICTIONARY = {
     //'holySpire': HolyBuilding,
     //'death': Death,
     //'dataSilos': DataSilos,
-    //'dataSilosMudSignup': DataSilosMudSignup
+    //'dataSilosMudSignup': DataSilosMudSignup,
+    'readFromInkStoryFrame': ReadFromInkStoryFrame,
 }
 
 export const NarrativeProvider = ({
