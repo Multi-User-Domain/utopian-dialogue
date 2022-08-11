@@ -10198,6 +10198,11 @@ ini@^1.3.5:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
 
+inkjs@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/inkjs/-/inkjs-2.1.0.tgz#2e6d501e7477dcafdf200ec4d790e2d01d88a076"
+  integrity sha512-M4b2mHZYWxlcft9zaGbGh0t4Bi3M8no/O86N8uwLA6UzP8M1pNGmcyqyfxUmNqyDTQ4/caMx2EqwvNTv/N10SQ==
+
 internal-ip@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-4.3.0.tgz#845452baad9d2ca3b69c635a137acb9a0dad0907"
