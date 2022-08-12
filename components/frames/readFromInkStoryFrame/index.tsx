@@ -43,6 +43,14 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         return content;
     }
 
+    const makeChoice = (index: number, originalChoiceText: string) => {
+        inkStory.ChooseChoiceIndex(index);
+        let content: string = inkStory.Continue();
+        content = content.substring(originalChoiceText.length, content.length).trim();
+
+        return getNext(content);
+    }
+
     const getResponses = (choices) => {
         let responses: IMessage[] = [];
 
@@ -52,7 +60,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
             responses.push({
                 shorthandContent: <p>{stripPerformerFromContent(choice.text)}</p>,
                 performer: getPerformerFromContent(choice.text),
-                selectFollowup: () => getNext(inkStory.ChooseChoiceIndex(i))
+                selectFollowup: () => makeChoice(i, choice.text)
             });
         }
 
