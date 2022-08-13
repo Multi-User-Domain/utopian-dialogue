@@ -1,4 +1,5 @@
 import React, { lazy, createContext, ReactElement, useState, useEffect } from "react";
+import MainMenu from "../../components/frames/mainMenu";
 import Home from "../../components/frames/home"
 import WhoAmI from "../../components/frames/whoAmI";
 import WhereAmI from "../../components/frames/whereAmI";
@@ -22,6 +23,7 @@ export const FRAME_DICTIONARY = {
     // however it involves using another format from IIEF or UMD
     // look into using ESM format (had difficulties bundling this)
     //'home': lazy(() => import('../../components/frames/home')),
+    'mainMenu': MainMenu,
     'home': Home,
     'whoAmI': WhoAmI,
     'whereAmI': WhereAmI,
@@ -52,7 +54,7 @@ export const NarrativeProvider = ({
     }
 
     useEffect(() => {
-        setFrame("home");
+        setFrame("mainMenu");
     }, []);
 
     return(
