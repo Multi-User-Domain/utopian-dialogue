@@ -44,6 +44,10 @@ Here the words `<Craig:>` will be stripped from the story content and Craig's po
 
 Note that currently custom portraits are not supported - please select a portrait name from the [list here](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3), e.g. `Mari`, `Craig` or `Andrew`
 
+#### Pauses
+
+To make the text animation Pause manually, use `<Pause 100>`, replacing `100` with the milliseconds the pause should last for
+
 ### Extending the Base Dialogue
 
 This section is for opening requests to change the content of the base game
