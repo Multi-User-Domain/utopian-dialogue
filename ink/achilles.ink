@@ -2,9 +2,9 @@
 ->introduce_achilles
 
 === introduce_achilles ===
-    <Craig:> "Greetings! I am Achilles, Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
+    <Craig:> "Greetings! I am Achilles,<Pause 100> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
     
-    <Rupert:> "And <em>I</em> am King Rupert"
+    <Rupert:> "And <em>I</em>... am King Rupert"
     
     <Craig:> "Nobody cares who you are"
     

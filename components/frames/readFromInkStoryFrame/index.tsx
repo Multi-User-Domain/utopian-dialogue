@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import InkJs from 'inkjs';
 import axios from 'axios';
 import { Text, Container, Button, Center, Input } from "@chakra-ui/react";
+import { Pause, Pace, Effect } from "windups";
 
 import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../../components/lib/dialogue";
@@ -22,6 +23,12 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/achilles.ink.json");
     const [inkStory, setInkStory] = useState(null);
 
+    // contains a set of definitions for element generators supported in Ink files
+    // for example, <Pause 100> will result in the React element <Pause ms={100}></Pause>
+    const customInkElementDict = {
+        "Pause": (key, ms) => { return <Pause key={key} ms={ms}></Pause> }
+    }
+
     const getPerformerFromContent = (content: string) => {
         if(content.startsWith("<") && content.indexOf(":>") > 0) {
             let i = content.indexOf(":>");
@@ -35,11 +42,8 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const stripPerformerFromContent: (string) => string = (content: string) => {
-        if(content.startsWith("<") && content.indexOf(":>") > 0) {
-            let i = content.indexOf(":>");
-
-            content = content.substring(i + 2, content.length);
-        }
+        let i = content.indexOf(":>");
+        if(content.startsWith("<") && i > 0) content = content.substring(i + 2, content.length);
 
         return content;
     }
@@ -68,16 +72,54 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         return responses;
     }
 
+    /**
+     * @param s the string from an Ink file to be parsed
+     * @return a React element generated from parsing
+     */
+    const parseContent = (s: string) => {
+        s = stripPerformerFromContent(s);
+        let contentArr = [];
+
+        let index = 0;
+        while(index >= 0) {
+            index = s.indexOf("<");
+            if(index < 0 || s[index + 1] == ">") continue; // catch empty brackets - ink "glue" syntax
+
+            // isolate the bounds of our element
+            let end = s.indexOf(">") + 1;
+            let element: any = s.substring(index + 1, end -1);
+
+            // split the element into its' component, and it's parameters (separated by spaces)
+            element = element.split(" ");
+            let elementName = element.shift();
+
+            // find the element and push it to the contentArr
+            contentArr.push(<span key={index}>{s.substring(0, index)}</span>);
+            if(Object.keys(customInkElementDict).includes(elementName)) {
+                contentArr.push(customInkElementDict[elementName](index + 1, ...element));
+            }
+
+            // strip the element from the content
+            s = s.substring(end, s.length);
+        }
+
+        // build the content into a ReactElement
+        contentArr.push(<span key={s.length}>{s}</span>);
+        let content = <Text>{contentArr}</Text>;
+
+        return content;
+    }
+
     const getNext = (s: string = null) => {
         if(s == null) s = inkStory.Continue();
 
         let performer = getPerformerFromContent(s);
-        s = stripPerformerFromContent(s);
+        let content = parseContent(s);
 
         let hasChoices: boolean = inkStory.currentChoices.length > 0;
 
         addMessage({
-            content: <Text>{s}</Text>,
+            content: content,
             performer: performer,
             includeContinuePrompt: hasChoices ? false : true,
             getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
