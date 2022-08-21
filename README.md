@@ -46,7 +46,13 @@ Note that currently custom portraits are not supported - please select a portrai
 
 #### Pauses
 
-To make the text animation Pause manually, use `<Pause 100>`, replacing `100` with the milliseconds the pause should last for
+To make the text animation Pause manually, use `<Pause 100>`, replacing `100` with the milliseconds the pause should last for. The recommendation is to use your own variables in ink which you can control:
+
+```
+VAR long_pause = 2000
+
+<Craig:> "Greetings! I am Achilles,<Pause {long_pause}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
+```
 
 ### Extending the Base Dialogue
 
