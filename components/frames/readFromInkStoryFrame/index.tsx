@@ -142,7 +142,16 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     useEffect(() => {
         if(storyUrl != null) {
             axios.get(storyUrl).then(res => {
-                setInkStory(new InkJs.Story(res.data));
+                // get the file type returned by the server
+                let story = null;
+
+                if(res.headers["content-type"] == "application/json")
+                    story = new InkJs.Story(res.data);
+                else if(res.headers["content-type"] == "application/inkml+xml")
+                    story = new InkJs.Compiler(res.data).Compile();
+                
+                if(story != null) setInkStory(story);
+                else console.error("unrecognised content-type " + res.headers["content-type"]);
             });
         }
     }, [storyUrl]);
