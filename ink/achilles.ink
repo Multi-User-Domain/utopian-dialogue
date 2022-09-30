@@ -1,5 +1,7 @@
 
 VAR long_pause = 2000
+VAR is_champion = false
+VAR text = "<GET_TEXT https:\/\/calum.inrupt.net/public/mudcard.ttl>"
 
 ->introduce_achilles
 
@@ -15,6 +17,20 @@ VAR long_pause = 2000
     
 == champion ==
     <Craig:> "Champion, eh?". Achilles seems impressed
+    <Effect Shake>
+    
+    #{"MATCH_GRAPH https:\/\/calum.inrupt.net/public/mudcard.ttl":
+    #    <Craig:> "I know about you"
+    #- else:
+    #    <Craig:> "I do not know about you yet"
+    #}
+    
+    #{ world.hello != "test":
+    #    {world.hello}
+    #- else:
+    #    "test"
+    #}
+    
     -> DONE
 
 == not_champion ==

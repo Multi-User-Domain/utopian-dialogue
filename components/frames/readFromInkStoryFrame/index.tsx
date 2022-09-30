@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import InkJs from 'inkjs';
 import axios from 'axios';
 import { Text, Container, Button, Center, Input } from "@chakra-ui/react";
-import { Pause, Pace, Effect } from "windups";
+import { WindupChildren, Pause, Pace, Effect } from "windups";
 
 import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../../components/lib/dialogue";
@@ -13,6 +13,8 @@ import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import { performers, PerformerNames } from "../../lib/performers";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, INTUITION_COLOUR, FAST_PACE } from "../../lib/constants";
 
+const SHAKE_TIMEOUT = 500;
+
 /*
 *   A component which renders a dialogue directly from an ink file
 */
@@ -21,13 +23,32 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
     const [storyUrl, setStoryUrl] = useState(null);
-    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/achilles.ink.json");
+    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/ink/achilles.ink");
     const [inkStory, setInkStory] = useState(null);
+
+    // CSS classes to apply to the story container
+    // used for example for animations
+    const [storyClasses, setStoryClasses] = useState(null);
+
+    const shakeEffect = (classes: string, timeout=SHAKE_TIMEOUT) => {
+        setStoryClasses(classes);
+
+        setTimeout(() => {
+            setStoryClasses(null);
+        }, timeout);
+    }
+
+    const resolveEffect = (key, effectName, ms=SHAKE_TIMEOUT) => {
+        if(effectName == "Shake") {
+            return <Effect key={key} fn={() => shakeEffect("shake-hard shake-constant", ms)} />
+        }
+    }
 
     // contains a set of definitions for element generators supported in Ink files
     // for example, <Pause 100> will result in the React element <Pause ms={100}></Pause>
     const customInkElementDict = {
-        "Pause": (key, ms) => { return <Pause key={key} ms={ms}></Pause> }
+        "Pause": (key, ms) => { return <Pause key={key} ms={ms}></Pause> },
+        "Effect": resolveEffect
     }
 
     const getPerformerFromContent = (content: string) => {
@@ -178,8 +199,12 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     return (
-        <Dialogue>
-        </Dialogue>
+        <Container className={storyClasses ? storyClasses : ""}>
+            <WindupChildren>
+                <Dialogue>
+                </Dialogue>
+            </WindupChildren>
+        </Container>
     );
     
 }

@@ -54,6 +54,12 @@ VAR long_pause = 2000
 <Craig:> "Greetings! I am Achilles,<Pause {long_pause}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
 ```
 
+#### Effects
+
+Some special animation effects are available, see below:
+
+* **Shake**: makes the screen shake. <Effect Shake _timeout_>, e.g. `<Effect Shake 500>`. Timeout optional, defaults to 500
+
 ### Extending the Base Dialogue
 
 This section is for opening requests to change the content of the base game
