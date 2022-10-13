@@ -1,11 +1,16 @@
 
 VAR long_pause = 2000
+VAR short_pause = 1000
 VAR is_champion = false
 VAR text = "<GET_TEXT https:\/\/calum.inrupt.net/public/mudcard.ttl>"
 
 ->introduce_achilles
 
 === introduce_achilles ===
+    <Mari:> "Salutations!" Says a young lady, with a beaming smile. "My name is Mari- "<Pause {short_pause * 0.5}>
+    
+    <Douglas:> "Do you remember who you are?!". He is addressing you <Continue>
+
     <Craig:> "Greetings! I am Achilles,<Pause {long_pause}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
     
     <Rupert:> "And <em>I</em>... am King Rupert"

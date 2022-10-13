@@ -143,20 +143,27 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         return content;
     }
 
+    const hasContinue = (s: string) => {
+        return s.indexOf("<Continue>") > 0;
+    }
+
     const getNext = (s: string = null) => {
         if(s == null) s = inkStory.Continue();
 
+        let isContinue = hasContinue(s);
         let performer = getPerformerFromContent(s);
         let content = parseContent(s);
 
         let hasChoices: boolean = inkStory.currentChoices.length > 0;
+        let includeContinuePrompt: boolean = isContinue && !hasChoices;
 
         addMessage({
             content: content,
             performer: performer,
-            includeContinuePrompt: hasChoices ? false : true,
+            includeContinuePrompt: includeContinuePrompt,
             getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
-            selectFollowup: inkStory.canContinue ? getNext : null
+            selectFollowup: inkStory.canContinue ? getNext : null,
+            sideEffect: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? getNext : null
         });
     }
 

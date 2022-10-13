@@ -44,6 +44,16 @@ Here the words `<Craig:>` will be stripped from the story content and Craig's po
 
 Note that currently custom portraits are not supported - please select a portrait name from the [list here](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3), e.g. `Mari`, `Craig` or `Andrew`
 
+#### Continue Prompts
+
+Displaying everything in the story in one prose will be too fast for many readers to follow. It's better to include `<Continue>` whenever you want one message to end:
+
+```
+<Douglas:> "Do you remember who you are?!". He is addressing you <Continue>
+```
+
+Note that a continue prompt can only be placed at the end of the line (at least, placing it twice in the same paragraph will only have the effect once). If there are choices following the message, the continue prompt will be ignored
+
 #### Pauses
 
 To make the text animation Pause manually, use `<Pause 100>`, replacing `100` with the milliseconds the pause should last for. The recommendation is to use your own variables in ink which you can control:
