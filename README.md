@@ -64,6 +64,15 @@ VAR long_pause = 2000
 <Craig:> "Greetings! I am Achilles,<Pause {long_pause}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
 ```
 
+#### Pace
+
+To make the text run more slowly, use `<Pace 100>your text here</Pace>`, replacing `100` with the miliseconds pace the text should be printed.
+
+```
+VAR slow_pace = 150
+VAR fast_pace = 40
+```
+
 #### Effects
 
 Some special animation effects are available, see below:
