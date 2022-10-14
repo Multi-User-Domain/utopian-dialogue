@@ -70,6 +70,10 @@ Some special animation effects are available, see below:
 
 * **Shake**: makes the screen shake. <Effect Shake _timeout_>, e.g. `<Effect Shake 500>`. Timeout optional, defaults to 500
 
+#### Text Markup
+
+Some basic text markup is supported: `<em>emphasis</em>` and `<b>bold</b>`
+
 ### Extending the Base Dialogue
 
 This section is for opening requests to change the content of the base game

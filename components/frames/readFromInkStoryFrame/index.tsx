@@ -48,7 +48,9 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     // for example, <Pause 100> will result in the React element <Pause ms={100}></Pause>
     const customInkElementDict = {
         "Pause": (key, ms) => { return <Pause key={key} ms={ms}></Pause> },
-        "Effect": resolveEffect
+        "Effect": resolveEffect,
+        "em": (key, substring) => { return <em key={key}>{substring}</em> },
+        "b": (key, substring) => { return <b key={key}>{substring}</b> },
     }
 
     const getPerformerFromContent = (content: string) => {
@@ -119,8 +121,25 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
             // find the element and push it to the contentArr
             contentArr.push(<span key={contentArr.length}>{s.substring(0, index)}</span>);
             if(Object.keys(customInkElementDict).includes(elementName)) {
-                contentArr.push(customInkElementDict[elementName](contentArr.length, ...element));
+                // some elements encapsulate text (e.g. <em>text</em>)
+                let endBracket = s.indexOf("</" + elementName + ">");
+                if(endBracket >= 0) {
+                    let nextInst = s.indexOf("<" + elementName, index + 1);
+                    if (nextInst < 0 || endBracket < nextInst) {
+                        let substring = s.substring(end, endBracket);
+                        contentArr.push(customInkElementDict[elementName](contentArr.length, substring, ...element));
+
+                        // when we remove the element from the string, we can now remove the text within as well
+                        end = endBracket + elementName.length + 3; // + 3 for < and then /> characters
+                    }
+                }
+
+                // .. whilst others represent standalone effects (e.g. <Pause>)
+                else {
+                    contentArr.push(customInkElementDict[elementName](contentArr.length, ...element));
+                }
             }
+            else console.warn("parsed unknown element " + elementName);
 
             // strip the element from the content
             s = s.substring(end, s.length);
