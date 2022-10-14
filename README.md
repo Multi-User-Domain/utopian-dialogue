@@ -73,16 +73,3 @@ Some special animation effects are available, see below:
 #### Text Markup
 
 Some basic text markup is supported: `<em>emphasis</em>` and `<b>bold</b>`
-
-### Extending the Base Dialogue
-
-This section is for opening requests to change the content of the base game
-
-Our intention is to build a game which engages the reader in a utopian dialogue and explore the question "how do we want to live together?"
-
-If you have an interesting expansion to our game, then please feel free to write it and open a PR!
-
-Our process for writing stories is as follows:
-* We prototype the story using [Ink](https://www.inklestudios.com/ink/) ([repo](https://github.com/inkle/ink)). Please see the agora dialogue in the `ink` directory for an example of how this works
-* Playtest it to see if your choices work!
-* Create a new React component in `components/frames`. Please refer to `agora` as a reference. You can now use the `Dialogue` and other providers to write and animate your story using JavaScript. We use [Windups](https://windups.gwil.co) to provide much of the text animation but you can try custom things as well
