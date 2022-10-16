@@ -53,6 +53,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         "b": (key, substring) => { return <b key={key}>{substring}</b> },
         "color": (key, substring, color) => { return <Text key={key} color={color} as="span">{substring}</Text> },
         "Pace": (key, substring, ms) => { return <Pace key={key} ms={ms}>{substring}</Pace> },
+        "br/": (key) => { return <br key={key} /> },
     }
 
     const getPerformerFromContent = (content: string) => {

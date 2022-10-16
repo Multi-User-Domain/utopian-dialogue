@@ -84,3 +84,5 @@ Some special animation effects are available, see below:
 Some basic text markup is supported: `<em>emphasis</em>` and `<b>bold</b>`
 
 Text can be colored using `<color "#ffffff">text</color>`
+
+Newlines with `<br/>`
