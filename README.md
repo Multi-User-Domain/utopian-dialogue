@@ -83,6 +83,10 @@ Some special animation effects are available, see below:
 
 Some basic text markup is supported: `<em>emphasis</em>` and `<b>bold</b>`
 
-Text can be colored using `<color "#ffffff">text</color>`
+Text can be colored using `<color white>text</color>`, or using a color variable for example `VAR intuition_color = "\#9246d9"`
 
 Newlines with `<br/>`
+
+#### Fade Animations
+
+* **ColorFade**: `<ColorFade colorA colorB duration> text </ColorFade>` where duration is optional and defaults to 5. For example `<ColorFade black red 5></ColorFade>`

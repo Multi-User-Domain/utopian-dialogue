@@ -11,6 +11,7 @@ import usePlayer from "../../../hooks/usePlayer";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 
 import { performers, PerformerNames } from "../../lib/performers";
+import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, INTUITION_COLOUR, FAST_PACE } from "../../lib/constants";
 
 const SHAKE_TIMEOUT = 500;
@@ -39,9 +40,12 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     }
 
     const resolveEffect = (key, effectName, ms=SHAKE_TIMEOUT) => {
-        if(effectName == "Shake") {
-            return <Effect key={key} fn={() => shakeEffect("shake-hard shake-constant", ms)} />
-        }
+        if(effectName == "Shake")  
+            return <Effect key={key} fn={() => shakeEffect("shake-hard shake-constant", ms)} />;
+    }
+
+    const colorFadeTransition = (key, substring, colorA, colorB, ms) => {
+        return <Text key={key} className={colourFadeAnimationCss(colorA, colorB, ms)} as="span">{substring}</Text>;
     }
 
     // contains a set of definitions for element generators supported in Ink files
@@ -54,6 +58,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         "color": (key, substring, color) => { return <Text key={key} color={color} as="span">{substring}</Text> },
         "Pace": (key, substring, ms) => { return <Pace key={key} ms={ms}>{substring}</Pace> },
         "br/": (key) => { return <br key={key} /> },
+        "ColorFade": colorFadeTransition,
     }
 
     const getPerformerFromContent = (content: string) => {
