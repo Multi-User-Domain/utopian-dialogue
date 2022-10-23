@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 
 
-export const colourFadeAnimationCss = (fromColour: string, toColour: string, durationSeconds: number) => {
+export const colourFadeAnimationCss = (fromColour: string, toColour: string, durationSeconds: number=5) => {
     return css`
             -webkit-animation-duration: ${durationSeconds}s;
             -webkit-animation-name: fading;
