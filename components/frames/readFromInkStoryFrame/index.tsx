@@ -12,7 +12,7 @@ import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 
 import { performers, PerformerNames } from "../../lib/performers";
 import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
-import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE, INTUITION_COLOUR, FAST_PACE } from "../../lib/constants";
+import { SLOW_PACE } from "../../lib/constants";
 
 const SHAKE_TIMEOUT = 500;
 
@@ -44,8 +44,8 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
             return <Effect key={key} fn={() => shakeEffect("shake-hard shake-constant", ms)} />;
     }
 
-    const colorFadeTransition = (key, substring, colorA, colorB, ms) => {
-        return <Text key={key} className={colourFadeAnimationCss(colorA, colorB, ms)} as="span">{substring}</Text>;
+    const colorFadeTransition = (key, subcontent, colorA, colorB, ms) => {
+        return <Text key={key} className={colourFadeAnimationCss(colorA, colorB, ms)} as="span">{subcontent}</Text>;
     }
 
     // contains a set of definitions for element generators supported in Ink files
@@ -53,10 +53,10 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     const customInkElementDict = {
         "Pause": (key, ms) => { return <Pause key={key} ms={ms}></Pause> },
         "Effect": resolveEffect,
-        "em": (key, substring) => { return <em key={key}>{substring}</em> },
-        "b": (key, substring) => { return <b key={key}>{substring}</b> },
-        "color": (key, substring, color) => { return <Text key={key} color={color} as="span">{substring}</Text> },
-        "Pace": (key, substring, ms) => { return <Pace key={key} ms={ms}>{substring}</Pace> },
+        "em": (key, subcontent) => { return <em key={key}>{subcontent}</em> },
+        "b": (key, subcontent) => { return <b key={key}>{subcontent}</b> },
+        "color": (key, subcontent, color) => { return <Text key={key} color={color} as="span">{subcontent}</Text> },
+        "Pace": (key, subcontent, ms) => { return <Pace key={key} ms={ms}>{subcontent}</Pace> },
         "br/": (key) => { return <br key={key} /> },
         "ColorFade": colorFadeTransition,
     }
@@ -106,7 +106,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
     /**
      * @param s the string from an Ink file to be parsed
-     * @return a React element generated from parsing
+     * @return a React element generated from parsing. The content contained within a <span> component
      */
     const parseContent = (s: string) => {
         s = stripPerformerFromContent(s);
@@ -134,8 +134,8 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 if(endBracket >= 0) {
                     let nextInst = s.indexOf("<" + elementName, index + 1);
                     if (nextInst < 0 || endBracket < nextInst) {
-                        let substring = s.substring(end, endBracket);
-                        contentArr.push(customInkElementDict[elementName](contentArr.length, substring, ...element));
+                        let subcontent: any = parseContent(s.substring(end, endBracket));
+                        contentArr.push(customInkElementDict[elementName](contentArr.length, subcontent, ...element));
 
                         // when we remove the element from the string, we can now remove the text within as well
                         end = endBracket + elementName.length + 3; // + 3 for < and then /> characters
@@ -165,7 +165,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         // build the content into a ReactElement
         contentArr.push(<span key={contentArr.length}>{s}</span>);
-        let content = <Text>{contentArr}</Text>;
+        let content = <Text as="span">{contentArr}</Text>;
 
         return content;
     }
@@ -179,7 +179,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         let isContinue = hasContinue(s);
         let performer = getPerformerFromContent(s);
-        let content = parseContent(s);
+        let content = <Text>{parseContent(s)}</Text>;
 
         let hasChoices: boolean = inkStory.currentChoices.length > 0;
         let includeContinuePrompt: boolean = isContinue && !hasChoices;
