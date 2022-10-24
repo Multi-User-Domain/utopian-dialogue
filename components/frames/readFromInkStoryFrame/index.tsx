@@ -61,6 +61,12 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         "ColorFade": colorFadeTransition,
     }
 
+    // similar pattern which returns css classes following directives
+    const customInkCssDirectiveDict = {
+        "FadeInAll": fadeInTransition,
+        "FadeOutAll": fadeOutTransition
+    }
+
     const getPerformerFromContent = (content: string) => {
         if(content.startsWith("<") && content.indexOf(":>") > 0) {
             let i = content.indexOf(":>");
@@ -119,7 +125,7 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
             if(index < 0 || s[index + 1] == ">") continue; // catch empty brackets - ink "glue" syntax
 
             // isolate the bounds of our element
-            let end = s.indexOf(">") + 1;
+            let end = s.indexOf(">", index) + 1;
             let element: any = s.substring(index + 1, end -1);
 
             // split the element into its' component, and it's parameters (separated by spaces)
@@ -170,6 +176,33 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
         return content;
     }
 
+    /**
+     * @param s the string from an Ink file to be parsed
+     * @return an array. In [0] - the css requested to be applied to the container (can be null). In [1], the string with all css tags removed
+     */
+    const parseContainerCss = (s: string) => {
+        let css = null;
+
+        // TODO: allow more than one CSS directive - at the moment it is only FadeIn or FadeOut, which are incompatible anyway
+        for(let [key, value] of Object.entries(customInkCssDirectiveDict)) {
+            let searchTerm = "<" + key;
+            let index = s.indexOf(searchTerm);
+            if(index >= 0) {
+                let end = s.indexOf(">", index) + 1;
+                let element: any = s.substring(index + 1, end - 1);
+                element = element.split(" ");
+                element.shift(); // remove element name from the parameters
+
+                css = customInkCssDirectiveDict[key](...element);
+
+                s = s.substring(0, index) + s.substring(end, s.length);
+                break;
+            }
+        }
+
+        return [css, s];
+    }
+
     const hasContinue = (s: string) => {
         return s.indexOf("<Continue>") > 0;
     }
@@ -179,12 +212,15 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
 
         let isContinue = hasContinue(s);
         let performer = getPerformerFromContent(s);
+        let parsedCss = parseContainerCss(s);
+        s = parsedCss[1];
         let content = <Text>{parseContent(s)}</Text>;
 
         let hasChoices: boolean = inkStory.currentChoices.length > 0;
         let includeContinuePrompt: boolean = isContinue && !hasChoices;
 
         addMessage({
+            containerCss: parsedCss[0],
             content: content,
             performer: performer,
             includeContinuePrompt: includeContinuePrompt,

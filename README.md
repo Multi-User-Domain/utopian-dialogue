@@ -89,4 +89,6 @@ Newlines with `<br/>`
 
 #### Fade Animations
 
-* **ColorFade**: `<ColorFade colorA colorB duration> text </ColorFade>` where duration is optional and defaults to 5. For example `<ColorFade black red 5></ColorFade>`
+* **ColorFade**: Transitions from _colorA_ to _colorB_ timed in seconds by optional _duration_ (default 5). `<ColorFade colorA colorB duration> text </ColorFade>`. For example `<ColorFade black red 5></ColorFade>`
+
+**FadeInAll** and **FadeOutAll** can also be applied on the level of the whole message (i.e. for when you want the portrait to fade in, too) - by adding the tag somewhere in the message: `<Craig:><FadeInAll 5> text` (note the lack of closing tag here). Both accept one argument - the duration of the animation in seconds.
