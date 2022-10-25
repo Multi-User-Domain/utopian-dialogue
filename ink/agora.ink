@@ -2,58 +2,66 @@
 INCLUDE bigCity.ink
 INCLUDE relationships.ink
 
+VAR long_pause = 2000
+VAR short_pause = 1000
+VAR slow_pace = 150
+VAR fast_pace = 40
+
+VAR intuition_color = "\#9246d9"
+VAR greensight_text_color = "\#27b197"
+
 -> introduce_agora
 
 === introduce_agora ===
 
-    "Salutations!" Says a young lady, with a beaming smile. "My name is Mari- " # Mari
+    <Mari:> "Salutations!" Says a young lady, with a beaming smile. "My name is Mari- "<Pause {short_pause * 0.5}>
     
-    "Do you remember who you are?!". He is addressing you
-    "I don't remember who I am, perhaps you know?" # Douglas
+    <Douglas:> "Do you remember who you are?!". He is addressing you <Continue>
     
-    "Of course they don't, Douglas. None of us do" # Mari
+    <Mari:> "Of course they don't, Douglas. None of us do"
     
     -> do_you_remember
     
     = do_you_remember
     
-        * [{"I remember who I am" | "Yes I remember who I am"}]
-            "Wow! Then perhaps there is hope for all of us!" # Douglas
-            His eyes are sparkling as he says it
+        * [<Player:> { "I remember who I am" | "Yes I remember who I am"}]
+            <Douglas:> "Really?<Pause {short_pause}> Wow!<Pause {short_pause * 0.3}> Then perhaps there is hope for all of us!"
+            <Null:> His eyes are sparkling as he says it <Continue>
             ~ player_self_knowledge_claim = true
             ~ douglas_hope_represent += 1
             
-            {~Mari mumbles disapprovingly|Mari seems disrupted by your statement|Mari says nothing|Mari is frowning}
+            <Mari:> {~Mari mumbles disapprovingly|Mari seems disrupted by your statement|Mari says nothing|Mari is frowning} <Continue>
             ~ mari_trusting -= 1
             ->agora_meeting
           
-        * [{"I don't remember who I am" | "No, I don't remember"}]
-            Douglas seems disappointed by this
+        * [<Player:> {"I don't remember who I am" | "No, I don't remember"}]
+           <Douglas:> He seems disappointed by this <Continue>
             ~ mari_trusting += 1
             ->agora_meeting
-        * "I am gifted with the Greensight, I see things that others do not"
-          "Like... knowing who you are?" # Douglas
+        * <Player:> "I am gifted with the Greensight, I see things that others do not"
+          <Douglas:> Douglas looks skeptical <Pause {short_pause * 0.5}>
+          <Douglas:> "Like... remembering who you are?"
           ~ player_has_greensight = true
           -> do_you_remember
           
     = mari_introduces_agora
-      Mari addresses you: "We've been meeting here for the last few days, ever since the Great Pop"
+      <Mari:> Mari addresses you: "We've been meeting here for the last few days, ever since the Great Pop" <Continue>
       
-      "Once we woke up we needed to figure out again how to live, we were all disoriented and without purpose"
+      <Mari:> "Once we woke up we needed to figure out again how to live, we were all disoriented and without purpose" <Continue>
       
-      "We call this the Agora. Here we ask the question 'How do we want to live together?' and then we delegate and organise to make the answers reality"
+      <Mari:> "We call this the Agora. Here we ask the question 'How do we want to live together?' and then we delegate and organise to make the answers reality"
       
       -> pre_meeting_questions
     
     = agora_meeting
     
-        <em>Your choices are affecting how other characters view you, and how you view them</em>
+        <Player:> <em>Your choices are affecting how other characters view you, and how you view them</em> <Continue>
     
         {mari_trusting >= 0: -> mari_introduces_agora}
         
-        Douglas address you. "We've been meeting here for the last few days, ever since the Great Pop"
-        "It's a governance of sorts. Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like, before the Great Pop"
-        "But now that you're here, maybe we can shift our focus to recovering the Old World, and rebuilding it!"
+        <Douglas:> Douglas address you. "We've been meeting here for the last few days, ever since the Great Pop" <Continue>
+        <Douglas:> "It's a governance of sorts. <Pause {short_pause}> Once we woke up we needed to figure out again how to live, so we've been piecing together what life was like... you know, before" <Continue>
+        <Douglas:> "Now that you're here,<Pause {short_pause * 0.2}> maybe we can set about recovering the Old World, and rebuilding it... <em>exactly</em> as it was!"
         
         -> pre_meeting_questions
         
@@ -61,284 +69,373 @@ INCLUDE relationships.ink
     
         VAR asked_how_many = false
         
-        * How long has it been since the Great Pop?
-            "What? Have you only just woken up?"
-            Evidently this surprises her
-            # Alicia
+        * <Player:> How long has it been since the Great Pop?
+            <Alicia:> "What?<Pause {short_pause}> Have you only just woken up?"<Pause {short_pause * 0.5}>
+            <Null:> Evidently this surprises her <Continue>
             
-            "It's been {days_since_great_pop} days" Mari answers. "We've been meeting here for {days_since_great_pop - 1}"
+            <Mari:> "It's been {days_since_great_pop} days" Mari answers. "We've been meeting here for {days_since_great_pop - 1}"
             -> pre_meeting_questions
-        * {not asked_how_many } How many people are here, in attendance?
-            "Around fifty, in total" Mari answers
+        * {not asked_how_many } <Player:> How many people are here, in attendance?
+            <Mari:> "Around fifty, in total" Mari answers
             ->pre_meeting_questions
-        * {asked_how_many} And how many people, in the city?
-            "A lot more than that" # Alicia
-            "Our numbers are growing, little by little" # Mari
+        * {asked_how_many} <Player:> And how many people, in the city?
+            <Alicia:> "A lot more than that"<Pause {short_pause}>
+            <Mari:> "Our numbers are growing, little by little"
             -> pre_meeting_questions
-        * Is the city governed here, in the Agora?
-            Nobody seems sure how to answer this, there is a pause
-            "Not so much 'governance', as far as I understand the term" # Alicia
-            "Not in an everday sense" Mari admits. "But it's becoming known as the central place to engage in the city politics"
+        * <Player:> Is the city governed here, in the Agora?
+            <Null:> Nobody seems sure how to answer this. <Continue>
+            <Alicia:> "Not so much 'governance', as far as I understand the term" <Continue>
+            <Mari:> "Not in an everday sense" Mari admits.<Pause {long_pause}> "But it's becoming known as the central place <Pace {slow_pace * 0.33}> to engage in the city politics</Pace>"
             -> pre_meeting_questions
-        * No more questions
+        * [No more questions] <Player:> ...
             -> rupert_introduction
 
 === rupert_introduction ===
 
-    A man dressed in fine clothing is approaching, his face is red and puffy with sweat.
-    He is leading a procession of five other men, dressed in bright uniform.
-    # <Pause ms={LONG_PAUSE} />
-    "And just /*<Pause ms={SHORT_PAUSE *0.25}/>*/<b>what</b> is the meaning of all this <em>nonsense</em>?!"
-    # include_continue_prompt
-    # Rupert
+    <Rupert:> A man dressed in fine clothing is approaching, his face is red and puffy with sweat. <Pause {short_pause * 0.5}>
+    <Rupert:> He is leading a procession of five other men, dressed in bright uniform. <Continue>
     
-    He calls out to the audience, his arms waving theatrically:
-    "Good citizens of <b>Rupertston</b>, I am your leader!"
-    # <Pause ms={SHORT_PAUSE * 0.75} />
-    "I understand that The Great Pop seems to have affected our memories but nevertheless!/*<Pause ms={SHORT_PAUSE * 0.25} />*/ <em>I am your mayor!</em>"
-    # <Pause ms={SHORT_PAUSE * 1.25} />
-    "Nevertheless I have all of the necessary /*<Pause ms={SHORT_PAUSE*0.25}/>*/<em>\*ahem\*</em> records to prove it"
-    He is waving a ledger of papers in his hand
-    # include_continue_prompt
-    # performer: rupert
+    <Rupert:> "And just <Pause {short_pause * 0.25}><b>what</b> is the meaning of all this <em>nonsense</em>?!" <Continue>
+    
+    <Rupert:> He calls out to the audience, his arms waving theatrically:
+    <Rupert:> "Good citizens of <b>Rupertston</b>, I am your leader!"
+    <Pause {short_pause * 0.75}>
+    <Rupert:>"I understand that this <b>Great Pop</b> seems to have affected our memories but nevertheless!<Pause {short_pause * 0.25}> <em>I am your mayor!</em>"<Continue>
+    
+    <Rupert:> "Nevertheless I have all of the necessary <Pause {short_pause*0.25}><em>\*ahem\*</em> records to prove it"
+    <Null:> He is waving a ledger of papers in his hand <Continue>
     
     * [Take a look at the records]
-      It is a thick ledger of semi-organised documents bound in leather. The documents are pertaining to credits and debts owed the local City Mayoral, and to property records
+      <Player:> It is a thick ledger<Pace {slow_pace * 0.33}> of semi-organised documents</Pace><Pause {short_pause * 0.75}> bound in leather.<Pause {short_pause * 0.5}> The documents are pertaining to credits and debts owed the local City Mayoral,<Pause {short_pause * 0.5}> and to property records <Continue>
       
-      "Ledgers.. of property records, debts"
+      <Player:> "Ledgers.. of property records, debts"
       
-      "And the most recent ones... Signed and stamped by Yours Truly" Rupert adds smugly
+      <Rupert:> "And the most recent ones... Signed and stamped by Yours Truly" <Pause {short_pause * 0.33}>Rupert adds smugly <Pause {long_pause}>
       
-      Douglas is reading the ledgers keenly over your shoulder
+      <Douglas:> Douglas is reading the ledgers keenly over your shoulder <Continue>
       
-      A tall guardsman wrestles the ledger from your grip roughly. Your ribcage is sore from his efforts
+      <Burly:> A tall guardsman wrestles the ledger from your grip roughly.<Pause {short_pause}> Your ribcage is sore from his efforts
     * [Say nothing]
-      Mari snatches the ledger from his hand, and scans them scrupulously
-      "Ledgers.. of property records, debts"
+      <Mari:> Mari snatches the ledger from his hand and scans them scrupulously <Pause {long_pause}>
+      <Mari:> "Ledgers.. of property records, debts"<Pause {short_pause * 0.5}>
       
-      "And the most recent ones... Signed and stamped by Yours Truly" Rupert adds smugly
+      <Rupert:> "And the most recent ones... Signed and stamped by Yours Truly" <Pause {short_pause * 0.33}>Rupert adds smugly <Pause {long_pause}>
       
-      Douglas is reading the ledgers keenly over Mari's shoulder
+      <Douglas:> Douglas is reading the ledgers keenly over Mari's shoulder <Continue>
       
-      The tallest of his guardsmen wrestles the ledger from her grip roughly. Mari holds her ribcage and frowns deeply
+      <Burly:> The tallest of his guardsmen wrestles the ledger from her grip roughly.<Pause {short_pause}>
+      
+      <Mari:> Mari holds her ribcage and frowns deeply <Continue>
     
-    - "Your gathering here is illegal!" shrieks the tall guardsman, who is wearing a fiercely bright orange and white blouse.
-    # include_continue_prompt
-    # Burly
+    - <Burly:> "Your gathering here is illegal!" shrieks the tall guardsman,<Pause {short_pause * 0.5}> who is wearing a fiercely bright orange and white blouse.
     
-    * "Who are you?"
+    * <Player:> "Who are you?" <Continue>
         ~ burly_trusting -= 1
         -> burly_who
-    * "Illegal? Says who?"
+    * <Player:> "Illegal? Says who?" {not player_has_greensight: <Continue>}
         ~ burly_trusting -= 2
         ~ player_courageous += 1
         
-        {player_has_greensight: This man's aura has become tense and carries the potential of violence }
+        {player_has_greensight: <Burly:> <color {greensight_text_color}>This man's aura has become tense.<Pause {short_pause * 0.5}> It carries the potential of violence</color> <Continue> }
         -> burly_who
     * [Say nothing]
-        "Who are you?"
-        # Mari
+        <Player:> ...
+        <Mari:> "Who are you?" <Continue>
         
         -> burly_who
     
     = burly_who
     
-        He is taken aback by the question, a little stung.
-        He feels as though his relevance has been brought into question. #INTUITION
-        # <Pause ms={SHORT_PAUSE * 1.33} /> 
-        "I- I- the Burly Bodyguard"
-        # <Pause ms={SHORT_PAUSE * 0.5} />
-        He gathers himself and stands up taller.
-        "I'm Mayor Rupert's lead bodyguard"
-        # include_continue_prompt
-        # Burly
-    
-        "Oh, well"
-        # <Pause ms={SHORT_PAUSE * 0.75} />
-        "That sounds like a real honour" Mari responds.
-        She is grinning widely as she says it. # INTUITION
-        # include_continue_prompt
-        # Mari
-    
-        "It is an honour" the burly bodyguard responds bitterly.
-        His face folds, his frown a deepening grotesque.
-        He folds his arms protectively.
-        # include_continue_prompt
-        # Burly
+       <Burly:> He is taken aback by the question, a little stung.
+       <Burly:> <color {intuition_color}>He feels as though his relevance has been brought into question.</color><Pause {short_pause * 1.33}>
+       <Burly:> "I- I- the Burly Bodyguard" <Pause {short_pause * 0.5}>
+       <Burly:> He gathers himself and stands up taller. <Pause {short_pause}>"I'm Mayor Rupert's lead bodyguard" <Continue>
+       
+       <Mari:> "Oh, well" ... "That sounds like a real honour"
+       <Mari:> <color {intuition_color}>She is grinning widely as she says it.</color> <Continue>
+       
+       <Burly:> "It is an honour" the burly bodyguard responds bitterly.<Pause {short_pause * 0.75}> His face folds, his frown a deepening grotesque, and folds his arms protectively <Continue>
         
         -> mari_questions_rupert
     
 == function king_rupert_chastises_burly ==
-   "Burly, what have we discussed about speaking before you're spoken to?"
-    "And it's <em>Your Grace</em>, now."
-    He stands straighter as he says it. He likes the sound of it, <em>Your Grace</em>.
+   <Rupert:> "Burly,<Pause {short_pause * 0.2}> what have we discussed about speaking before you're spoken to?"<Pause {short_pause}>
+   <Rupert:> "And it's <em>Your Grace</em>, now."<Pause {short_pause * 0.66}>
+   <Rupert:> He stands straighter as he says it.<Pause {short_pause * 0.25}> He likes the sound of it, <Pace {slow_pace * 2}><em>Your Grace</em></Pace>. <Continue>
 
 === mari_questions_rupert ===
     
-    Mari stands up onto the platform in the centre of the arena and calls out to the crowd.
-    "Good people, what do we need a false mayor for, and why do we need his ledger?"
-    # Mari
+    <Mari:> Mari stands up onto the platform in the centre of the arena and calls out to the crowd. <Pause {short_pause}>
+    <Mari:> "Good people!<Pause {long_pause}> what do we need a false mayor for?<Pause {short_pause}> and why do we need this ledger of his,<Pause {short_pause * 0.5}> marking our names as debts and credits?"<Pause {short_pause}>
     
-    A few people in the agora cheer, but others seem unsure
+    <Axel:> A few people in the agora cheer.<Pause {long_pause}>
+    <Douglas:> Others seem unsure <Continue>
     
     -> debt_discussion
     
     = debt_discussion
     
-        "What <em>is</em> in the ledger?" Douglas asks
+        <Douglas:> <Pace {slow_pace * 0.25}>"What <em>is</em> in the ledger?"</Pace> Douglas asks <Continue>
         
-        "<b>Debts</b>". She pronounces the word with enunciated distaste. "Obligations to pay, forced by the state. You need to find a way to pay them, and pay them regularly, and until you do you are not free"
+        <Mari:> "<b>Debts</b>".<Pause {short_pause * 0.25}> She pronounces the word with enunciated distaste.<Pause {short_pause * 1.5}> "Obligations to pay, forced by the state.<Pause {short_pause * 1.5}> You need to find a way to pay them, <Pace {slow_pace * 0.3}>and pay them regularly</Pace><Pause {short_pause * 0.5}>, and as long as you have them you are not free" <Continue>
         
-        "Taxes and currency are how we direct ourselves to a common goal!" Rupert complains
+        <Rupert:> "Do you expect to receive everything for <em>free</em>?" <Pause {short_pause}> ... "Taxes and currency are how we direct ourselves to a common goal!" <Continue>
         
-        There is a concerned mumbling
+        <Mari:> "The debts are taken from us,<Pause {short_pause * 0.4}> paid to men like <em>him</em> - as a way to manipulate our activities into funding their enterprise" <Continue>
         
-        "The debts are taken from us, paid to men like <em>him</em>, as a way to manipulate our activities into funding their enterprise"
+        <Rupert:> "<em>My</em> enterprise?!<Pause {long_pause}> Nae, 'tis the enterprise of our <em>nation</em>!"
         
-        <em>My</em> enterprise?! I suppose that you'd prefer that <em>you</em> were mayor, then
+        <Rupert:> "By paying eachother using my <em>currency</em>,<Pause {short_pause * 0.1}>  you are able to hold your debt through me,<Pause {short_pause}> Safe in the knowledge that it is <Pace {slow_pace * 0.33}><em>guaranteed</em></Pace> by the vitality of my force"<Pause {long_pause}>
         
-        "By paying eachother using my <em>currency</em>, you are able to transfer the debt to me, Safe in the knowledge that it is <em>guaranteed</em> by the vitality of my force"
+        <Burly:> <color {intuition_color}>Burly is radiating pride when Rupert discusses the vitality of his force</color> <Continue>
         
-        Burly is radiating pride when Rupert discusses the vitality of his force
+        <Rupert:> "In return, you pay me a portion of that debt back each month,<Pause {short_pause * 0.2}> and respect my order.<Pause {long_pause}> This forms the basis of our <b>social contract</b><Pause {short_pause * 0.2}>... and ensures that we don't descend into chaos" <Continue>
         
-        "In return, you pay me a portion of that debt back each month, and respect my order. This forms the basis of our <b>social contract</b>, and ensures that we don't descend into chaos"
+        <Mari:> "Our debts could be to eachother,<Pause {short_pause * 0.1}> in principle.<Pause {short_pause * 0.2}> To our <Pause {short_pause * 0.1}><em>shared</em> enterprise"<Pause {short_pause * 0.2}>
         
-        "Our debts could be to eachother, in principle. To our <em>shared</em> enterprise" # Mari
-        
-        * "Without a powerful state, it is a war of all against all"
-          "We are selfish by nature and won't provide for eachother unless we are to gain in doing so"
-          "Friends, we <em>need</em> a powerful state, to bind us into the common interest, to serve the collective will"
+        * <Player:> "Without debt nobody would be moved to doing anything which doesn't benefit them immediately" <Pause {long_pause}>
+          <Player:> "We are selfish by nature and won't provide for eachother unless we are to gain in doing so ... we need a means to direct this drive towards the collective will" <Continue>
           
           ~ mari_trusting -= 1
           ~ rupert_trusting += 1
+          ~ player_favours_debt = true
           
-          "To serve the collective will, and <em>me</em>, its' arbritor!" Rupert adds eagerly
-          -> debt_challenge
-        * "We do not need a state to establish trust"
-          "We are motivated by <em>care</em>, we regularly care for eachother beyond our immediate selves.
-          "There are any number of ways that we can pool resources, and we really only need <b>trust</b> if we have a reason not to trust the other to whom we are <em>giving</em>"
+          <Rupert:> Rupert is nodding eagerly.<Pause {long_pause}>
+          <Rupert:> "To serve the collective will, and <em>me</em>, its' arbritor!"<Pause {short_pause}
+          <Rupert:> "As is <Pause {short_pause*0.25}><em>\*ahem\*</em> <Pause {short_pause * 0.1}> - written in law <Continue>
+          
+          <Mari:> "But can we really <b>separate</b> the individual from the collective in this way? Isn't it already in our nature to seek the common good?"
+          
+          ** ["The market will guide us to the common good"]
+            <Player:> "The <b>market</b> will guide us to the common good ... like an <b>invisible hand</b>.<Pause {long_pause}> Conveniently, <Pace {slow_pace}><em>we</em></Pace> don't have to do <em>anything</em>!" <Continue>
+            
+            <Douglas:> "Did the Old World run on the market principle?"
+            
+            <Douglas:> "And each person seeking their own gain ... brings them to <em>exchange</em> things ... and this is the market?" <Pause {short_pause}>
+            
+            <Rupert:> "Precisely! Debt is just the IOUs which are created in the process" <Continue>
+            
+            <Douglas:> "And how does that lead to the common good?" <Pause {long_pause}>
+            
+            <Player:> "My own interest <b>must</b> involve the interest of the collective - because I <em>need</em> the collective to be well.<Pause {short_pause}> My suppliers, my workers, without them I can't make a profit!" <Continue>
+            
+            ~ rupert_trusting += 1
+            ~ mari_trusting -= 2
+            
+            <Mari:> "And only to the extent that it makes me a <b>profit</b>, and no more" Mari adds grumpily. <Pause {long_pause}> "Tell me, do we see your utopia around us now, from the market world which existed before?"
+            
+            -> old_world_and_utopia_question
+            
+          ** ["Being a good person and doing the right thing is outside of the market"]
+             <Player:> "What you have is what you have, we can't all be equal.<Pause {short_pause}> Being rich doesn't make you bad as long as you give some of your wealth away" <Pause {long_pause}>
+             
+             <Francis:> "What if <em>everyone</em> gave <em>all</em> of their wealth away?"<Pause {long_pause}>
+             
+             <Rupert:> "... to who?"<Pause {short_pause}>
+             
+             <Francis:> "Well... we could store it all in the church?" <Continue>
+             
+             # TODO: a conversation about values and Good?
+             
+             <Null:> The idea continues without really going anywhere.<Pause {short_pause}> Eventually, people begin to talk about what makes a good person, if it's something which is innate or if some people are bad. <Continue>
+             
+             -> introduce_craig
+          
+          ** ["What do we know about our nature?"]
+            <Player:> "What can we know about our nature?<Pause {short_pause * 0.5} {not player_self_knowledge_claim: After all we just woke up. } <Pause {short_pause}> Surely nothing beyond what we know about ourselves?" <Continue>
+            
+            <Francis:> "I've observed that I care for the needs of others ... and that I generally try to fulfill them, in the time since I've been awake" one man offers <Pause {long_pause}>
+            
+            <Alicia:> "I seem to habitually look for things which don't make me and attempt to solve them.<Pause {short_pause}> But does that make me a problem <b>solver</b> ... or a problem <b>creator</b>?" <Continue>
+            
+            -> meeting_continues
+            
+        * <Player:> "I don't see why we need to formalise debt at all"
+          <Player:> "We are motivated by <em>care</em>,<Pause {short_pause * 0.5} we regularly care for eachother beyond our immediate selves"<Pause {long_pause}><br/>"There are any number of ways that we can pool resources,<Pause {short_pause * 0.25}> and we really only need <b>trust</b> if we have a reason not to trust the other to whom we are <em>giving</em>" <Continue>
           
           ~ mari_trusting += 1
           ~ rupert_trusting -= 2
+          ~ player_sedition = true
           
-          "Sedition!" Burly complains
+          <Burly:> "Sedition!"<Pause {short_pause * 3}>
           
-          "I think that we could organise our society to establish trust in giving" Mari agrees pensively
+          <Mari:> "I think that we could organise our society to establish trust in giving"<Pause {short_pause}> Mari agrees pensively <Pause {short_pause}>
           
-          "Sedition!"
-          "I will <em>not</em> let you subvert my sacred right to distribute wealth!"
+          <Rupert:> "Sedition!" <Pause {short_pause * 0.2}>
+          <Rupert:> "I will <em>not</em> let you subvert my sacred right to distribute wealth!"
           
-          ** Rupert has to be stopped!
+          ** [Rupert has to be stopped!]
+          
               ~ player_courageous += 1
               ~ mari_trusting += 1
               
-              <em>You must not allow them to take your collective property!</em>
-              A voice calls from deep within you
+              <Player:> <color {intuition_color}><em>You must <Pace {slow_pace}>not</Pace> allow them to take your collective property!</em></color><Pause {short_pause}><br/>You know now what you have to do
               
-              You know now what you have to do
-              
-              *** Sing!
-                 From the deep pool of resistance which goes down to your very core and into the abyss of your soul, a voice calls out
+              *** [Sing!]
+                <Player:> Deep inside the pool of your soul a primordial force of Resistance wants to make itself known<Pause {long_pause}><br/><Pace {slow_pace}>"NOOOOO!"</Pace> it roars with your voice, <Pace {slow_pace * 0.33}>fading softly into silence</Pace> <Continue>
                  
-                 "NOOO!" it roars with your voice, fading softly into silence, before rising once more as a soft melody:
+                <Player:> "We'll be eating soup of stone,<Pause {short_pause * 0.5}> 'til what we grow is what we own.."<Pause {short_pause}><br/>"But we won't steal from the land what's freely given"<Pause {short_pause}><br/><Pace {slow_pace * 0.33}>"Tear up the deeds to the land</Pace>,<Pause {short_pause * 0.25}> throw the debts into the furnace ... debts to <em>God</em>,<Pause {short_pause * 0.25}> to the <em>banks</em>,<Pause {short_pause * 0.2}> and to the <em>landlord</em>" <Continue>
+                
+                <Player:> "And even if we're just one pistol,<Pause {short_pause * 0.5}> against an army of policemen,<Pause {short_pause * 0.3}> I <Pace {slow_pace * 0.4}><em>insist</em></Pace> that we are many<Pause {short_pause * 0.25}> and they are few ..."<br/>"And if we don't stand up now then we might never and we'll never know again our freedom taken"<Pause {short_pause}>
                  
-                 "We'll be eating soup of stone til what we grow is what we own.."
-                 "But we won't steal from the land what's freely given"
-                 "Tear up the deeds to the land, throw the debts into the furnace, debts to <em>God</em> to the <em>banks</em> and to the <em>landlord</em>"
-                 "And even if we're just one pistol against an army of policemen, I <em>insist</em> that we are many and they are few"
-                 "If we don't stand up now then we might never and we'll never know again our freedom taken"
-                 
-                 "Enough!" Rupert calls and puts you off, just as you were gearing up for the second verse
-                 
-                 -> debt_challenge
-          ** Let it go
-            -> debt_challenge
-          
-    = debt_challenge
-      "You are all already in debt!"
-      "Just because you've <b>forgotten</b> about it, doesn't mean you don't have to pay it!"
+                <Rupert:> "ENOUGH!" Rupert shouts and puts you off.<Pause {short_pause}> Just as you were gearing up for the second verse <Continue>
+                
+                ~ rupert_trusting -= 1
+                ~ burly_trusting -= 1
+                
+                -> rupert_conclusion
+                
+          ** [Let it go]
+            
+            <Mari:> "A society motivated by debt is a miserable society, is it not?" <Pause {long_pause}><br/>"As far as practicality is concerned I came into existence {days_since_great_pop} days' ago. Since then I've had a fascination for this world we're in.<Pause {short_pause * 0.75}>I'm <Pace {slow_pace}>alive</Pace> ... and I know you all are, too" <Continue>
+            
+            <Douglas:> "What's your point?"<Pause {long_pause}>
+            
+            <Mari:> "My point is that there are any number of ways we can structure our society.<Pause {short_pause}> A world built on debt sounds miserable,<Pause {short_pause}> instead I think we can build our society towards the ideals which <em>we</em> want" <Continue>
+            
+            <Douglas:> Douglas thinks on this for a moment, he seems inclined to agree.<Pause {short_pause}><br/>"But surely ... surely this is what we were doing before ... you know,<Pause {short_pause * 0.25}> in the <Pace {slow_pace * 0.3}><em>Old World</em></Pace>?" <Continue>
+            
+            <Douglas:> "If debt existed in the Old World, then surely that means that it <em>had</em> to exist.<Pause {short_pause}> If indeed it was an evil, then surely it was a <em>necessary</em> one?" <Continue>
+            
+            <Mari:> "I think in our nature there is something <em>better</em>,<Pause {short_pause * 0.25}> at least I feel it in mine.<Pause {short_pause}> Surely we ought not to give up on utopia before we even <Pace {slow_pace * 0.3}><em>try</em></Pace>?" <Continue>
+            
+            <Craig:> A man pushes himself ahead of the crowd,<Pause {short_pause}> eager to speak on the subject <Continue> 
+            
+            -> introduce_craig
+            
+    = old_world_and_utopia_question
+      * ["If the Old World was not a utopia it's because utopia was not possible"]
+        <Player:> "Everything is how it is out of necessity.<Pause {short_pause}> There <em>is</em> no alternative" <Pause {long_pause}>
+        
+        <Mari:> "What a bizarre suggestion" <Continue>
+        
+        -> burly_attempts_to_use_force
+            
+      * ["The Old World was developing towards utopia, it just takes time"]
       
-      "Our very existence is a debt to God" # Francis
+        <Player:> "Utopia ... heaven on earth ... is a <b>distant</b> goal, for our great grandchildren.<Pause {short_pause}> We're making <b>progress</b>, that's what counts.<Pause {short_pause}> And we can continue in that carrying the proud legacy of our ancestors" <Continue>
       
-      "And it is repaid in service of the Nation" # Rupert
+        ~ douglas_hope_represent += 1
+        
+        <Player:> "I think we should piece together where the Old World was ... exactly ... in its' progress towards inevitable utopia" <Continue>
+        
+        -> meeting_continues
+    
+      * [Insist that the Old World was a utopia]
       
-      "Why should we repay debts for loans that weren't made by us?" # Mari
+        <Player:> "The Old World <em>was</em> a utopia. It's not going to be as obvious flying cars you know.<Pause {short_pause}> But everyone had what they needed and then some - they -<Pause {short_pause}> we ... were <em>happy</em> <Continue>
+        
+        <Douglas:> "<em>Oh really?</em> Douglas asks with shining eyes.<Pause {short_pause * 0.5}> How can you tell?" <Pause {long_pause}>
+        
+        <Player:> "Well... just look at all the <em>food</em> they were throwing out... they clearly had <em>way</em> more than they needed..." <Pause {long_pause * 0.8}>
+        
+        ~ douglas_hope_represent += 10
+        
+        <Rupert:> "The market provides" Rupert adds tastefully <Continue>
+        
+        <Null:> But others seem less sure,<Pause {short_pause * 0.5}> and the conversation develops around what life was like for people in the World Before... were they happy? <Continue>
+        
+        -> introduce_craig
       
-      "Because if you don't, we'll lock you up" # Burly
+      * <Player:> "The Old World was waiting on the right conditions for a revolution... all at once"
+        <Null:> <Pause {long_pause}> You pause as you take a moment to consider if that's what happened with the Big Pop <Continue>
+        
+        ~ player_sedition = true
+        
+        -> meeting_continues
+    
+    = burly_attempts_to_use_force
+      <Burly:> "There is no alternative because we'll back it up with <em>force</em>.<Pause {short_pause}> That's your alternative!" <Continue>
       
-      "Why should you get to decide which loans to make and how they should be repaid? Why don't we decide together?" # 
+      <Philippa:> "Oh you think so?! What gives you that right?"
       
-      "What <em>you lot</em>? Don't make me laugh. You'll all just compete constantly to maximise your own benefit. You need the state to limit your crude greed"
-      
-      -> rupert_conclusion
-     
+      * [Make the case for a monopoly of violence]
+        <Player:> "Well, <em>someone</em> has to have a monopoly on violence! It should be Rupert because ..."
+        ~ rupert_trusting += 1
+        ~ player_favours_rupert = true
+        
+        ** ["He is King!"] -> player_claim_rupert_king
+        
+        ** ["He has the biggest gang!"]
+           <Player:> "The world is going to be a war of all against all,<Pause {short_pause * 0.5}> so we might as well just accept it and submit to the biggest gang"<Pause {short_pause}> you say bluntly <Continue>
+           
+           <Philippa:> "But there's plenty of us here ... there's no <b>reason</b> for us to accept it!"
+           
+           -> burly_force_conclusion
+           
+      * [Say nothing]
+        <Burly:> At the challenge, Burly shrinks back into his shell. {not player_has_greensight: <Continue>}
+        
+        {player_has_greensight: <Player:> You sense that he craves acceptance <Continue> }
+        
+        -> meeting_continues
+    
+    = burly_force_conclusion
+      * ["He is King!"] -> player_claim_rupert_king
+      * [Say nothing]
+        <Burly:> At the challenge, Burly shrinks back into his shell. <Continue>
+        
+        -> meeting_continues
+    
     = rupert_conclusion
       
       * {rupert_trusting >= 0} [Appeal to the mayor to permit the agora]
-          "Your Grace" you propose softly, your voice sweet like a song
+          <Player:> "Your Benevolence" you propose softly<Pause {short_pause}>. your voice is soft and sweet like a song<Pause {short_pause * 1.5}>.
           
-          "Permit us in your wise benevolence, to recommence our discussions under your supervision?"
+          <Player:> "Permit us in your wise... fatherliness... to recommence our discussions under your supervision?" <Continue>
           
-          {burly_trusting < 0: Burly does not trust you}
+          {burly_trusting < 0: <Burly:> <color {intuition_color}>Burly does not trust you</color><Continue>}
           
-          "I <em>am</em> benevolent" Rupert admits, chewing it over slowly
+          <Rupert:> "I <em>am</em> benevolent" Rupert admits<Pause {short_pause}>. He is chewing it over slowly ... <Continue>
           
-          {player_has_greensight: There is a dark hunger beneath this man's jovial exterior. It is gnawing at him and crying for power}
-          
-          "But I will not permit sedition"
+          <Rupert:> "But I will not permit sedition" <Continue>
           
           -> rupert_conclusion
         * [Crown Rupert King] -> player_claim_rupert_king
         * [Banish the Impostor] -> player_exile_rupert
           
     = player_claim_rupert_king
-      You fill your lungs with air and stand straight.
-      You are projecting such a lionesque dominance that everyone is watching you, silent.
-      "My liege, forgive me to be telling you this but you mistake yourself"
-      "Look at the uniform of these men" you declare, making eye contact with each citizen in the crowd in turn.
-      "This is not the uniform worthy of a mayor's troop, NAE!"
+      <Player:> You fill your lungs with air and stand straight<Pause {short_pause * 0.75}>.<br/><color {intuition_color}>You are projecting such a lionesque dominance that everyone is watching you, silent</color>.<Pause {long_pause}>
+      <Player:> "My liege, forgive me to be telling you this but you mistake yourself"<Pause {short_pause}><br/>"Look at the uniform of these men" you declare,<Pause {short_pause * 0.25}> making eye contact with each citizen in the crowd in turn.<Pause {short_pause}><br/>"This is not the uniform worthy of a mayor's troop - <Pace {fast_pace}> NAE!</Pace>" <Continue>
       
-      The burly man makes a motion to interrupt you but he is silenced by his boss.
+      <Burly:> The burly man makes a motion to interrupt you but he is silenced by his boss. <Continue>
       
-      "This man... was our KING!"
-      There is a collective gasp.
-      "It is God's will that he rule over us. When we excercise our activity to his will, we are also exercising our activity to God's will!"
+      <Player:> "This man... was our KING!"<Pause {short_pause * 1.25}><br/>There is a collective gasp.<Pause {short_pause * 0.75}><Continue>
       
-      Rupert is grinning very widely
+      <Player:> "It is God's will that he rule over us.<Pause {short_pause}> When we excercise our activity to his will, we are also exercising our activity to God's will!" <Continue>
       
-      They seem to be buying it! It must be the sensational <em>authority</em> that you're projecting.
+      <Rupert:> <em>Rupert is grinning very widely</em>. <Continue>
+      
+      <Player:> <Pace {slow_pace * 0.6}>They seem to be buying it</Pace>!<Pause {short_pause}><br/><color "\#FFBF00"> It must be the sensational <em>authority</em> that you're projecting.</color> <Continue>
       ~ player_authority += 1
       
-      Slowly, the crowd turns in your favour, and the dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert.
-      Big City is now an <b>Absolute Monarchy</b>.
-      Rupert is now King!
+      <Player:> Slowly the crowd turns in your favour.<Pause {short_pause * 0.5}>
+      <Player:> The dubious claim of Mayor Rupert becomes the <em>truth</em> of King Rupert. <Continue>
+      
+      <Null:> Big City is now an <b>Absolute Monarchy</b>, Rupert is now King!<Pause {short_pause}>
+      <Rupert:> <color "\#ff5dcb"><em>King Rupert's eyes have started to sparkle whenever he looks at you.</em></color> <Continue>
+      
       ~ governance = "absolute_monarchy"
       ~ rupert_trusting = 20
       ~ burly_trusting += 1
       ~ city_name = "Rupertston"
       ~ ruler = "Rupert"
+      ~ player_favours_rupert = true
       
-      <em>King Rupert's eyes have started to sparkle whenever he looks at you.</em>
+      <Mari:> Mari's face is a picture of her lost utopia.<Pause {short_pause}><br/><br/>"But.."<br/><br/><Pause {short_pause * 0.5}>The cheers of the crowd drown her out.
       
-      Mari's face is a picture of her lost utopia.
-      "But.."
-      The cheers of the crowd drown her out
+      <Burly:> "Long live the King!"<br/><Pause {short_pause * 0.2}>"Long live the King!"<Pause {short_pause * 0.2}>
       
-      "Long live the King!"
-      "Long live the King!"
-      "Long live the King!"
+      <Alicia:> "Long live the King!" <Continue>
       
-      The King and his men are gazing at you in stupified admiration.
-      "You've done well today, old sport!"
-      "Your ambition is remarkable"
-      He turns to the crowd and hushes them to silence
-      "In my grace, I will allow this meeting to continue. Henceforth my <em>court</em> is in open session!"
-      "You there, peasant! Fetch me a throne!"
+      <Rupert:> The King is gazing at you in stupified admiration.<Pause {short_pause}><br/>"You've done well today, old sport!"<Pause {short_pause}><br/>"I regard your ambition in high esteem.<Pause {short_pause}> We will go far together" <Continue>
       
-      Douglas finds a nearby picnic bench and heaves it to the centre of the ampitheatre
-      As Rupert takes a seat Burly eagerly bounds over to his side
+      <Rupert:> Rupert turns graciously to the crowd and hushes them to silence.<Pause {short_pause * 1.5}><br/> "This meeting shall continue!<Pause {short_pause}>  I do declare that my <em>court</em> is now in session!"<Pause {short_pause * 1.25}> ...<br/>"I require a throne!" <Continue>
       
-      The new King beckons you to stand on his left
+      <Douglas:> Douglas finds a nearby picnic bench and heaves it to the centre of the ampitheatre.<Pause {short_pause}> He is reprimanded and sent away in search of something more appropriate. <Continue>
+      
+      <Burly:> Burly has moved closer to Rupert's side.
+      <Rupert:> The new King beckons you to stand on his left <Continue>
       
       * [Join Rupert loyally]
         
@@ -348,648 +445,648 @@ INCLUDE relationships.ink
         ~ burly_trusting -= 1
         ~ player_loyal_to_rupert = false
       
-      - "My people! Come to me with your problems and I will rule on them fairly and <b>absolutely</b>!"
+      - <Rupert:> "My people! Come to me with your problems and I will rule on them fairly ... and <b>absolutely</b>!" <Continue>
       
-      -> introduce_leopald
-      
+      -> rupert_court_continues
       
     = player_exile_rupert
       ~ player_courageous = 3
       
-      "This man <b>is</b> an impostor! Worse still he is a leech!"
-      "If you ask me, {player_self_knowledge_claim: and I am the Chosen One, }then I say we're better off without him!"
-      "All power to the people! All power to the <em>Polis</em>!" # Player
+      <Player:> You look around you and see the faces of comrades. You are confident that these people are going to back you up. <Continue>
       
-      Just a few at first, then the crowd, chant in unison: "Long live the Polis!" # repeat
+      <Player:> "This man <b>is</b> an impostor! Worse still he is a leech!"<Pause {short_pause}><br/>"If you ask me then I say we're better off without him!"<Pause {short_pause * 1.25}>
+      <Player:>"All power to the people!<Pause {short_pause * 0.25}> All power to the <em>Polis</em>!" <Continue>
       
-      The would-be mayor looks around nervously.
-      Indignant fury crosses his face.
-      "You <b><em>need</em></b> me"
-      The crowd does not hear him through the chanting.
-      # <Pause ms={LONG_PAUSE * 1.5} />
-      His protests become increasingly desparate.
-      He throws a sharp look to the his lead guard.
-      "Burly. <em>Do something</em>."
+      <Null:> Just a few at first, then the crowd, chant in unison:<Pause {short_pause * 0.25}>
+      <Mari:> "Long live the Polis!"<Pause {short_pause * 0.25}><br/>"Long live the Polis!"<Pause {short_pause * 0.25}>
+      <Alicia:> "Long live the Polis!"<Pause {short_pause * 0.25}>
+      <Axel:> "Long live the Polis!" <Continue>
       
-      "Get 'em men!"
-      He lifts a proud fist into the air to accompany the command.
-      # <Pause ms={LONG_PAUSE} />
-      Nothing happens.
-      # <Pause ms={SHORT_PAUSE} />
-      Burly looks about him, most of his men have gone.
-      Those who remain are chanting with the others.
+      <Rupert:> The would-be mayor looks around nervously.<Pause {short_pause * 0.5}><br/>Indignant fury flashes across his face.<Pause {short_pause * 0.25}><br/>"You <b><em>need</em></b> me"<Pause {long_pause}>
+      <Axel:> The crowd does not hear him through the chanting. <Pause {short_pause}>
+      <Rupert:> "Burly. <Pace {slow_pace}><em>Do something</em></Pace>." <Continue>
       
-      "Long live the Polis!"
+      <Burly:> "Get 'em men!"<br/>He lifts a proud fist into the air to accompany the command.<Pause {long_pause}><br/><br/>Nothing happens.<Pause {short_pause}>
+      <Burly:> Burly looks about him, most of his men have gone. Those who remain are chanting with the others.<Pause {short_pause * 0.25}>
+      <Marcus:> "Long live the Polis!" <Continue>
       
-      Burly and the would-be mayor beat a slow retreat from the crowd.
+      <Burly:> Burly and the would-be mayor beat a slow retreat from the crowd.
       
       ~ rupert_trusting = -10
       ~ burly_trusting = -10
       ~ rupert_exiled = true
       
       * [Mock them as they leave]
-        "Yeah you better run! And your outfits are terrible!"
-        # <Pause ms={SHORT_PAUSE * 1.25} />
-        That hit its' mark. You can hear the wound from here.
+        <Player:> "Yeah you better run! And your outfits are terrible!"<Pause {short_pause * 1.25}>
+        <Burly:> That one hit its' mark. You can hear the wound from here. <Continue>
       * [Say nothing]
+        <Player:> ... <Continue>
       
-      - "Yeeeahh!"
-      Mari is elated as she watches the exiled pretenders flee.
-      # <Pause ms={SHORT_PAUSE} />
-      "Long live the Polis!"
+      - <Mari:> "Yeeeahh!"
+      <Mari:> <color {intuition_color}>Mari is elated as she watches the exiled pretenders flee.</color><Pause {short_pause}>
+      <Mari:> "Long live the Polis!" <Continue>
       
-      Rupert is looking over his shoulder as he leaves, his face is a picture.
-      # <Pause ms={SHORT_PAUSE} />
+      <Rupert:> Rupert is looking over his shoulder as he leaves, his face is a picture. <Continue>
       
-      "This is such an <em>exhillarating</em> feeling!"
-      
-      "There is no burden of power over us, no burden of tradition behind us" she says with a long sigh
-      # <Pause ms={SHORT_PAUSE * 0.5} />
-      "We are held back only by the capabilities of our language and the limits of our abilities"
-      "We are the masters of our own destiny"
+      <Mari:> "This is such an <em>exhillarating</em> feeling!"<Pause {short_pause}><br/>"There is no burden of power over us, no burden of tradition behind us" she says with a long <Pace {slow_pace * 0.75}>sigh</Pace><Continue>
+      <Mari:> "We are held back only by the capabilities of our language and the limits of our abilities.<Pause {short_pause}> We are the <Pace {slow_pace * 1.25}><em>masters</em></Pace> of our own <b>destiny</b>" <Continue>
       
       ~ mari_trusting = 2
-      {player_has_greensight: Mari looks to you as an ally}
+      {player_has_greensight: <Null:> <color {greensight_text_color}>Mari looks to you as an ally</color>}
       
-      -> introduce_leopald
+      -> meeting_continues
       
-    = introduce_leopald
-      "Are we ready for this?"
-      Douglas gestures around him
-      "We - our ancestors - surely built this city, and we don't even remember <em>how</em> we did it"
-      {rupert_exiled: You said that we are masters of our own destiny}{not rupert_exiled: We may be the masters of our own destiny}. But how can we ensure that we are not just masters of our own peril, if not by following from tradition?" # Douglas
+    = meeting_continues
+      <Null:> As the meeting continues, people begin sharing their experiences of waking up.<Pause {short_pause}> How it felt, what their life in Big City might have been like before, what it is like now. <Continue>
       
-      "Yes!" a man shouts, all in a rush.
-      "These are my concerns exactly"
+      -> introduce_craig
       
-      "My name is <b>Leopald</b>. I am a general in the {ruler == "Rupert": Royal} <em>army</em>"
+    = rupert_court_continues
+      <Null:> Royal court now in session, and it becomes clear that at this stage there really is only one problem, shared by everyone.<Pause {short_pause}> Everyone has just started to exist in a strange world, and nobody knows what on earth they're doing there.<Pause {short_pause}>. The people are turn to their king for answers, and his subjects begin sharing their experiences of waking up. <Continue>
       
-      "Here, now, when all this is so fresh, <em>of course</em> we will all co-operate with eachother but a week from now? A month?"
-      "It's been a meagre <b>{days_since_great_pop} days</b> since the Big Pop. I've flicked through some of the <b>history books</b> I found down by the library. Do you know what I saw?"
-      
-      "I've only flicked through and looked at the pictures but..."
-      "I saw a lot of pain and suffering. Soldiers and wars, famines and plagues. Most of it was <em>man-made</em>"
-      
-      { player_has_greensight: There is a look of deep concern on Douglas' face. He is engrossed by the potential lessons of history }
-      
-      "I think that it's clear that we need to establish a strong <b>state apparatus</b> to help ensure that we do not revert into a state of chaos"
-      { ruler == "Rupert": "At its' head, of course, our wise King" }
-      
-      -> responding_to_leopalds_initial_suggestion
-      
-    = responding_to_leopalds_initial_suggestion
+      -> introduce_craig
+  
+  = introduce_craig
+  
+    <Craig:> "When I woke I was in a collosal building,<Pause {short_pause}> <b>'{city_name} Prison'</b>"<br/>"Myself and others,<Pause {short_pause * 0.25}> we were dressed the same.<Pause {short_pause}> We were armed, and I think that our purpose was to keep people <Pace {slow_pace * 0.4}>locked inside</Pace>" <Continue>
+  
+    <Andrew:> "I was a prisoner there!" Another man calls out, and makes his way to the front.<Pause {long_pause}> He introduces himself as a man named Andrew <Continue>
     
-      VAR asked_about_old_world_state = false
-      
-      * "Did the Old World have a state apparatus?"
-        "I don't recall" Leopald answers evasively
-        "But if they did, it certainly wasn't strong enough!"
-        
-        "If the Old World needed to use some force to make things fit into a certain way.. maybe it was necessary?" Douglas suggests
-        
-        { player_has_greensight: Douglas' words are said through significant discomfort }
-        ~ douglas_faith_in_old_world -= 1
-        ~ asked_about_old_world_state = true
-        -> responding_to_leopalds_initial_suggestion
+    <Andrew:> "I was a prisoner there.<Pause {short_pause}> <em>Human beings</em> locked into tiny cells.<Pause {short_pause * 0.75}> Just the thought of it makes me feel sick"<Pause {short_pause * 0.75}>
     
-      * "People must be kept in line, for our own protection"
-        
-        "There are a wide variety of <b>dangerous people</b> who would do us harm. To an extent we are all potentially dangerous. The only way to ensure that we are all civil is to coerce us in line"
-        
-        { ruler == "Rupert": "To maintain the Kings' peace, some force must be necessary" Rupert agrees with a sympathetic tone. }
-        ~ player_values_order = true
-        
-        -> prison_dilemma
-      
-      * "A state is necessary, but only to ensure that the People's will is carried out"
-    
-        "This, surely, is the only justification of force" Leopald agrees. { ruler == "Rupert": "And the essence of a King's divine right" }
-        
-        "The State has the power to coerce those who will not bend"
-        
-        ~ player_values_order = true
-        
-        -> prison_dilemma
-        
-      * "People must be free from the State's inherent tyranny!"
-        
-        { ruler == "Rupert": Rupert begins to cough uncontrollably. "And what about the <b>tyranny</b> of <b>sedition</b>?!. No. Unacceptable" -> responding_to_leopalds_initial_suggestion }
-        
-        Mari is nodding in agreement
-        
-        "But there may be times where we <em>have</em> to use force, to defend our liberty" a man complains
-        
-        "We can always use force later, if we have to. But we cannot un-use force" Francis observes
-        
-        "We do not need to <b>institutionalise</b> violence" Mari agrees
-        
-        -> prison_dilemma
-        
-      * {ruler != "Rupert"} "The violence of the State is detestable!"
-        "Since when was <b>organised violence</b> a part of 'how we want to live together'?"
-        
-        -> prison_dilemma
-        
-      * [Say Nothing]
-        "Pish!" Mari complains
-        { not asked_about_old_world_state: "I read up on some history too, and they <em>had</em> a State apparatus" }
-        "Since when was <b>organised violence</b> a part of 'how we want to live together'?"
-        
-        -> prison_dilemma
-
-== prison_dilemma ==
-  { not player_values_order: "My dear you're being <b>naïve</b>" }
-  
-  "It only takes one <b>murderer</b> to spoil a <b>picnic</b>" # Leopald
-  
-  { player_has_greensight: Leopald introduced himself as a <b>general</b>, you recall. He is a military man and sees society through a military lens }
-  
-  -> murderer_question
-  
-  = murderer_question
-  
-  * "I do not believe that it's in our nature to kill one another"
-    "And yet it does happen" Leopald refutes
-  * "Should we not try to prevent murder from happening by targetting its' causes?"
-    
-    - "Which murderers?" Mari complains, evidently frustrated by the hypotheticals at play
-    
-    -> prison_introduction
-    
-  * "And what would we do with these 'murderers'"? -> prison_introduction
-  
-  = prison_introduction
-  
-    "When I woke I was in a collosal building, <b>'{city_name} Prison'</b>"
-    "Myself and others, we were dressed the same. We were armed, and I think that our purpose was to keep people locked inside" # Craig
-  
-    "I was a prisoner there. <em>Human beings</em> locked into tiny cells. It makes me feel sick"
-    
-    * How did you get out?
-      "Some of the guards let us out" # Andrew
+    * <Player:> "How did you get out?"
+      <Andrew:> "Some of the guards let us out"
     * [Say nothing]
     
-    - A look of anger flashes across his face. "The prisoners were locked away for the good of society. And for their <em>own</em> good, too. You should have been confirmed as <b>rehabilitated</b> before you were allowed to rejoin society"
+    - <Craig:> A look of anger flashes across the former guard's face.<Pause {short_pause}> "The prisoners were locked away for the good of society.<Pause {short_pause}> And for their <em>own</em> good, too.<Pause {short_pause}> You should have been confirmed as <b>rehabilitated</b> before you were allowed to rejoin society"<Pause {short_pause * 0.66}><br/>"You might be dangerous!" <Continue>
     
-    "I don't see how any of that could have been for my own good. And I'm <em>not</em> going back in there"
-    There is much distress in his voice
+    <Andrew:> "I don't see how any of that could have been for my own good.<Pause {short_pause * 0.6}> And I'm <em>not</em> going back in there"
+    <Player:> <color {intuition_color}>You detect that there is much distress in his voice</color> <Continue>
     
-    Many of the Agora members attempt to relieve the tension
+    <Null:> Many of the Agora members attempt to relieve the tension ...
     
-    "Perhaps they were not <em>always</em> right then, clearly. But neither surely were they <em>always</em> wrong?"
+    <Zoe:> "Perhaps they were not <em>always</em> right then, clearly.<Pause {short_pause}> But neither surely were they <em>always</em> wrong?"
     
-    * "The prison was primarily a tool of oppression"
+    * <Player:> "The prison was primarily a tool of oppression"
     
-      "Yes. The <b>old ways</b> are something to be overcome" # Mari
-      
-      ~ mari_trusting += 1
+      <Andrew:> <Pause {short_pause * 0.5}> <color {intuition_color}><em>Andrew visibly appreciates your solidarity</em></color> <Continue>
+    
       ~ andrew_trusting += 1
-      ~ player_revolutionary += 2
       ~ douglas_hope_represent -= 1
-      ~ rupert_trusting -= 1
+      ~ player_sedition = true
       
       -> prison_abolition
       
-    * "The prison was not necessary, it was cruel"
+    * <Player:> "The prison was not necessary,<Pause {short_pause * 0.33}> it was cruel"
      
-      <em>Andrew visibly appreciates your solidarity</em>
+      <Andrew:> <Pause {short_pause * 0.5}> <color {intuition_color}><em>Andrew visibly appreciates your solidarity</em></color> <Continue>
       
       ~ andrew_trusting += 2
-      ~ player_revolutionary += 1
+      ~ douglas_hope_represent -= 1
+      ~ player_sedition = true
       
       -> prison_abolition
      
-    * "We do not need a prison. We can resolve conflicts collectively"
-      "Locking someone up only serves to alienate them from society further"
-      "It's sweeping a problem under the rug, instead of dealing with it"
-      "Before we build this kind of system, we should ask ourselves - what do we want it to achieve?"
-      
-      "It should be <em>restorative</em> as much as possible, focussed on allowing me to repair the relationships I may have damaged" Andrew suggests
-      
-      "It should be focussed on <em>preventing</em> the behaviour from happening again" Mari suggests
-      
-      Other suggestions are made by many in the discussion. Douglas has started to take notes.
-      
-      "... Decisions will be made collectively and based on consent, with a circle being delegated to <em>implement</em> the process." # Mari
-      
-      This is found to be acceptable by the majority of the agora. Andrew and several others volunteered to be a part of this circle, their actions under the supervision and authority of the agora as a whole.
-      
-      Leopald is at first adamently opposed to the suggestions, when all of a sudden he is convinced.
-      "Yes, yes... I see the value in what you are saying now, Mari"
-      "And the body which you are leading, Andrew, will be responsible for establishing our new... <em>egalitarian</em> infrastructure"
-      
-      "And naturally, of course, another body will be needed, to <em>enforce</em> our new regime"
-      "To deal with those who would oppose us. To protect ourselves"
-      
-      ~ prison = "restorative"
-      
-      { ruler == "Rupert": -> attempt_abolish_prison_rupert_king }
-      
-      -> organised_violence_dilemma
+    * ["We do not need a prison. We can resolve conflicts collectively"] 
+
+      ~ player_sedition = true
+      -> prison_abolition
     
-    * "We should replace the prison with something more focussed on <em>reform</em>"
-      "The old ways were necessarily cruel"
-      "Or else prison would not have been an effective detterant"
-      "Clearly at least an <em>element</em> of our nature is sinful"
-      "To shape the society that we wish to live in we must punish wrongdoing and reward goodness"
+    * ["We should replace the prison with something more focussed on <em>reform</em>"]
+      <Player:> "The old ways were necessarily cruel.<Pause {short_pause}> Or else prison would not have been an effective detterant"<Pause {short_pause}><br/>"Clearly at least an <em>element</em> of our nature is sinful.<Pause {short_pause}>" <Continue>
       
-      You feel a little tense about your use of the word cruel
+      { not rupert_exiled: <Burly:> "This element must be crushed" Burly agrees <Pause {long_pause}> }
+      
+      <Player:> "To shape the society that we wish to live in we must punish wrongdoing and reward goodness" <Continue>
+      
       ~ andrew_trusting -= 1
       ~ leopald_trusting += 1
       
-      "The old society... used to reward goodness? Did you see this in the history books, Leopald? Could you tell use more?" # Douglass
+      <Craig:> "I think that the prison might not <em>always</em> be necessary<Pause {short_pause * 0.4}>, perhaps we could use it sparingly.<Pause {short_pause * 1.1}> But it can be a powerful tool<Pause {short_pause * 0.4}>, in order to shape <em>our citizens</em> to be the way we want them to be" <Continue>
       
-      "I.. er.. I don't know if I could say for definite. As I say, I just skimmed the pages. I believe this was always their aim"
-      
-      ~ douglas_hope_represent += 1
-      
-      "You <em>believe?</em> So you don't know" # Mari
-      
-      "What else would their aim be? It's our aim, isn't it?"
-      He seems a little irritated
-      
-      "I think that the prison might not <em>always</em> be necessary, perhaps we can use it sparingly"
-      "But it can be a powerful tool, in order to shape <em>our citizens</em> to be the way we want them to be"
-      "Naturally.. it will require enforcement, it requires us to form a <b>state</b>, capable of pursuing - and protecting - our <b>utopian vision</b>"
+      { ruler == "Rupert": <Rupert:> "The King would like to make clear the ardent necessity of being able to lock someone up and throw away the key ... as a final measure,<Pause {short_pause * 0.5}> saved for only the most vulgar sedition" <Continue> }
       
       ~ prison = "reforming"
       
-      { ruler == "Rupert": -> attempt_abolish_prison_rupert_king }
+      -> reimprisonning_dilemma
       
-      -> organised_violence_dilemma
+    * ["The prison was absolutely necessary, it is a <em>deterrant</em>"]
+      <Player:> "The prison was absolutely necessary<Pause {short_pause * 0.5}>, it is a <em>deterrant</em>.<Pause {short_pause}><br/>Within each of us is a <b>beast</b>.<Pause {short_pause}> We are <b>selfish</b><Pause {short_pause * 0.3}>, <b>sinful</b> beings always seeking to maximise our own gain - and we have a great proclivity to violence.<Pause {long_pause}> We <em>must</em> use the prison.<Pause {short_pause * 0.5}> Without it would be chaos" <Continue>
       
-    * "The prison was absolutely necessary, it is a <em>deterrant</em>"
-      "Within each of us is a <b>beast</b>. We are <b>selfish</b>, <b>sinful</b> beings always seeking to maximise our own gain, and we have a great proclivity to violence"
-      "We <em>must</em> use the prison, to ensure <b>order</b>. Without it would be chaos"
+      <Rupert:> Rupert is nodding emphatically.<Pause {short_pause * 0.5}>
       
-      Leopald is nodding emphatically
-      
-      Andrew and Mari are significantly less pleased
+      <Andrew:> Others are significantly less pleased <Continue>
       
       ~ andrew_trusting -= 1
       ~ mari_trusting -= 3
       
-      Your arguments sway the agora. The prison is here to stay!
+      <Null:> It takes some time to convince people that there is an aspect of them which is sinful<Pause {short_pause * 0.5}>, but it is much easier to convince them that there are aspects of <em>other</em> people which is sinful.<Pause {short_pause}> Their memories extend only a few days<Pause {short_pause * 0.5}>, but even so many have seen behaviours puzzling or aggressive.<Pause {long_pause}>
+      
+      <Player:> Your arguments sway the agora.<Pause {short_pause}> The prison is here to stay! <Continue>
       
       ~ leopald_trusting += 1
       ~ player_values_order = true
       ~ prison = "strict"
       
-      "And this, of course, implies a <b>strong state</b> capable of maintaining order" # Leopald
-      
-      -> organised_violence_dilemma
-      
+      -> reimprisonning_dilemma
+
+  = abolish_prison_rupert_leaves
+    <Rupert:> <color {intuition_color}>Rupert and his goons have left conspicuously<Pause {short_pause * 0.5}, you notice</color> <Continue>
+    
+    -> prison_abolition_resolved
+  
   = prison_abolition
-    "We should try to resolve all of our issues face-to-face" You begin.
-    "We should focus on restorative justice, and on solving the issues which cause transgressions"
-    "If it comes to it, we can discuss transgressions and punishments collectively to find solutions"
-    
-    ~ player_revolutionary += 2
-    
+    <Player:> "Locking someone up only serves to alienate them from society further.<Pause {short_pause}> It's sweeping a problem under the rug, instead of dealing with it" <Continue>
+      
+    <Player:> "Before we build this kind of system, we should ask ourselves - what do we want it to achieve?" <Continue>
+  
+    <Andrew:> Andrew is the first to make a suggestion.<Pause {short_pause * 1.2}> "It should be <em>restorative</em> as much as possible<Pause {short_pause * 0.5}>, focussed on allowing me to repair the relationships I may have damaged" <Continue>
+  
+    <Mari:> "It should be focussed on <Pace {slow_pace * 2}><em>preventing</em></Pace> the behaviour from happening again" <Continue>
+  
+    <Douglas:> The suggestions continue and you notice that Douglas has started to take notes. <Pause {short_pause * 1.5}>
+  
+    { not ruler == "Rupert": <Douglas:> "... Decisions will be made collectively and based on consent... with a circle being delegated to <em>implement</em> the process." he eventually summarises from the decisions passed collectively. <Continue> }
     { ruler == "Rupert": -> attempt_abolish_prison_rupert_king }
-    
+  
+    ~ prison = "restorative"
+    ~ mari_trusting += 1
+    ~ rupert_trusting -= 2
+  
+    { not ruler == "Rupert" and not rupert_exiled: -> abolish_prison_rupert_leaves }
+  
     -> prison_abolition_resolved
 
   = attempt_abolish_prison_rupert_king
-    "The prison will <em>not</em> be abolished. Or reformed, for that matter. Your king has thus spoken"
+    <Rupert:> "The King would like to make clear the ardent necessity of being able to lock someone up and throw away the key ... as a final measure,<Pause {short_pause * 0.5}> saved for only the most vulgar sedition" <Pause {long_pause}>
     
-    * Accept Rupert's decision
-      You bow low and make exaggerated apologies for your myopic imprudence. Rupert appreciates this greatly and he tips his head as a token of his forgiveness.
+    * [Accept Rupert's decision]
+      <Player:> You bow low and make exaggerated apologies for your myopic imprudence.<Pause {short_pause}> Rupert appreciates this greatly and he tips his head<Pause {short_pause * 0.2}>, as a token of his forgiveness. <Continue>
       
       ~ rupert_trusting += 1
       ~ player_loyal_to_rupert = true
       
-      "My liege" Leopald begins, kneeling and bowing his head in reverance.
-      <em>He is mimicking my action</em>, you realise
+      <Craig:> "Speaking of..." <Continue>
       
-      -> leopald_imprison_dissidents
+      -> reimprisonning_dilemma
       
-    * Turn Rupert into a cat
-      Really?! Are you a wizard?
+    * [Turn Rupert into a cat]
+      <Null:> Really?!<Pause {short_pause * 0.5}> Are you a{player_has_greensight: greenseeing} wizard?<Pause {short_pause * 0.5}>
       ~ player_loyal_to_rupert = false
+      ~ player_favours_rupert = false
+      ~ player_sedition = true
       
-      ** Yes I am
-        You outstretch your hands and close your eyes, and concentrate all of your magic energy into your fingertips
-        Silently you allow yourself to be lost in your power, to disappear from your physical body into a metaphysical world of hairballs, of mice and little saucers of milk
-        <em>'Ruppperrtttttt'</em> comes a voice from far beyond the real world
-        <em>'Here puss puss puss puss'</em>
+      ** [Yes I am]
+        <Player:> You outstretch your hands and close your eyes<Pause {short_pause * 0.5}>, and concentrate all of your magic energy into your fingertips.<Pause {short_pause}> Silently you allow yourself to be lost in your power<Pause {long_pause}> You disappear temporarily into a metaphysical world of hairballs<Pause {short_pause * 0.75}>, of mice and little saucers of milk. <Continue>
         
-        When your eyes open again, you are back in the agora. There is an air of absolute awe at your abilities
+        <Null:> <color {greensight_text_color}><em>'Ruppperrtttttt'</em></color> ... comes a voice from far beyond the real world.<Pause {short_pause}><br/><color {greensight_text_color}><em>'Here puss puss puss puss'</em></color> <Continue>
         
-        King Rupert has become a fluffy white cat, and perched atop his throne he is drinking eagerly from a little milk saucer
+        <Player:> ...<Pause {short_pause}>
+        
+        <Player:> Your eyes open again<Pause {short_pause * 0.3}>, you are back in the agora<Pause {short_pause * 0.75}>. The crowd has taken several steps back and is stood in stunned silence. <Continue>
+        
+        <Rupert:> King Rupert has become a fluffy white cat<Pause {short_pause * 0.5}>, and perched atop his throne he is drinking eagerly from a little milk saucer <Continue>
         
         -> rupert_is_a_cat
         
-      ** No I am not
-        You outstretch your eyes and close your eyes, wiggling your fingertips. You can sense the whole agora watching you and waiting in suspense
+      ** [No I am not]
+        <Player:> You outstretch your hands and close your eyes<Pause {short_pause * 0.3}>, wiggling your fingertips gently.<Pause {short_pause * 1.25}> You can sense the whole agora watching you and waiting in mounting suspense <Continue>
         
-        Moments pass. You are deep beyond the veil of reality, deep in the magical realm
-        Then you are back. You suddenly become conscious that you are stood with your eyes closed, wiggling your finger. "Here puss puss puss puss" you are saying. "Here Rupey Rupey Rupert. Come and get your milk"
+        <Player:> Moments pass.<Pause {short_pause}> You are deep beyond the veil of reality<Pause {short_pause * 0.3}>, deep into the magical realm.<Pause {long_pause * 1.25}>
         
-        There is a long pause, and then an uproar of laughter. Burly is evidently furious with your antics. Rupert less so, but he is looking at you like you're a fool
+        <Player:> Then<Pause {short_pause * 0.3}>, all of a sudden<Pause {short_pause * 0.1}>, you are back <Continue>
+        
+        <Player:> You become conscious that you are stood with your eyes closed<Pause {short_pause * 0.2}>, wiggling your fingers.<Pause {long_pause}> <Pace {slow_pace * 2}>"Here puss puss puss puss"</Pace> you are saying.<Pause {short_pause}> <Pace {slow_pace * 2}>"Here Rupey Rupey Rupert<Pause {short_pause * 0.75}>. Come and get your milk" <Continue>
+        
+        <Axel:> There is a long pause before people start to laugh.<Pause {short_pause * 0.5}>
+        <Burly:> Burly is evidently furious with your antics.<Pause {short_pause}> Rupert less so<Pause {short_pause * 0.4}>, but he is looking at you like you're a fool <Continue>
         
         ~ player_is_failed_wizard = true
         ~ rupert_trusting -= 1
         ~ burly_trusting -= 2
         
-        *** How dare he look at me that way?!
-            "How dare you?!" You demand. "You sit on a fool's throne and you have the gall to look at <em>me</em> that way? I am a <em>WIZARD!</em>"
+        *** [How dare he look at me that way?!]
+            <Player:> "How dare you?!"<Pause {long_pause}><br/>"Here you are<Pause {short_pause * 0.5}>, perched on a fool's throne with a fool's ledger and a fool for a bodyguard<Pause {short_pause}>, and you have the gall to look at <em>me</em> that way?<Pause {short_pause}> I am a <em>WIZARD!</em>"
             
-            **** When my power is back, they'll be sorry.
-            - <em>You have emphatically rejected the identity of the fool</em>
+            **** [When my power is back, they'll be sorry.]
+            - <Player:> <em>You have emphatically rejected the identity of the fool</em> <Continue>
             
             ~ player_fool = "resistance"
-        *** How embarrassing!
-            <em>You have accepted the identity of the fool, and it shames you</em>
+        *** [How embarrassing!]
+            <Player:> <em>You have accepted the identity of the fool<Pause {short_pause * 0.5}>, and it shames you</em> <Continue>
             ~ player_fool = "shame"
-        *** A fool? Why not, we're all fools are we not?
-            <em>You have accepted the identity of the fool, and you revel in it</em>
+        *** [A fool? Why not, we're all fools after all]
+            <Player:> <em>You have accepted the identity of the fool<Pause {short_pause * 0.5}>, and you revel in it.<Pause {short_pause * 0.5}> You are a rebel fool</em> <Continue>
             ~ player_fool = "embrace"
         *** [This does not bother me]
         
-        - "Er.. my liege? There was something I wanted to ask you before we were.. interrupted". Rupert nods. "Speak" he commands -> leopald_imprison_dissidents
+        - <Rupert:> "Right... <Pause {short_pause}>so then the prison is here to stay.<Pause {short_pause}> Who to <b>lock up</b> first I wonder?" <Continue>
+        
+        -> reimprisonning_dilemma
         
   = rupert_is_a_cat
     ~ douglas_hope_represent += 1
     ~ rupert_exiled = "cat"
     
-    The agora is watching you in stunned silence. You notice that Douglas in particular is shocked, stood there with an open mouth. It is a long time before the silence is broken again
+    <Burly:> Most of Rupert's bodyguards have gone.<Pause {short_pause * 0.5}> Burly is still as stone <Pause {short_pause}> 
     
-    * "I am your monarch now!"
+    <Axel:> Your people wait for you to speak <Pause {short_pause}>
+    
+    * ["I am your monarch now!"]
+      <Player:> You jump up onto the former king's picnic table<Pause {short_pause * 0.3}>, brandishing your tightly clenched teeth and with your fists raised to the air.<Pause {short_pause}> A champion among minions. <Continue>
+    
       ~ ruler = "player"
       
-      The word 'Monarch' seems to bring Burly crashing back into reality. His face is pale with fear and he has been staring at Rupert for a while. Rupert is purring happily and licking his fur
-      "Boss?" he says, looking up at you from confused grey eyes
+      <Burly:> The word 'Monarch' seems to have brought Burly crashing back into reality.<Pause {short_pause}> He is staring at Rupert, who is purring and brushing his cheek against your shin. <Continue>
       
-      ** Accept your minion
-         You nod, sweeping the cat from your throne and causing it to complain loudly. When you sit Burly stands straight and proud at your side
+      <Burly:> "Boss?" he asks<Pause {short_pause * 0.5}>, looking up at you from confused grey eyes<Pause {short_pause * 1.4}>
+      
+      ** [Accept your minion]
+         <Player:> You nod firmly<Pause {short_pause * 0.3}>, nostrils flaring with pride as you sweep the cat from your throne<Pause {short_pause * 0.3}>, causing him to complain loudly.<Pause {short_pause}> You never once blink or look away from Burly's eyeline.<Pause {short_pause}> Burly shuffles nervously as you drop one step ... and then another - striding flamboyantly over to him.<Pause {long_pause}> After an awkward pause he shuffles to stand by your side.<Pause {short_pause}> You look to your subjects, fists raised triumphantly
+         
          ~ burly_trusting = 5
          ~ burly_minion = true
-      ** Magic up a better minion
-         "Get lost Burly!" you shout decisively. You add nothing, and wait for him to awkardly oblige, shuffling off towards the back of the crowd
-         You close your eyes again and return to the spirit realm, preparing to summon your ideal 'assistant'. You picture them and they are..
          
-         ~ player_alt_minion = true
+         -> player_is_monarch
          
-         *** A cybernetic warrior, fierce and caluclating!
-         *** A special agent, cunning and resourceful
-         *** An Elven prince!
-         *** A mortal man, stern and scrupulously attentive
-         *** A military captain, diligent and strategic
-         - Poof! The crowd is stunned once again by your brilliance
-         - You grant a name to your new minion # Name cue
-      ** I don't need a minion!
-         "Get lost Burly!" you shout decisively. "This monarch doesn't need a minion"
-         "I'm a lone wolf"
+      ** [I don't need a minion!]
+         <Player:> "Get lost Burly!" you shout decisively.<Pause {short_pause}> "This monarch doesn't need a minion"<Pause {short_pause}>
+         <Player:> "I'm a lone wolf" <Continue>
          
-         { player_has_greensight: Burly is rather distressed }
+         { player_has_greensight: <Burly:> <color {greensight_text_color}>Burly is rather distressed</color> }
          ~ burly_trusting -= 5
-      - <>
+         
+         -> player_is_monarch
       
-    * "Forget what I said about the whole... King thing... it was just a phase..."
-      You go to add more, but you're not sure of what to say
+    * ["Forget what I said about the whole.. King thing"]
+      <Player:> "Forget what I said about the whole - <Pause {short_pause*0.25}><em>\*ahem\*</em> - King thing... it was just a phase..." <Continue>
+    
+      <Player:> You think to add more<Pause {short_pause * 0.4}>, but you're not sure of what to say<Pause {short_pause}>
+      
+      <Douglas:> A lot of people have been leaving the agora space<Pause {short_pause * 0.4}>, but at least they seem to accept it...
+      
+      <Leopald:> Just as you're about to agree to call it an end to today's meeting<Pause {short_pause * 0.4}>, a man approaches the circle with strident purpose ... <Continue>
       
       ~ ruler = false
       ~ governance = "agora"
       
-    - In the end it is Leopald who brings the conversation back to a semblence of normality -> leopald_insists_on_statehood
+      -> introduce_leopald
       
   = prison_abolition_resolved
-    Leopald eyes each of you coldly, but he does not speak for a long while.
+    <Craig:> A handful of people - notably some of the former prison guards - have left the Agora behind<Pause {short_pause * 0.5}>. But others stay <Continue>
     
-    The others are anticipating what he might say.
+    <Andrew:> Andrew looks delighted <Pause {short_pause}>
     
-    -> leopald_insists_on_statehood
-
-  = leopald_insists_on_statehood
-    "My comrades and peers, I share in your vision of creating a utopian society. Really I do"
-    "I felt that a prison apparatus would be necessary it is true, necessary to protect our vision from those who would do it ill"
-    "But there is a greater threat to us than the sin of individuals - and that is the threat of <b>armed gangs</b>"
-    "What is the worth of all we will build, if someone decided to <em>take</em> it from us?"
-    "Naturally - and to protect ourselves - it is imperative that we form our own armed group - a <b>state</b> - staffed by our trustworthy Utopianists. Capable of protecting our vision"
+    <Zoe:> Some of the Agora members have returned with equipment for starting a fire<Pause {short_pause * 0.3}>, and vegetables and meat<Pause {short_pause}>. There is a barbecue and much celebration <Continue>
     
-    ~ prison = "abolished"
+    <Null:> As evening approaches... much of the Agora's numbers have reduced as people have gone back to their dwellings<Pause {short_pause}>. A group strides towards you from the park gates <Pause {short_pause}>
+    <Player:> <color {intuition_color}><em>They are striding with purpose</em></color> <Continue>
     
-    -> organised_violence_dilemma
-
-== organised_violence_dilemma ==
-  // not currently possible that Rupert is king and you arrive here
-  // * {ruler == "Rupert" && player_fool != "shame" && player_fool != "resistance" && prison != "strict" } "Our King has no need of Terror. We should consider him instead as a counsellor to the people"
+    -> introduce_leopald
     
-    //"I'll be the judge of that!" Rupert complains
-    //~ rupert_trusting -= 1
-    
-    //** {not player_has_greensight} [Warn Rupert of Leopald's ambition]
-    //** {player_has_greensight} [Claim to have forseen Leopald's treachery]
-    //** [Propose yourself as Rupert's lead general]
-    //** [Say nothing]
-    //   "Wisely said, oh wise and handsome King" Leopald grovels
-    //   "A strong army will ensure 
-    
-  * {ruler == "player"} "My rule will not be tainted by the use of Terror. Consider me instead as your counsellor"
-    "A counsellor who can turn people into cats" Leopald jests
-    
+  = introduce_leopald
     { player_is_wizard: -> leopald_disables_player_magic }
-    { not player_is_wizard: -> coup_dilemma }
     
-  * {governance == "agora"} "Violence is justifiable out of necessity, but organised violence would hamper the freedom of our agora"
-    "There are times when violence is necessary, for example in self-defence it is justified"
-    "But this simple fact does not mean that we will abandon our dreams of a direct democracy without tyranny"
-    "The agora is the <em>only</em> state apparatus that we need"
-    -> coup_dilemma
+    <Leopald:> "I am Leopald!" one announces, who you take to be their leader<Pause {short_pause * 0.5}>. For menacing effect<Pause {short_pause * 0.2}>, he pushes Andrew over - who others help to his feet <Continue>
     
-  * "We must destroy the armoury, lest it become a <b>threat</b> to our nonviolent utopia!"
-  
-    ~ armoury_destroyed = true
-    -> coup_dilemma
+    -> introduce_leopald_proper
     
-  * [Violence is exclusively the right of an estbalished state which will be kept in check by representation]
-    "I believe that Leopald is right in the need of an established state, to protect us from the threat of <b>mob rule</b>"
+  = introduce_leopald_proper
+    <Leopald:> "I am Leopald<Pause {short_pause * 0.3}>, first of his name (as far memory goes)<Pause {short_pause}>. I am the general to {ruler == "rupert": King}{ruler != "rupert": Mayor} Rupert ... {rupert_is_a_cat: our beloved Cat... } and I've come to put an end to your antics!" <Continue>
     
-    "What makes this 'state' any different from any other armed mob?!" Mari demands
-    ~ mari_trusting -= 1
-    
-    "<b>Representation</b>", you begin
-    "The armed group will be <b>organised</b>, and structured on discipline and <b>self-restraint</b>. We will vote from those among us who will represent us in the leadership positions of this organisation, and in so doing we will keep it in check"
-    
-    { not ruler: As the majority think over your proposition it is becoming popular}
-    { ruler == "player": <em>You have abdicated your throne!</em> }
-    
-    ~ governance = "representative_democracy"
-    ~ ruler = false
-    
-    It soon surfaces that Leopald in particular is not content.
+    { burly_minion: <Burly:> Burly is stood frozen to the ground with fear<Pause {short_pause}>. He doesn't know what to do } <Continue>
     
     -> coup_dilemma
-   * "Let us instead empty the armoury to arm the mob!"
-     "There will be no <b>armed minority</b>, because instead we will arm the <b>majority</b>! There will never be another <b>coup</b>, because we will always <b>outgun</b> them!"
-     "Hurrah!" Andrew cheers
-     
-     "Long live the People! May their aim be ever true!"
-     
-     Some it is clear are emphatically in agreement with your aims. { governance == "agora": Most of the others seem less sure, but you are betting that your armed 'mob' will carry enough to carry the day }
-     
-     -> coup_dilemma
-    
+
   = leopald_disables_player_magic
-    Leopald throws you a rock and you catch it instinctively
+    <Leopald:> "Catch." <Pause {short_pause * 0.25}>
+    <Player:> He throws you a rock<Pause {short_pause}>. You catch it instinctively<Pause {short_pause * 0.2}>, then drop it to the ground with disgust when you realise what it is <Continue>
     
-    Oh no, a Hellebite rock! The one weakness of your magic
-    { player_alt_minion: Your minion vanishes into steam, your magic fading you are unable to maintain the conjuring }
-    You shake your hand, pull at the rock and try to dislodge it by every means that you can, but to no avail. Something is keeping it attached to you
+    <Player:> <em>Oh no, a Hellebite rock!<Pause {short_pause * 0.5}> The one weakness of your magic<Pause {short_pause * 0.4}>. You feel your strength leaving you almost instantly <Continue>
     
-    { burly_minion: Burly is stood frozen to the ground with fear. He doesn't know what to do }
+    -> introduce_leopald_proper
     
-    -> coup_dilemma
+  = reimprisonning_dilemma
+    <Craig:> "I'm delighted that we're keeping the prison.<Pause {short_pause * 1.25}> Maybe <b>delighted</b> is the wrong word<Pause {short_pause * 0.4}>, but anyway it gives me a sense of purpose<Pause {short_pause}> <Continue>
+    
+    <Craig:> "We have records of all the former prisoners... I think we should look them back up again<Pause {short_pause * 0.5}>, right?" <Pause {short_pause * 1.25}>
+    
+    <Andrew:> Andrew lunges for Craig<Pause {short_pause * 0.4}>, the two are separated only by the efforts of the crowd<Pause {short_pause * 0.75}>
+    
+    <Craig:> "You see what an animal he is?!" <Pause {long_pause}>
+    <Andrew:> "<b>Me?!</b> He's the animal!" <Continue>
+    
+    * { prison == "reforming" } ["Perhaps we can pardon the previously imprisoned, conditional on behavioural monitoring"]
+      { player_is_failed_wizard and player_fool == "shame": <Player:> As you go to speak you see Burly looking at you, fury in his eyes<Pause {short_pause * 0.4}>. You choke <Continue> -> reimprison_conclusion }
+      
+      <Player:> "{ ruler == "rupert": My leige ... }Perhaps we should pardon Andrew, and the others previously imprisoned?<Pause {short_pause}>. We don't know yet how the Big Pop might have changed us<Pause {short_pause * 0.5}>, it seems unfair to imprison someone for something that nobody remembers?" <Continue>
+      
+      { player_is_failed_wizard: <Burly:> Burly spits<Pause {short_pause * 0.4}>. Rupert ignores you <Continue> -> reimprison_conclusion }
+      
+      <Rupert:> Rupert thinks pensively on your suggestion but says nothing<Pause {short_pause}>
+      
+      <Andrew:> <color {intuition_color}>Andrew seems somewhat calmer<Pause {short_pause * 0.3}>, although still very stressed</color> <Continue> -> reimprison_conclusion
+      
+    * { ruler != "rupert" or (player_favours_rupert and not player_sedition) } ["We should pardon all prior sentences"]
+      <Player:> "It seems unfair to imprison someone for something that nobody remembers? I think we should pardon everyone imprisoned in the era of the Old World" <Continue>
+      
+      -> suggest_pardoning_previous_prisoners
+      
+    * [Agree with Prison Guard Craig]
+      <Player:> "I agree with the gentleman Craig{ ruler == "rupert" and not player_is_failed_wizard: your Grace}.<Pause {short_pause * 0.5}> Some of these prisoners might have been murderers and worse.<Pause {short_pause}> They must be prevented from walking free" <Continue>
+      
+      { andrew_trusting > 0: <Andrew:> "You've changed your tune".<Pause {short_pause * 0.5}> Andrew is seething. <Continue> }
+      
+      ~ andrew_trusting -= 4
+      
+      { ruler == "rupert": <Rupert:> "We will judge this on a case-by-case basis.<Pause {short_pause}> Small crimes will be forgiven<Pause {short_pause * 0.5}>, big crimes will not be<Pause {short_pause * 0.5}>" }
+      
+      { ruler == "rupert": <Rupert:> "Debt will not be forgiven"<Pause {short_pause * 0.4}>, he adds as an afterthought <Continue> }
+      
+      -> reimprison_conclusion
+      
+    * { ruler == "rupert" or prison == "strict" } ["Yes, and what about all those guilty of sedition besides?!"]
+    
+      <Player:> "Yes<Pause {short_pause * 0.5}>, and what about all those guilty of sedition besides?!" <Continue>
+    
+      { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): <Burly:> <Pause {short_pause * 0.5}>Burly scoffs<Pause {short_pause}>. "You yourself are guilty of sedition!" <Continue> }
+      
+      -> reimprison_conclusion
+      
+    * [Say nothing]
+      <Alicia:> "It seems unfair to imprison someone for something that nobody remembers? I think we should pardon everyone imprisoned in the era of the Old World" <Continue>
+      
+      { ruler != "rupert" or (player_favours_rupert and not player_sedition): -> suggest_pardoning_previous_prisoners }
+      
+      -> reimprison_conclusion
+
+  = suggest_pardoning_previous_prisoners
+    # you know here that the player is not in sedition against Rupert
+    <Craig:> "And what if I produce a ledger of his crimes<Pause {short_pause * 0.4}>, that it might jog your memory?"
+    
+    * ["Reviewing it on a case-by-case basis could be a good compromise"]
+      <Player:> "We can avoid conflict here with compromise.<Pause {short_pause}> I would suggest that we could review each crime individually and decide on that basis" <Continue>
+      
+      <Zoe:> "Yeah.<Pause {short_pause * 0.5}> Let go of the minor stuff"<Pause {short_pause}>
+      
+      <Andrew:> Andrew <Pace {slow_pace}>sighs</Pace><Pause {short_pause * 0.4}>, seeming to accept it - or possibly imagining that his crime could not be so bad <Continue>
+      
+      <Craig:>...<Pause {short_pause}> After some waiting Craig is able to provide a ledger of crimes committed by prisoners.<Pause {short_pause}> Anrew looks nervously over his shoulder <Continue>
+      
+      <Craig:> "Tax fraud" <Continue>
+      
+      <Andrew:> <color {intuition_color}>Andrew is visibly relieved</color> <Continue>
+      
+      { ruler != "rupert": <Rupert:> "So we're locking him up then<Pause {short_pause}>, right?" <Continue>}
+      
+      -> reimprison_conclusion
+      
+    * ["Reading the records would prevent a fresh start, we should throw the ledger out"]
+      { ruler == "rupert": <Player:> "Your Grace<Pause {short_pause * 0.5}>, this ledger will prevent people like Andrew truly having a fresh start<Pause {short_pause * 0.5}>. It is the eyes of society that makes a criminal<Pause {short_pause * 0.5}>, not the deed.<Pause {short_pause}> We should throw the ledger out" <Continue> }
+      { ruler == "rupert": <Mari:> "Hear, hear!<Pause {short_pause}> Sage counsel<Pause {short_pause * 0.25}>" <Continue> }
+      { ruler == "rupert": <Rupert:> Rupert thinks on your counsel and nods slowly<Pause {short_pause}>. "The King should know<Pause {short_pause * 0.5}>. I'll have the ledger<Pause {short_pause * 0.5}>, but nobody else will know - and there will be no <em>public</em> record against your name... Should you reoffend I'll be forced to reconsider" <Continue> -> reimprison_conclusion }
+      
+      <Craig:> "I will not stand for this!"<Pause {short_pause}> He looks about him furiously.<Pause {short_pause * 0.5}> "I will return forthwith!" <Continue>
+      
+      -> craig_returns
+      
+    * [Say nothing]
+      { ruler == "rupert": <Rupert:> "Very well. I shall review this ledger of yours" <Continue> -> reimprison_conclusion }
+      
+      <Null:> There is a long silence... it seems that nobody is very eager to see the ledger <Continue>
+      
+      <Philippa:> "I think we're hesitant... Craig was it?<Pause {long_pause}> We're hesitant because seeing the ledger will change how we view Andrew.<Pause {short_pause}> Until Andrew is made a criminal by your ledger<Pause {short_pause * 0.5}>, to us he's just Andrew" <Continue>
+      
+      <Alicia:> "I'd prefer to give Andrew the opportunity of a fresh start ..." <Continue>
+      
+      <Craig:> Craig looks about him with disbelief.<Pause {short_pause}> "I will not stand for this!<Pause {short_pause * 0.5}> I will return forthwith!" <Continue>
+      
+      -> craig_returns
+  
+  = craig_returns
+    <Mari:> Shortly after Craig leaves<Pause {short_pause * 0.4}>, Mari announces her intention to rally a crowd to Andrew's support.<Pause {short_pause}> The pair head off with a dozen others <Continue>
+    
+    { not rupert_exiled: <Rupert:> Rupert and his guard leave<Pause {short_pause}>, and then only a few of you remain <Pause {short_pause}> }
+    
+    <Player:> <color {intuition_color}><em>This can't be good</em></color> you think to yourself <Continue>
+    
+    <Leopald:> A while passes before a group of armed men approach<Pause {short_pause * 0.4}>, lead by a man you do not recognise <Continue>
+    
+    <Craig:> You do see Craig among them<Pause {short_pause * 0.5}>, but recognise no-one else
+    
+    -> introduce_leopald
+    
+  = reimprison_conclusion
+    <Arsene:> Armed guards have started arriving in numbers<Pause {short_pause * 0.5}>, and they're preventing people from leaving.<Pause {short_pause}> Anxious murmuring grows <Continue>
+    
+    <Rupert:> "Ah fantastic, the <b>additional guards</b> have arrived" Rupert beams <Continue>
+    
+    <Rupert:> "<em>\*ahem\*</em>... {ruler == "rupert": My }people!<Pause {short_pause}> Please do not be alarmed by the presence of all these <b>armed guards</b>.<Pause {short_pause}> Among you are some dangerous seditionists who need to be <Pace {slow_pace}><b>rooted out</b></Pace> and <Pace {slow_pace}><b>imprisoned</b></Pace><Pause {long_pause}>. The rest of you will not be harmed" <Continue>
+    
+    <Rupert:> Rupert points to Mari and Andrew in turn{ not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition):, and then to you}.<Pause {short_pause}> "THEM!" he declares<Pause {short_pause * 0.4}> ...<br/>"These heretical MALCONTENTS!<Pause {short_pause}> {ruler == "rupert":They would see me overthrown!}{ruler != "rupert": They wish to seize power for THEMSELVES!}" <Continue>
+    
+    { ruler == "rupert" and not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): <Player:> He seems to have forgotten rather quickly that it was you who put him on the throne in the first place <Continue> }
+    
+    <Arsene:> The armed guards begin seizing people <Pause {short_pause}>
+    
+    { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): -> player_imprisoned }
+    
+    <Andrew:> Andrew thuds to the floor unconscious and is dragged away<Pause {short_pause * 0.5}>, you didn't see what happened <Pause {long_pause}>
+    
+    <Mari:> Mari looks desparately to you as a guard is taking her by the arm <Continue>
+    
+    <Player:> You consider whether helping her is possible but think better of it<Pause {short_pause}>. You are stood still as stone
+    
+    * [I didn't want this to happen]
+      <Player:> As those on the list are dragged away at gunpoint you feel an overwhelming sense of guilt<Pause {short_pause * 0.5}>. <em>what have I done?</em> you think to yourself ... <Pause {short_pause}>
+      
+      <Rupert:> You imagine that you may have a long reign to think it over ...<Pause {short_pause}> that is unless you plot against the King yourself.<Pause {short_pause * 0.4}> <Continue>
+      
+      -> thank_you_message
+    * [Good, separate the wheat from the chaffe]
+      <Player:> As those on the list are dragged away at gunpoint you feel a sense of pride<Pause {short_pause}>. This could be the dawning of a new era of state control ... of enormous wealth and power for the King ... and no doubt Rupert will remember his friends <Continue>
+      
+      -> thank_you_message
+    * [I am indifferent to their suffering]
+      <Player:> As those on the list are dragged away at gunpoint you feel nothing for their plight<Pause {short_pause}>. And why should you?<Pause {short_pause}> The King is in power now<Pause {short_pause * 0.5}>, and no doubt he will remember his friends <Continue>
+      
+      -> thank_you_message
+
+  = player_imprisoned
+    <Eleni:> As a guard seizes you by the arm tightly you realise with horror that <Pace {slow_pace}><b>you</b></Pace> are on the list as well <Continue>
+    
+    * [Resist the arrest physically]
+      <Player:> You pull against the soldier's grip<Pause {short_pause * 0.5}>. They hit you, hard, and it is no use<Pause {short_pause}>. Before long your hands are bound and your mouth gagged and you stop resisting<Pause {short_pause}> This is the end of your story, you suppose<Pause {short_pause}>. You consider the possibility of a daring escape <Continue>
+      
+      -> thank_you_message
+      
+    * [Decry the injustice]
+      <Player:> "Tyranny-!" You shout with a muffled voice, as the guard's hand is clenched over your mouth<Pause {short_pause * 0.5}>. Before not too long you are gagged, and being led to the edge of the park<Pause {short_pause * 0.5}>. Onwards to some dingy cell, you expect<Pause {short_pause}>. You wonder of your chances of escape<Pause {short_pause * 0.5}>, or of perhaps being freed <Continue>
+      
+      <Player:> You decide that you are not too optimistic. <Pause {short_pause}>But you never know. <Continue>
+      
+      -> thank_you_message
+    * [Promise vengeance]
+      <Player:> "I'll be back!" you announce<Pause {short_pause * 0.5}>. "Oh mark my words I'll be back<Pause {short_pause * 0.5}>. And then you'll be sorry!" <Continue>
+      
+      <Eleni:> "Quiet, scum!" The guard announces as she drags you towards a waiting car<Pause {short_pause}>. "Try to run and I'll shoot you" <Pause {short_pause * 0.3}>
+      
+      <Player:> Best save your escape attempts for later, then.<Pause {short_pause * 0.3}> You wonder what the future holds ... you suppose that escaping is unlikely<Pause {short_pause * 0.4}, if indeed you are not to be executed<Pause {short_pause}>. Yet you remain optimistic <Continue>
+      
+      -> thank_you_message
+    * [Accept your fate stoicly]
+      <Player:> You hold your head up high and with dignity as you are led to the bus which will take you into custody <Continue>
+      
+      <Eleni:> The guard seems to appreciate this.<Pause {short_pause}> The two of you watch Andrew's unconscious body being dragged towards the bus in front of you<Pause {short_pause}>
+      
+      <Player:> You wonder what will become of you<Pause {short_pause * 0.4}>, and of the rest of this procession of those inconvenient to the new status quo<Pause {short_pause}>. You may yet live, you suppose optimistically <Continue>
+      
+      -> thank_you_message
+    * [Begin to sob]
+      <Player:> You are sobbing uncontrollably as you make it towards the prison bus<Pause {short_pause * 0.5}>. You can feel like you haven't cried like this in years<Pause {short_pause}>. It's so liberating<Pause {short_pause * 0.3}>, the only thing on your mind is the tears rolling down your face <Continue>
+      
+      -> thank_you_message
+    * { ruler == "rupert"} ["Death to the King!"]
+      <Player:> "Death to the King!" you announce defiantly<Pause {short_pause * 0.5}>. "Big City will see a Republic again!" <Continue>
+      
+      <Eleni:> "Quiet, scum!" The guard announces as she drags you towards a waiting car<Pause {short_pause}>. "Try to run and I'll shoot you" <Pause {short_pause * 0.3}>
+      
+      <Player:> Best save your escape attempts for later, then.<Pause {short_pause * 0.3}> You wonder what the future holds ... you suppose that escaping is unlikely<Pause {short_pause * 0.4}, if indeed you are not to be executed<Pause {short_pause}>. Yet you remain optimistic <Continue>
+      
+      -> thank_you_message
+    
+  = player_is_monarch
+    <Player:> Hands on your waist, you survey your kingdom with pride <Pause {short_pause}>. You are faintly aware of the crowd chanting your name.<Pause {short_pause}> For a brief moment, you think about imprisonning those disloyal<Pause {short_pause}> - Mari in particular seems like she might be a malcontent troublemaker<Pause {short_pause}>. You decide that your first purge can wait until at least tomorrow ... <Continue>
+    
+    -> thank_you_message
     
 == coup_dilemma==
-  "I already left for the <b>arsenal</b> this morning" Leopald reveals..
-  "I went with some <b>likeminded individuals</b>, and we armed ourselves to the teeth"
-  "These proud defenders of liberty are lurking in the <b>shrub</b> with our guns, awaiting my word"
+  <Leopald:> <ColorFade black red 5> "I left for the <b>arsenal</b> this morning" Leopald reveals ...<Pause {short_pause}><br/>"I went with some <Pace {slow_pace * 0.4}><b>likeminded individuals</b></Pace>, and we armed ourselves <Pace {slow_pace * 0.4}>to the</Pace><Pace {slow_pace * 0.35}> teeth</Pace><br/><Pause {short_pause * 1.25}>There are more proud defenders of liberty lurking in the <b>shrub</b> with our guns<Pause {short_pause * 0.5}>, awaiting my word" <Continue>
   
-  You notice a rustling in the bushes
+  <Player:> <color {intuition_color}>You think you notice a rustling in the bushes</color> <Continue>
   
-  "The utopia we wish to build must be built on virtue <em>and</em> terror, in equal measure"
-  "Will you stand in our way, and fall by the sword of virtue, or repent, and live?!"
+  <Leopald:> "The utopia that we wish to build must be built on virtue <Pace {slow_pace * 0.6}><em>and</em></Pace> terror<Pause {short_pause * 0.5}>, in equal measure"<Pause {short_pause}><br/>"Will you stand in our way, and fall by the sword of virtue, or repent... and live?!"
   
-  * You believe Leopald has an armed force in waiting
-    So then... you are surrounded
+  * [You believe Leopald has an armed force in waiting]
+    <Player:> So then... you are surrounded
+    
     -> leopald_has_you_surrounded
     
-  * You are sure that Leopald is bluffing
-    You scoff. "Oh yeah?!"
-    "I don't believe you could find <b>ONE</b> fool to follow you Leopald, let alone a dozen!"
+  * [You are sure that Leopald is bluffing]
+    <Player:> You scoff<Pause {short_pause * 0.75}>. "Oh yeah?!"<Pause {short_pause}>
+    <Player:> "I don't believe you could find <Pace {slow_pace * 0.4}><b>ONE</b></Pace> fool to follow you Leopald<Pause {short_pause * 0.5}>, let alone a dozen!" <Continue>
     
-    Leopald is looking at you from behind a poker face
-    "Arsene". His voice is raised
+    <Leopald:> Leopald is looking at you from behind a poker face <Continue>
     
-    A man steps out from beyond the bush, he is carrying a carbine rifle
-    You feel a lump in the back of your throat
+    <Leopald:> "Arsene"<Pause {short_pause * 0.4}>. His voice is raised <Continue>
+    
+    <Arsene:> A man steps out from beyond the bush<Pause {short_pause * 0.4}>, he is carrying a carbine rifle.<Pause {short_pause}>
+    
+    <Player:> You feel a lump in the back of your throat <Continue>
     
     ** [One man.. well that doesn't prove anything]
-       "What does <b>one man</b> prove?! Even with a rifle. I could take him"
+       <Player:> "What does <b>one man</b> prove?!<Pause {short_pause * 0.8}> Even with a rifle.<Pause {short_pause}> I could take him" <Continue>
        
-       { burly_minion: "You could take him boss" }
-       { burly_minion: "Yeah I could take him" }
+       { burly_minion: <Burly:> "You could take him boss" <Continue> }
        
-       "Would you like to try?" the gruesome looking man asks. Something about the way he says it is quite intense
+       <Arsene:> "Would you like to try?" the gruesome looking man asks.<Pause {short_pause}> There is malevolent intent behind his eyes <Continue>
        
        -> player_silent
        
-    ** [Okay, he might be telling the truth] -> leopald_has_you_surrounded
+    ** [Okay, so he might be telling the truth] -> leopald_has_you_surrounded
     
   = leopald_has_you_surrounded
-    * There's only one thing for it [PANIC]
+    * [There's only one thing for it (PANIC)]
     
       ~ player_courageous -= 3
       -> player_panics
     * {player_courageous > 0} [You're not scared!] -> player_defiant
-    * Your face goes a ghostly white. You remain still as stone -> player_silent
-    * You remain silent, stoicly
+    * [Your face goes a ghostly white. You remain still as stone] -> player_silent
+    * [You remain silent, stoicly]
       ~ player_courageous += 1
       -> player_silent
   
   = player_panics
-    You are willing with great ferocity to speak, the energy builds and builds until finally the words burst from your lips
-    "Have mercy!"
+    <Player:> You are willing with great ferocity to speak... the energy builds and builds... until finally the words burst from your lips<Pause {short_pause * 1.25}> "Have mercy!" <Continue>
     
     -> player_silent
 
   = player_defiant
-    <em>"I'm not scared!"</em> you tell yourself convincingly
-    "I'm not scared of you!"
+    <Player:> <em>"I'm not scared!"</em> you tell yourself convincingly<Pause {short_pause}><br/>"I'm not scared of you!" <Continue>
     
-    Leopald is looking at you with a sort of gleeful look of a toddler, he is thoroughly enjoying your defiance and it has taken him by surprise
+    <Leopald:> Leopald is looking at you with a sort of gleeful look of a toddler<Pause {short_pause * 0.5}>, he is thoroughly enjoying your defiance and it has taken him by surprise <Continue>
     
     -> player_silent
   
   = player_silent
-    Mari has turned on her heels and ran away. Leopald laughs smugly as she runs
-    He licks his lips. { player_has_greensight: He has been eager for this moment, he is revelling in it }
+    <Mari:> Mari has turned on her heels and ran away.<Pause {short_pause}>
+    <Leopald:> Leopald laughs smugly as she runs <Continue>
     
-    Leopald's co-conspirators have begun to step out from the line of bushes. You count seven in total
-    <em>A coup, with seven soldiers?!</em> you wonder
+    <Leopald:> He licks his lips. { player_has_greensight: <Pause {short_pause * 0.75}>He has been eager for this moment<Pause {short_pause * 0.5}>, he is revelling in it } <Continue>
     
-    Leopald glances at you nervously, as if reading your mind
-    "There are many more of us!" he announces. "Those of you who comply will be amply rewarded. Resist and you will be crushed"
+    <Eleni:> Leopald's co-conspirators have begun to step out from the line of bushes<Pause {short_pause * 0.5}>. You count seven in total <Pause {long_pause}>
     
-    He looks about the faces in the crumbling Agora
-    "We will be reinstating the police force, and returning them to their former prestige"
-    { douglas_hope_represent <= 0: "We will be restoring the order and rationality of the <em>Old World</em>" }
+    <Player:> <em>A coup, with seven soldiers?!</em><Pause {short_pause * 0.3}>, you wonder.<Continue>
     
-    He turns to face you now. "{ player_name } you are under arrest, for your crimes against the Big City Republic"
-    "Round up the other <b>troublemakers</b> and throw them in the prison" he commands the soldiers
-    "We'll decide what to do with them later"
+    <Leopald:> Leopald glances at you nervously<Pause {short_pause * 0.3}>, as if reading your mind.<Pause {short_pause * 0.3}><br/>"There are many more of us!" he announces<Pause {short_pause}>. "Those of you who comply will be amply rewarded.<Pause {short_pause * 0.3}> Resist and you will be crushed" <Continue>
     
-    A soldier grabs you by your arm and roughly jerks you in front of him, his rifle to your back. Another ties your wrists together. They drive you from the agora and through the park, to the gates. Andrew is taken prisoner as well, you are dimly aware
-    By the gates there are two more armed guards. They watch on nervously as a crowd is gathering outside
-    {player_has_greensight: It seems that word has been spreading}
+    <Leopald:> He looks about the faces in the crumbling Agora<Pause {short_pause}>.<br/>"We will be reinstating the police force<Pause {short_pause * 0.4}>, and returning them to their former prestige" <Continue>
     
-    "Disperse!"
-    He shouts it into a crowd that does not hear him
-    "Disperse!"
+    <Leopald:> "I have a list of troublemakers who are to be rounded up and placed under arrest". <Pause {short_pause * 0.75}>He turns to face you now<Pause {short_pause * 0.2}>. "Yes, <Pace {slow_pace}><b>you</b></Pace> are on it" <Continue>
     
-    A troop approaches over the horizon, making a lot of noise. You cannot see how many there are, maybe three dozen
-    They are calling people onto the street to join them
-    They are full of energy
-    You spot Mari at the head of the crowd. She must be spreading the word
+    <Arsene:> A soldier grabs you by your arm and roughly jerks you in front of him<Pause {short_pause * 0.5}>, his rifle to your back.<Pause {short_pause}>
+    <Eleni:> The other ties your wrists together <Continue>
+    
+    <Arsene:> They drive you from the agora and through the park<Pause {short_pause * 0.4}>, to the gates <Pause {short_pause}>
+    <Andrew:> Andrew is taken prisoner as well<Pause {short_pause * 0.5}>, you are dimly aware <Continue>
+    
+    <Heinrich:> By the gates there are two more armed guards.<Pause {short_pause}> They watch on nervously as a crowd is gathering outside <Continue>
+    
+    <Arsene:> "Disperse!"<Pause {short_pause * 0.6}><br/>He shouts it into a crowd that does not hear him<Pause {short_pause}><br/>"Disperse!" <Continue>
+    
+    <Zoe:> A troop approaches over the horizon<Pause {short_pause * 0.4}>, making a lot of noise.<Pause {short_pause * 1.2}> You cannot see how many there are, maybe three dozen <Pause {long_pause}>
+    
+    <Zoe:> They are calling people onto the street to join them, and they're full of energy <Continue>
+    
+    <Mari:> You spot Mari at the head of the crowd.<Pause {short_pause}> She must be spreading the word
     
     * [Call for help]
-      "Mari!" you call out, but the soldier <em>SLAMS</em> the butt of his rifle into your stomach and you keel over in pain # Slam effect
+      <Player:> "Mari!" you call out, but the soldier <em>SLAMS</em><Effect Shake><Pause 375> the butt of his rifle into your stomach and you keel over in pain <Continue>
       -> battle
       
     * [Shout a warning]
-      "Mari!" you call out, but the soldier <em>SLAMS</em> the butt of his rifle into your stomach and you keel over in pain # Slam effect
+      <Player:> "Mari!" you call out, but the soldier <em>SLAMS</em><Effect Shake><Pause 375> the butt of his rifle into your stomach and you keel over in pain <Continue>
       -> battle
       
     * [Say nothing] -> battle
     
   = battle
-    { mari_trusting > 0: "{player_name}!"} {mari_trusting <= 0: "Andrew!"} she calls, rushing forward to help.
-    Where she treads the crowd follows, despite the danger. Leopald and his followers have now caught up, and their rifles pointed into the crowd.
+    <Mari:> { mari_trusting > 0: "{player_name}!"} {mari_trusting <= 0: "Andrew!"} she calls<Pause {short_pause * 0.5}>, rushing forward to help.<Pause {short_pause}> Where she treads the crowd follows<Pause {short_pause * 0.4}>, despite the danger.<Pause {short_pause * 0.6}> Leopald and his followers have now caught up, and their rifles pointed into the crowd. <Continue>
     
-    <em>They will not fire</em> you think to yourself. That would be madness.
+    <Player:> <em>They will not fire</em> you think to yourself<Pause {short_pause}>. That would be madness. <Continue>
     
-    <b>BOOM!</b> a rifle sounds. # shake effect
-    You do not know if it was on purpose
-    The echo rings through your body into a terrible abyss # fade out transition
+    <Leopald:> <FadeOutAll 1> <b>BOOM!</b><Effect Shake><Pause {short_pause * 0.33}> a rifle sounds.<Pause {short_pause}> The echo rings through your body into a terrible abyss ... <Continue>
     
-    "{player_name}?" # fade in and out
-    "{player_name}?"
-    "Are you alright?" # fade in
-    You flutter back into consciousness, and the world seems to flutter with you.
-    Andrew is stood over you. He is holding a rifle. There is blood across his chest
+    <Andrew:> <FadeInAll 1> "{player_name}?"<Pause {short_pause * 0.33}><br/>"{player_name}?"<Pause {short_pause * 0.33}><br/>"Are you alright?" <Continue>
     
-    You look about you, dizzy. There are bodies strewn everywhere.
-    You see Leopalds first, and his guards.
-    You see other faces, some you recognise dimly, others the faces of complete strangers.
-    You see Mari, her face pale and her eyes icy. The life has left them
-    You cannot hear what Andrew is saying
-    All the death you around you is making a racket, and you are being bounced back and forth
-    Someone is helping you to your feet and guiding you away, back to the Agora.
-    The birds are chirping. It's so peaceful here
+    <Player:> Gradually you flutter back into consciousness... the world seems to flutter with you. <Pause {long_pause}>
     
-    "When you are recovered enough there will be a meeting in the Agora to discuss what happened" Andrew is explaining
+    <Andrew:> Andrew is stood over you<Pause {short_pause}>. He is holding a rifle. There is blood on his clothes <Continue>
     
-    -> DONE
+    <Null:> There are bodies strewn everywhere. <Pause {long_pause}> You see Leopald's, and those of some guards.<Pause {short_pause}> You see other faces you recognise dimly<Pause {short_pause * 0.3}>, on still others the faces of complete strangers. <Continue>
+    
+    <Mari:> You see Mari, her face pale and her eyes icy<Pause {short_pause * 0.4}>. Dead too. <Pause {short_pause}>
+    <Andrew:> You cannot hear what Andrew is saying<Pause {short_pause * 0.4}>, but he forcibly averts your gaze <Continue>
+    
+    <Null:> Someone is helping you to your feet and guiding you away<Pause {short_pause * 0.4}>, back to the Agora.<Pause {short_pause}> You notice the sound of birds chirping <Continue>
+    
+    <Andrew:> "We beat them<Pause {short_pause}>. You need time to recoop<Pause {short_pause * 0.5}>. We will bury our dead... and meet on the morrow to discuss what has happened... where to go from here" <Continue>
+    
+    * [Make yourself useful] -> thank_you_message
+    * [Stay seated on the grass] -> thank_you_message
+    * [Ask for help] -> thank_you_message
 
-== leopald_imprison_dissidents ==
-  "It is evident to us all, of course, the wise benevolence in which your prisons operate. We see that they are as much a service for the imprisoned themselves as for society at large"
-  "But it pains me to admit the scale of <b>dissidence</b> which exists in the hearts of some who are here today"
+== thank_you_message ==
+  <Null:> Thanks for playing! We plan on doing some much more interesting things with this platform.<Pause {short_pause}> We're going to open it up to allow the world to share their own stories with each other<Pause {short_pause * 0.5}>, and then to allow the data from those stories to go further<Pause {short_pause * 0.5}>, to allow characters and worlds to overlap and be read into other games in an open API.<Pause {short_pause}> If you're interested in this project<Pause {short_pause * 0.5}>, please get in touch!<br/> start@games.coop <Continue>
   
-  { player_has_greensight: the space has become very tense }
-
-  He points to Mari and Andrew in turn, slowly. "THEM!" he shouts
-  "These heretical MALCONTENTS, my liege! They would see you overthrown!"
-  "I have seen it time and again in the history records. Malcontents from the lower classes who blame those of <b>success</b> for the makings of their own <b>failures</b>" He seems to be explaining that part especially to Douglas
-  "Your Highness it is my counsel that we imprison them <em>immediately</em> and <em>indefinitely</em> before their evil sedition should spread. We must outlaw ill words spoken of the King or his decrees. For after all what place is it of the clay to question the judgement of its' maker?"
-  
-  * "No! These are my friends!"
-  * "No! My liege, we must protect <b>free speech</b>!"
-  * Accept their imprisonment
-    There is a brief scuffle, but the Royalists come out on top
-    
-    ~ mari_imprisoned = true
-    ~ andrew_imprisoned = true
-
--> END
+  -> END
