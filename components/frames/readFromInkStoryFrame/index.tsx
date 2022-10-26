@@ -16,14 +16,18 @@ import { SLOW_PACE } from "../../lib/constants";
 
 const SHAKE_TIMEOUT = 500;
 
+interface IReadFromInkDialogueFrame extends IStoryFrame {
+    url?: string;
+}
+
 /*
 *   A component which renders a dialogue directly from an ink file
 */
 
-function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
+function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : React.ReactElement {
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
-    const [storyUrl, setStoryUrl] = useState(null);
+    const [storyUrl, setStoryUrl] = useState(url);
     const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/ink/achilles.ink");
     const [inkStory, setInkStory] = useState(null);
 
@@ -236,9 +240,9 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
                 // get the file type returned by the server
                 let story = null;
 
-                if(res.headers["content-type"] == "application/json")
+                if(res.headers["content-type"].includes("application/json") || res.headers["content-type"].includes("text/plain"))
                     story = new InkJs.Story(res.data);
-                else if(res.headers["content-type"] == "application/inkml+xml")
+                else if(res.headers["content-type"].includes("application/inkml+xml"))
                     story = new InkJs.Compiler(res.data).Compile();
                 
                 if(story != null) setInkStory(story);
@@ -279,11 +283,11 @@ function ReadFromInkDialogue({followLink} : IStoryFrame) : React.ReactElement {
     
 }
 
-export default function ReadFromInkStoryFrame({followLink} : IStoryFrame): React.ReactElement {
+export default function ReadFromInkStoryFrame({followLink, url} : IReadFromInkDialogueFrame): React.ReactElement {
 
     return (
         <DialogueProvider>
-            <ReadFromInkDialogue followLink={followLink}/>
+            <ReadFromInkDialogue followLink={followLink} url={url}/>
         </DialogueProvider>
     );
 }
