@@ -14,6 +14,8 @@ VAR greensight_text_color = "\#27b197"
 
 === introduce_agora ===
 
+    <Null:> You follow the path which leads downhill, taking care on the slope.<br/>You come upon a large circular clearing enclosed by the remains of ancient stonework steps, steep and incomplete.<Pause {long_pause}><br/>There is a crowd of people here, in between the ruins.<br/>They are talking as a group with some energy.<Pause {short_pause}><br/>It becomes apparent that you are not the only one who does not remember.<br/>In fact, nobody does.<Pause {long_pause}><br/>The others have been awake for longer, they are discussing what they are supposed to do next. <Continue>
+
     <Mari:> "Salutations!" Says a young lady, with a beaming smile. "My name is Mari- "<Pause {short_pause * 0.5}>
     
     <Douglas:> "Do you remember who you are?!". He is addressing you <Continue>
