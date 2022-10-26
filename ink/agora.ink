@@ -203,7 +203,7 @@ VAR greensight_text_color = "\#27b197"
           ~ player_favours_debt = true
           
           <Rupert:> Rupert is nodding eagerly.<Pause {long_pause}>
-          <Rupert:> "To serve the collective will, and <em>me</em>, its' arbritor!"<Pause {short_pause}
+          <Rupert:> "To serve the collective will, and <em>me</em>, its' arbritor!"<Pause {short_pause}>
           <Rupert:> "As is <Pause {short_pause*0.25}><em>\*ahem\*</em> <Pause {short_pause * 0.1}> - written in law <Continue>
           
           <Mari:> "But can we really <b>separate</b> the individual from the collective in this way? Isn't it already in our nature to seek the common good?"
