@@ -4,7 +4,6 @@ import Home from "../../components/frames/home"
 import WhoAmI from "../../components/frames/whoAmI";
 import WhereAmI from "../../components/frames/whereAmI";
 //import HolyBuilding from "../../components/frames/holyBuilding";
-//import Death from "../../components/frames/death";
 //import DataSilos from "../../components/frames/dataSilos";
 //import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
 import ReadFromInkStoryFrame from "../../components/frames/readFromInkStoryFrame";
@@ -26,7 +25,6 @@ export const FRAME_DICTIONARY = {
     // in the meantime, they can be either a component or a URL to an ink story
     'agora': "https://raw.githubusercontent.com/Multi-User-Domain/utopian-dialogue/master/ink/agora.ink.json",
     //'holySpire': HolyBuilding,
-    //'death': Death,
     //'dataSilos': DataSilos,
     //'dataSilosMudSignup': DataSilosMudSignup,
     'readFromInkStoryFrame': ReadFromInkStoryFrame,
