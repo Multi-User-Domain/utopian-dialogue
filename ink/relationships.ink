@@ -30,6 +30,7 @@ VAR douglas_faith_in_old_world = 2
 
 VAR mari_trusting = 0
 VAR mari_imprisoned = false
+VAR mari_died = false
 
 VAR rupert_trusting = 0
 VAR player_loyal_to_rupert = false

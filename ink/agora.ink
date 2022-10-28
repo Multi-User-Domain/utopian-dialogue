@@ -1,14 +1,7 @@
 
 INCLUDE bigCity.ink
 INCLUDE relationships.ink
-
-VAR long_pause = 2000
-VAR short_pause = 1000
-VAR slow_pace = 150
-VAR fast_pace = 40
-
-VAR intuition_color = "\#9246d9"
-VAR greensight_text_color = "\#27b197"
+INCLUDE animation.ink
 
 -> introduce_agora
 
@@ -887,6 +880,9 @@ VAR greensight_text_color = "\#27b197"
     
     <Rupert:> Rupert points to Mari and Andrew in turn{ not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition):, and then to you}.<Pause {short_pause}> "THEM!" he declares<Pause {short_pause * 0.4}> ...<br/>"These heretical MALCONTENTS!<Pause {short_pause}> {ruler == "rupert":They would see me overthrown!}{ruler != "rupert": They wish to seize power for THEMSELVES!}" <Continue>
     
+    ~ mari_imprisoned = true
+    ~ andrew_imprisoned = true
+    
     { ruler == "rupert" and not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): <Player:> He seems to have forgotten rather quickly that it was you who put him on the throne in the first place <Continue> }
     
     <Arsene:> The armed guards begin seizing people <Pause {short_pause}>
@@ -1078,6 +1074,9 @@ VAR greensight_text_color = "\#27b197"
     <Null:> There are bodies strewn everywhere. <Pause {long_pause}> You see Leopald's, and those of some guards.<Pause {short_pause}> You see other faces you recognise dimly<Pause {short_pause * 0.3}>, on still others the faces of complete strangers. <Continue>
     
     <Mari:> You see Mari, her face pale and her eyes icy<Pause {short_pause * 0.4}>. Dead too. <Pause {short_pause}>
+    
+    ~ mari_died = true
+    
     <Andrew:> You cannot hear what Andrew is saying<Pause {short_pause * 0.4}>, but he forcibly averts your gaze <Continue>
     
     <Null:> Someone is helping you to your feet and guiding you away<Pause {short_pause * 0.4}>, back to the Agora.<Pause {short_pause}> You notice the sound of birds chirping <Continue>
