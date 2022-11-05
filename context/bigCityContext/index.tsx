@@ -39,8 +39,6 @@ export interface ILocation {
 export interface IBigCityContext {
     world?: any;
     setWorldItem?: (key: string, value: any) => void;
-    locations?: ILocation[];
-    visitLocation?: (name: string) => void;
 };
 
 export const BigCityContext = createContext<IBigCityContext>({});
@@ -56,18 +54,6 @@ export const BigCityProvider = ({
         daysSinceGreatPop: 4,
         "GOVERNANCE": GovernanceStates.AGORA
     });
-    const [locations, setLocations] = useState([
-        {
-            name: 'Holy Spire',
-            visited: false,
-            frameKey: 'holySpire'
-        },
-        {
-            name: 'Data Silos',
-            visited: false,
-            frameKey: 'dataSilos'
-        }
-    ]);
 
     const setWorldItem = (key: string, value: any) => {
         setWorld(prevWorld => (
@@ -75,20 +61,11 @@ export const BigCityProvider = ({
         ));
     }
 
-    const visitLocation = (name: string) => {
-        if(name == null || !(name in locations)) return;
-
-        locations[name].visited = true;
-        setLocations({...locations});
-    }
-
     return(
         <BigCityContext.Provider
             value={{
                 world,
-                setWorldItem,
-                locations,
-                visitLocation
+                setWorldItem
             }}
         >
             {children}
