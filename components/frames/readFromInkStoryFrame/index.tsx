@@ -131,7 +131,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             // isolate the bounds of our element
             let end = s.indexOf(">", index) + 1;
             if(end < 0 || s.indexOf("<", index+1) < end) {
-                console.warn("Possible error in ink story - missing closing tag for element which starts at index " + index + ". Is this an intended less-than character (<)? The surrounding text is: " + s.substring(index, index + 10));
+                console.warn("Possible error in ink story - missing closing tag for element. Is this an intended less-than character (<)? The surrounding text is: " + s.substring(index, index + 15));
                 s = s.substring(index+1, s.length);
                 continue;
             }
