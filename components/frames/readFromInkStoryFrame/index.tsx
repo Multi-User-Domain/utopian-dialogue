@@ -91,11 +91,6 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return content;
     }
 
-    const makeChoice = (index: number, originalChoiceText: string) => {
-        inkStory.ChooseChoiceIndex(index);
-        getNext();
-    }
-
     const getResponses = (choices) => {
         let responses: IMessage[] = [];
 
@@ -105,7 +100,10 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             responses.push({
                 shorthandContent: <p>{stripPerformerFromContent(choice.text)}</p>,
                 performer: getPerformerFromContent(choice.text),
-                selectFollowup: () => makeChoice(i, choice.text)
+                selectFollowup: () => {
+                    inkStory.ChooseChoiceIndex(i);
+                    getNext();
+                }
             });
         }
 
