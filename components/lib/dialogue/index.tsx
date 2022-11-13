@@ -85,7 +85,6 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
 
     const selectContinue = (msgValue: IMessage) => {
         setContinueButton(null);
-        if(msgValue.sideEffect) msgValue.sideEffect();
         if(msgValue.selectFollowup) msgValue.selectFollowup();
         continueDialogue();
     }
@@ -94,9 +93,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
         for(let msg of messageDisplayBuffer) {
             if(!msg.read) {
                 msg.read = true;
-                //side-effects are carried out when the message has been read
-                //but if there is a continue prompt then it will be effected after that is clicked
-                if(msg.sideEffect && !msg.includeContinuePrompt) msg.sideEffect();
+                if(msg.onRead) msg.onRead();
                 if(msg.includeContinuePrompt) {
                     //display continue button
                     setContinueButton(<Container marginTop={5}>
@@ -106,7 +103,7 @@ export default function Dialogue({children}: IDialogue): React.ReactElement {
                     </Container>);
 
                     return; //stop marking message read at any breaks
-                };
+                }
             }
         }
     }

@@ -95,7 +95,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         let content: string = inkStory.Continue();
         content = content.substring(originalChoiceText.length, content.length).trim();
 
-        return getNext(content);
+        getNext(content);
     }
 
     const getResponses = (choices) => {
@@ -236,7 +236,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             includeContinuePrompt: includeContinuePrompt,
             getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
             selectFollowup: inkStory.canContinue ? getNext : null,
-            sideEffect: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? getNext : null
+            onRead: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? getNext : null
         });
     }
 
