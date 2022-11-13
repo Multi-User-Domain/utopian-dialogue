@@ -84,7 +84,6 @@ export const DialogueProvider = ({
     const getResponse = (msg) => {
         // the conversation lead (player) has said something
         nextMessageBuffer();
-        addMessage(msg);
 
         if(msg.selectFollowup && !msg.includeContinuePrompt) {
             msg.selectFollowup();

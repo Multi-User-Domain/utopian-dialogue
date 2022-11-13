@@ -63,6 +63,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         "Pace": (key, subcontent, ms) => { return <Pace key={key} ms={ms}>{subcontent}</Pace> },
         "br/": (key) => { return <br key={key} /> },
         "ColorFade": colorFadeTransition,
+        "Continue": () => { return "" },
     }
 
     // similar pattern which returns css classes following directives
@@ -92,10 +93,11 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
 
     const makeChoice = (index: number, originalChoiceText: string) => {
         inkStory.ChooseChoiceIndex(index);
-        let content: string = inkStory.Continue();
-        content = content.substring(originalChoiceText.length, content.length).trim();
-
-        getNext(content);
+        getNext(originalChoiceText, () => {
+            let content: string = inkStory.Continue();
+            content = content.substring(originalChoiceText.length, content.length).trim();
+            getNext(content);
+        });
     }
 
     const getResponses = (choices) => {
@@ -217,7 +219,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return s.indexOf("<Continue>") > 0;
     }
 
-    const getNext = (s: string = null) => {
+    const getNext: (s?: string, selectFollowup?: () => void) => void = (s=null, selectFollowup=null) => {
         if(s == null) s = inkStory.Continue();
 
         let isContinue = hasContinue(s);
@@ -228,6 +230,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
 
         let hasChoices: boolean = inkStory.currentChoices.length > 0;
         let includeContinuePrompt: boolean = isContinue && !hasChoices;
+        if(selectFollowup == null) selectFollowup = inkStory.canContinue ? () => getNext() : null;
 
         addMessage({
             containerCss: parsedCss[0],
@@ -235,8 +238,8 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             performer: performer,
             includeContinuePrompt: includeContinuePrompt,
             getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
-            selectFollowup: inkStory.canContinue ? getNext : null,
-            onRead: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? getNext : null
+            selectFollowup: selectFollowup,
+            onRead: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? () => getNext() : null
         });
     }
 
