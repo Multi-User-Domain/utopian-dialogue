@@ -19,7 +19,7 @@ INCLUDE animation.ink
     
     = do_you_remember
     
-        * [<Player:> { "I remember who I am" | "Yes I remember who I am"}]
+        * <Player:> { "I remember who I am" | "Yes I remember who I am"}
             <Douglas:> "Really?<Pause {short_pause}> Wow!<Pause {short_pause * 0.3}> Then perhaps there is hope for all of us!"
             <Null:> His eyes are sparkling as he says it <Continue>
             ~ player_self_knowledge_claim = true
@@ -29,7 +29,7 @@ INCLUDE animation.ink
             ~ mari_trusting -= 1
             ->agora_meeting
           
-        * [<Player:> {"I don't remember who I am" | "No, I don't remember"}]
+        * <Player:> {"I don't remember who I am" | "No, I don't remember"}
            <Douglas:> He seems disappointed by this <Continue>
             ~ mari_trusting += 1
             ->agora_meeting
@@ -64,20 +64,20 @@ INCLUDE animation.ink
     
         VAR asked_how_many = false
         
-        * <Player:> How long has it been since the Great Pop?
+        * <Player:> "How long has it been since the Great Pop?"
             <Alicia:> "What?<Pause {short_pause}> Have you only just woken up?"<Pause {short_pause * 0.5}>
             <Null:> Evidently this surprises her <Continue>
             
             <Mari:> "It's been {days_since_great_pop} days" Mari answers. "We've been meeting here for {days_since_great_pop - 1}"
             -> pre_meeting_questions
-        * {not asked_how_many } <Player:> How many people are here, in attendance?
+        * {not asked_how_many } <Player:> "How many people are here, in attendance?"
             <Mari:> "Around fifty, in total" Mari answers
             ->pre_meeting_questions
-        * {asked_how_many} <Player:> And how many people, in the city?
+        * {asked_how_many} <Player:> "And how many people, in the city?"
             <Alicia:> "A lot more than that"<Pause {short_pause}>
             <Mari:> "Our numbers are growing, little by little"
             -> pre_meeting_questions
-        * <Player:> Is the city governed here, in the Agora?
+        * <Player:> "Is the city governed here, in the Agora?"
             <Null:> Nobody seems sure how to answer this. <Continue>
             <Alicia:> "Not so much 'governance', as far as I understand the term" <Continue>
             <Mari:> "Not in an everday sense" Mari admits.<Pause {long_pause}> "But it's becoming known as the central place <Pace {slow_pace * 0.33}> to engage in the city politics</Pace>"
