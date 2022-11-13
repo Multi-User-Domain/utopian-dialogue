@@ -93,11 +93,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
 
     const makeChoice = (index: number, originalChoiceText: string) => {
         inkStory.ChooseChoiceIndex(index);
-        getNext(originalChoiceText, () => {
-            let content: string = inkStory.Continue();
-            content = content.substring(originalChoiceText.length, content.length).trim();
-            getNext(content);
-        });
+        getNext();
     }
 
     const getResponses = (choices) => {
