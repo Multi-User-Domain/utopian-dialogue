@@ -217,7 +217,7 @@ INCLUDE animation.ink
             ~ rupert_trusting += 1
             ~ mari_trusting -= 2
             
-            <Mari:> "And only to the extent that it makes me a <b>profit</b>, and no more" Mari adds grumpily. <Pause {long_pause}> "Tell me, do we see your utopia around us now, from the market world which existed before?"
+            <Mari:> "And <em>only</em> to the extent that it makes me a <b>profit</b>, and no further" Mari adds grumpily. <Pause {long_pause}> "Tell me, do we see your utopia around us now, from the market world which existed before?"<Pause {short_pause}>
             
             -> old_world_and_utopia_question
             
@@ -804,7 +804,7 @@ INCLUDE animation.ink
     
       <Player:> "Yes<Pause {short_pause * 0.5}>, and what about all those guilty of sedition besides?!" <Continue>
     
-      { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): <Burly:> <Pause {short_pause * 0.5}>Burly scoffs<Pause {short_pause}>. "You yourself are guilty of sedition!" <Continue> }
+      { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition) and (burly_trusting < 0 or rupert_trusting < 0): <Burly:> <Pause {short_pause * 0.5}>Burly scoffs<Pause {short_pause}>. "You yourself are guilty of sedition!" <Continue> }
       
       -> reimprison_conclusion
       
@@ -887,7 +887,7 @@ INCLUDE animation.ink
     
     <Arsene:> The armed guards begin seizing people <Pause {short_pause}>
     
-    { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition): -> player_imprisoned }
+    { not rupert_is_a_cat and (not player_loyal_to_rupert or player_sedition) and (burly_trusting < 0 or rupert_trusting < 0): -> player_imprisoned }
     
     <Andrew:> Andrew thuds to the floor unconscious and is dragged away<Pause {short_pause * 0.5}>, you didn't see what happened <Pause {long_pause}>
     
