@@ -2,7 +2,7 @@
 // starts at 4
 VAR days_since_great_pop = 4
 
-# agora, absolute_monarchy, representative_democracy
+# agora, absolute_monarchy
 VAR governance = "agora"
 # default, abolished, strict, restorative, reforming
 VAR prison = "default"

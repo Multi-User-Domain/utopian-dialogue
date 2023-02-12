@@ -44,15 +44,51 @@ Here the words `<Craig:>` will be stripped from the story content and Craig's po
 
 Note that currently custom portraits are not supported - please select a portrait name from the [list here](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3), e.g. `Mari`, `Craig` or `Andrew`
 
-### Extending the Base Dialogue
+#### Continue Prompts
 
-This section is for opening requests to change the content of the base game
+Displaying everything in the story in one prose will be too fast for many readers to follow. It's better to include `<Continue>` whenever you want one message to end:
 
-Our intention is to build a game which engages the reader in a utopian dialogue and explore the question "how do we want to live together?"
+```
+<Douglas:> "Do you remember who you are?!". He is addressing you <Continue>
+```
 
-If you have an interesting expansion to our game, then please feel free to write it and open a PR!
+Note that a continue prompt can only be placed at the end of the line (at least, placing it twice in the same paragraph will only have the effect once). If there are choices following the message, the continue prompt will be ignored
 
-Our process for writing stories is as follows:
-* We prototype the story using [Ink](https://www.inklestudios.com/ink/) ([repo](https://github.com/inkle/ink)). Please see the agora dialogue in the `ink` directory for an example of how this works
-* Playtest it to see if your choices work!
-* Create a new React component in `components/frames`. Please refer to `agora` as a reference. You can now use the `Dialogue` and other providers to write and animate your story using JavaScript. We use [Windups](https://windups.gwil.co) to provide much of the text animation but you can try custom things as well
+#### Pauses
+
+To make the text animation Pause manually, use `<Pause 100>`, replacing `100` with the milliseconds the pause should last for. The recommendation is to use your own variables in ink which you can control:
+
+```
+VAR long_pause = 2000
+
+<Craig:> "Greetings! I am Achilles,<Pause {long_pause}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
+```
+
+#### Pace
+
+To make the text run more slowly, use `<Pace 100>your text here</Pace>`, replacing `100` with the miliseconds pace the text should be printed.
+
+```
+VAR slow_pace = 150
+VAR fast_pace = 40
+```
+
+#### Effects
+
+Some special animation effects are available, see below:
+
+* **Shake**: makes the screen shake. <Effect Shake _timeout_>, e.g. `<Effect Shake 500>`. Timeout optional, defaults to 500
+
+#### Text Markup
+
+Some basic text markup is supported: `<em>emphasis</em>` and `<b>bold</b>`
+
+Text can be colored using `<color white>text</color>`, or using a color variable for example `VAR intuition_color = "\#9246d9"`
+
+Newlines with `<br/>`
+
+#### Fade Animations
+
+* **ColorFade**: Transitions from _colorA_ to _colorB_ timed in seconds by optional _duration_ (default 5). `<ColorFade colorA colorB duration> text </ColorFade>`. For example `<ColorFade black red 5></ColorFade>`
+
+**FadeInAll** and **FadeOutAll** can also be applied on the level of the whole message (i.e. for when you want the portrait to fade in, too) - by adding the tag somewhere in the message: `<Craig:><FadeInAll 5> text` (note the lack of closing tag here). Both accept one argument - the duration of the animation in seconds.

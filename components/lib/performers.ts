@@ -16,8 +16,10 @@ export enum PerformerNames {
     HEINRICH="Heinrich",
     LEOPALD="Leopald",
     MARI="Mari",
+    MARCUS="Marcus",
     // you can use the NULL_PERFORMER when nobody is speaking (empty portrait, empty name)
     NULL_PERFORMER="NULL",
+    PHILIPPA="Philippa",
     RUPERT="Rupert",
     SADIQ="Sadiq",
     SIGMUND="Sigmund",
@@ -93,9 +95,17 @@ export const performers: {[key: string]: IPerformer} = {
         name: PerformerNames.MARI,
         imgSrc: "../../../public/img/mari.webp"
     },
+    [PerformerNames.MARCUS]: {
+        name: PerformerNames.MARCUS,
+        imgSrc: "../../../public/img/marcus.webp"
+    },
     [PerformerNames.NULL_PERFORMER]: {
         name: "",
         imgSrc: null
+    },
+    [PerformerNames.PHILIPPA]: {
+        name: PerformerNames.PHILIPPA,
+        imgSrc: "../../../public/img/philippa.webp"
     },
     [PerformerNames.RUPERT]: {
         name: PerformerNames.RUPERT,

@@ -3,10 +3,6 @@ import MainMenu from "../../components/frames/mainMenu";
 import Home from "../../components/frames/home"
 import WhoAmI from "../../components/frames/whoAmI";
 import WhereAmI from "../../components/frames/whereAmI";
-import Agora from "../../components/frames/agora";
-//import HolyBuilding from "../../components/frames/holyBuilding";
-//import Death from "../../components/frames/death";
-//import DataSilos from "../../components/frames/dataSilos";
 //import DataSilosMudSignup from "../../components/frames/dataSilosMudSignup";
 import ReadFromInkStoryFrame from "../../components/frames/readFromInkStoryFrame";
 
@@ -19,18 +15,13 @@ export const NarrativeContext = createContext<INarrativeContext>({activeFrame: n
 
 // a dictionary of React Element import routes. Register your frames here!
 export const FRAME_DICTIONARY = {
-    // TODO: code-splitting will improve performance for this design greatly at scale
-    // however it involves using another format from IIEF or UMD
-    // look into using ESM format (had difficulties bundling this)
-    //'home': lazy(() => import('../../components/frames/home')),
     'mainMenu': MainMenu,
     'home': Home,
     'whoAmI': WhoAmI,
     'whereAmI': WhereAmI,
-    'agora': Agora,
-    //'holySpire': HolyBuilding,
-    //'death': Death,
-    //'dataSilos': DataSilos,
+    // TODO: the system of using components for each frame will be replaces with URLs for ink stories
+    // in the meantime, they can be either a component or a URL to an ink story
+    'agora': "https://raw.githubusercontent.com/Multi-User-Domain/utopian-dialogue/master/ink/agora.ink.json",
     //'dataSilosMudSignup': DataSilosMudSignup,
     'readFromInkStoryFrame': ReadFromInkStoryFrame,
 }
@@ -41,13 +32,14 @@ export const NarrativeProvider = ({
 
     const [activeFrame, setActiveFrame] = useState<ReactElement>(null);
 
-    const getActiveFrameElement: (name: string) => ReactElement = (name: string) => {
-        return FRAME_DICTIONARY[name]({followLink: setFrame});
+    const getActiveFrameElement: (name: string, url?:string) => ReactElement = (name, url) => {
+        return FRAME_DICTIONARY[name]({"followLink": setFrame, "url": url});
     }
 
-    const setFrame = (name: string) => {
-        if(name in FRAME_DICTIONARY) {
-            setActiveFrame(getActiveFrameElement(name));
+    const setFrame = (key: string) => {
+        if(key in FRAME_DICTIONARY) {
+            if(typeof FRAME_DICTIONARY[key] == "string") setActiveFrame(getActiveFrameElement('readFromInkStoryFrame', FRAME_DICTIONARY[key]));
+            else setActiveFrame(getActiveFrameElement(key));
             return;
         }
         console.error("attempt made to set frame to " + name + " but this key doesn't exist!");

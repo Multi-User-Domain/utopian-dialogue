@@ -9,9 +9,9 @@ export interface IMessage {
     read?: boolean; // indicates that the message has been read now and the display should change accordingly (e.g. stop animating)
     includeContinuePrompt?: boolean; //if set to true it will hold other messages until the user selects 'Continue'
     excludeSkipPrompt?: boolean; //if set to true the message cannot be skipped
-    sideEffect?: () => void;
     getResponses?: () => IMessage[];
     selectFollowup?: () => void; // a shortcut to the response mechanism - forces the message to be responded to in a specific way
+    onRead?: () => void; // an optional hook when the message is read
 }
 
 export interface IDialogueParticipant {
@@ -84,7 +84,6 @@ export const DialogueProvider = ({
     const getResponse = (msg) => {
         // the conversation lead (player) has said something
         nextMessageBuffer();
-        addMessage(msg);
 
         if(msg.selectFollowup && !msg.includeContinuePrompt) {
             msg.selectFollowup();
