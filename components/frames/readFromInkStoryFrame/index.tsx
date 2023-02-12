@@ -14,6 +14,7 @@ import { performers, PerformerNames } from "../../lib/performers";
 import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
 import { SLOW_PACE } from "../../lib/constants";
 
+
 const SHAKE_TIMEOUT = 500;
 
 interface IReadFromInkDialogueFrame extends IStoryFrame {
@@ -28,7 +29,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
     const [storyUrl, setStoryUrl] = useState(url);
-    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/ink/achilles.ink");
+    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/achilles.ink.json");
     const [inkStory, setInkStory] = useState(null);
 
     // CSS classes to apply to the story container
@@ -84,11 +85,63 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return performers[PerformerNames.NULL_PERFORMER]
     }
 
-    const stripPerformerFromContent: (string) => string = (content: string) => {
+    const stripPerformerFromContent: (content: string) => string = (content) => {
+        
         let i = content.indexOf(":>");
         if(content.startsWith("<") && i > 0) content = content.substring(i + 2, content.length);
 
         return content;
+    }
+
+    /**
+     * a generator which identifies the bounds of each opening tag in parameterised string
+     * @param s the content to parse
+     */
+    function getGeneratorForTagBounds(s: string, startIndex: number = 0) {
+
+        function* generator() {
+            s = s.slice(); // creates a local copy of s
+            let index: number = startIndex;
+
+            while(true) {
+                index = s.indexOf("<", index);
+                if(index < 0) break; // stop condition - no more open tags
+                if(s[index + 1] == ">") continue; // ignore <>, it's ink "glue" syntax and should be left in-tact
+                
+                // code for finding the closing tag that bounds it
+                let end = s.indexOf(">", index);
+                if(end < 0) break; // stop condition - no more closing tags
+                end++;
+                let nextOpenTag = s.indexOf("<", index+1);
+                if(end <= 0 || (nextOpenTag > 0 && nextOpenTag < end)) {
+                    console.warn("Possible error in ink story - missing closing tag for element. Is this an intended less-than character (<)? The surrounding text is: " + s.substring(index, index + 15));
+                    s = s.substring(index+1, s.length);
+                    continue;
+                }
+                
+                yield [index, end];
+                index++;
+            }
+        }
+
+        return generator();
+    }
+
+    /**
+     * @returns a version of parameter content with all directives removed (e.g. performer, pauses, <Continue>)
+     */
+    const stripAllDirectivesFromContent: (content: string) => string = (s) => {
+        s = stripPerformerFromContent(s);
+
+        let tagParser = getGeneratorForTagBounds(s, 0);
+        let next = tagParser.next();
+        
+        while(!next.done) {
+            s = s.substring(0, next.value[0] - 1) + s.substring(next.value[1], s.length);
+            next = tagParser.next();
+        }
+
+        return s;
     }
 
     const getResponses = (choices) => {
@@ -96,13 +149,15 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
 
         for(let i = 0; i < choices.length; i++) {
             let choice = choices[i];
+            let choiceText = stripPerformerFromContent(choice.text)
 
             responses.push({
-                shorthandContent: <p>{stripPerformerFromContent(choice.text)}</p>,
+                shorthandContent: <p>{stripAllDirectivesFromContent(choiceText)}</p>,
+                content: <p>{choiceText}</p>,
                 performer: getPerformerFromContent(choice.text),
                 selectFollowup: () => {
                     inkStory.ChooseChoiceIndex(i);
-                    getNext();
+                    getNext(null, null, choice.text);
                 }
             });
         }
@@ -114,69 +169,83 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
      * @param s the string from an Ink file to be parsed
      * @return a React element generated from parsing. The content contained within a <span> component
      */
-    const parseContent = (s: string) => {
-        s = stripPerformerFromContent(s);
+    const parseContent = (inputString: string) => {
+        const originalContent = stripPerformerFromContent(inputString.slice()); // slice() passes a copy of the string
+        let parserIndex: number = 0;
         let contentArr = [];
 
-        // first find all the explicit examples of animation controls
-        let index = 0;
-        while(index >= 0) {
-            index = s.indexOf("<");
-            if(index < 0 || s[index + 1] == ">") continue; // catch empty brackets - ink "glue" syntax
+        // auxiliary function for pushing content which has no animation tags inside
+        const commitTaglessContent = (s: string) => {
+            // we check for automated animations here
+            //TODO: reintroduce this
+            /*let index = 0;
+            while(index >= 0) {
+                index = s.indexOf("...");
+                if(index < 0) break;
+    
+                contentArr.push(<span key={contentArr.length}>{s}</span>)
+                contentArr.push(<span key={contentArr.length}><Pace ms={SLOW_PACE}>...</Pace></span>)
+            }*/
+    
+            contentArr.push(<span key={contentArr.length}>{s}</span>)
+        }
 
-            // isolate the bounds of our element
-            let end = s.indexOf(">", index) + 1;
-            let nextOpenTag = s.indexOf("<", index+1);
-            if(end <= 0 || (nextOpenTag > 0 && nextOpenTag < end)) {
-                console.warn("Possible error in ink story - missing closing tag for element. Is this an intended less-than character (<)? The surrounding text is: " + s.substring(index, index + 15));
-                s = s.substring(index+1, s.length);
-                continue;
+        // commits content up to a certain index, and then the tag
+        const commitParsedContent = (contentFunction, contentParams, startIndex: number, endIndex: number) => {
+            commitTaglessContent(originalContent.substring(parserIndex, startIndex));
+            contentArr.push(contentFunction(contentArr.length, ...contentParams));
+            parserIndex = endIndex;
+        }
+
+        // auxiliary function for handling encapsulating tags (tags containing subcontent, like <em>subcontent</em>)
+        const handleEncapsulatingTag = (element, elementName: string, index: number, contentStart: number, endBracket: number) => {
+            let nextInst = originalContent.indexOf("<" + elementName, index + 1);
+            if (nextInst < 0 || endBracket < nextInst) {
+                let subcontent: any = parseContent(originalContent.substring(contentStart, endBracket));
+                // NOTE: we separate function and params so that the "key" parameter isn't assigned until the content is committed
+                let contentFunction = customInkElementDict[elementName];
+                let contentParams = [subcontent, ...element];
+                // find the end bracket
+                commitParsedContent(contentFunction, contentParams, index, endBracket + 3); // + 3 for < and then for />
             }
-            let element: any = s.substring(index + 1, end -1);
+        }
 
-            // split the element into its' component, and it's parameters (separated by spaces)
+        // first find all the explicit examples of animation controls
+        let tagParser = getGeneratorForTagBounds(originalContent, 0);
+        let next = tagParser.next();
+        
+        while(!next.done) {
+            // iterate over the content and find tags
+            let index: number = next.value[0];
+            let end: number = next.value[1];
+            let element: any = originalContent.substring(index + 1, end -1);
+
+            // identify the opening tag content
             element = element.split(" ");
             let elementName = element.shift();
 
-            // find the element and push it to the contentArr
-            contentArr.push(<span key={contentArr.length}>{s.substring(0, index)}</span>);
+            // customInkElementDict contains all of the valid tag rules
             if(Object.keys(customInkElementDict).includes(elementName)) {
                 // some elements encapsulate text (e.g. <em>text</em>)
-                let endBracket = s.indexOf("</" + elementName + ">");
-                if(endBracket >= 0) {
-                    let nextInst = s.indexOf("<" + elementName, index + 1);
-                    if (nextInst < 0 || endBracket < nextInst) {
-                        let subcontent: any = parseContent(s.substring(end, endBracket));
-                        contentArr.push(customInkElementDict[elementName](contentArr.length, subcontent, ...element));
+                let endBracket = originalContent.indexOf("</" + elementName + ">", index);
+                if(endBracket >= 0) handleEncapsulatingTag(element, elementName, index, end, endBracket);
 
-                        // when we remove the element from the string, we can now remove the text within as well
-                        end = endBracket + elementName.length + 3; // + 3 for < and then /> characters
-                    }
-                }
-
-                // .. whilst others represent standalone effects (e.g. <Pause>)
+                // .. whilst others represent standalone effects (e.g. <br/> <Pause>)
                 else {
-                    contentArr.push(customInkElementDict[elementName](contentArr.length, ...element));
+                    let contentFunction = customInkElementDict[elementName];
+                    let contentParams = [...element];
+                    commitParsedContent(contentFunction, contentParams, index, end);
                 }
             }
-            else console.warn("parsed unknown element " + elementName);
+            else console.warn("parsed unknown element '" + elementName + "'");
 
-            // strip the element from the content
-            s = s.substring(end, s.length);
+            next = tagParser.next();
         }
 
-        // find all automated animations
-        index = 0;
-        while(index >= 0) {
-            index = s.indexOf("...");
-            if(index < 0) break;
-
-            s = s.substring(0, index) + s.substring(index + 3, s.length);
-            contentArr.push(<span key={contentArr.length}><Pace ms={SLOW_PACE}>...</Pace></span>)
-        }
+        // stripped all of the tags out, push whatever is remaining
+        commitTaglessContent(originalContent.substring(parserIndex, originalContent.length));
 
         // build the content into a ReactElement
-        contentArr.push(<span key={contentArr.length}>{s}</span>);
         let content = <Text as="span">{contentArr}</Text>;
 
         return content;
@@ -213,10 +282,15 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return s.indexOf("<Continue>") > 0;
     }
 
-    const getNext: (s?: string, selectFollowup?: () => void) => void = (s=null, selectFollowup=null) => {
+    const getNext: (s?: string, selectFollowup?: () => void, stripText?: string) => void = (s=null, selectFollowup=null, stripText=null) => {
         if(s == null) s = inkStory.Continue();
+        if(stripText != null) {
+            let index = s.indexOf(stripText);
+            if(index >= 0) s.substring(index, stripText.length);
+        }
 
         let isContinue = hasContinue(s);
+        if(isContinue) s = s.substring(0, s.indexOf("<Continue>"));
         let performer = getPerformerFromContent(s);
         let parsedCss = parseContainerCss(s);
         s = parsedCss[1];
