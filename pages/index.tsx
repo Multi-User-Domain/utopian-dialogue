@@ -9,10 +9,15 @@ import {
 import { NarrativeProvider } from "../context/narrativeContext";
 import { PlayerProvider } from "../context/playerContext";
 import StoryView from "../components/lib/storyView";
+import Fonts from "../components/lib/fonts";
 import { BigCityProvider } from "../context/bigCityContext";
 import { MudAccountProvider } from "../context/mudAccountContext";
 
 const theme = extendTheme({
+  fonts: {
+    heading: `'iwona-heavy-regular', sans-serif`,
+    body: `'iwona-regular', sans-serif`,
+  },
   components:  {
     Container: {
       baseStyle: {
@@ -26,6 +31,7 @@ export default function Home(): React.ReactElement {
 
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <Container marginTop="20px">
         <MudAccountProvider>
           <NarrativeProvider>
