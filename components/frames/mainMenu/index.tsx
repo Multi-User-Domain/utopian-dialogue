@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Center } from "@chakra-ui/react";
+import { Container, Button, Center, Text, Heading } from "@chakra-ui/react";
 
 import { IStoryFrame } from "../../lib/types";
 
@@ -11,11 +11,14 @@ export default function MainMenu({followLink} : IStoryFrame): React.ReactElement
 
     return (
         <Container>
-            <Center marginTop={20}>
-                <Button onClick={() => followLink("home")}>New Game</Button>
+            <Center>
+                <Heading size='2xl'>Big City Agora</Heading>
             </Center>
-            <Center marginTop={20}>
-                <Button onClick={() => followLink("readFromInkStoryFrame")}>Load a Custom Narrative</Button>
+            <Center marginTop={20} fontSize={14}>
+                <Button onClick={() => followLink("home")}><Text>New Game</Text></Button>
+            </Center>
+            <Center marginTop={20} fontSize={14}>
+                <Button onClick={() => followLink("readFromInkStoryFrame")}><Text>Load a Custom Narrative</Text></Button>
             </Center>
         </Container>
     );
