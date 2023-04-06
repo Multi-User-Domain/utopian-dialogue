@@ -40,9 +40,23 @@ To add a portrait to some text, to indicate who is saying it, start a new line l
     <Rupert:> "And <em>I</em> am King Rupert"
 ```
 
-Here the words `<Craig:>` will be stripped from the story content and Craig's portrait will be displayed as the speaker
+Here the words `<Craig:>` will be stripped from the story content and Craig's portrait will be displayed as the speaker. The built-in portraits are [defined in this list](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3)
 
-Note that currently custom portraits are not supported - please select a portrait name from the [list here](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3), e.g. `Mari`, `Craig` or `Andrew`
+It's also possible to define custom characters using URLs, which can either point to an image file on the web
+
+````
+VAR achilles_img = "http:\/\/images.fineartamerica.com/images-medium-large/achilles-arturas-slapsys.jpg"
+VAR character_jsonld = "" // TODO
+
+->introduce_achilles
+
+=== introduce_achilles ===
+    <{achilles_img}:> "Greetings! I am Achilles,<Pause {short_pause * 0.5}> Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
+    
+    <{character_jsonld}:> "And <em>I</em>... am King Rupert"
+```
+
+Note that in Ink it's necessary to escape `//` or it will be treated as a comment
 
 #### Continue Prompts
 

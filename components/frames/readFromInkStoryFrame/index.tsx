@@ -80,6 +80,12 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             
             if(name == "Player") return playerPerformer;
             else if (name in performers) return performers[name];
+            // read remote performer
+            else if (name.startsWith("http"))
+                return {
+                    name: "[Unknown]",
+                    imgSrc: "https://cors-anywhere.herokuapp.com/" + name
+                }
         }
 
         return performers[PerformerNames.NULL_PERFORMER]
