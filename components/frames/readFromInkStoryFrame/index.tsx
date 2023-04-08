@@ -212,7 +212,8 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
                 let contentFunction = customInkElementDict[elementName];
                 let contentParams = [subcontent, ...element];
                 // find the end bracket
-                commitParsedContent(contentFunction, contentParams, index, endBracket + 3); // + 3 for < and then for />
+                let endOfEndBracket = endBracket + elementName.length + 3; // + 3 for < and then for />
+                commitParsedContent(contentFunction, contentParams, index, endOfEndBracket);
             }
         }
 
@@ -223,8 +224,8 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         while(!next.done) {
             // iterate over the content and find tags
             let index: number = next.value[0];
-            let end: number = next.value[1];
-            let element: any = originalContent.substring(index + 1, end -1);
+            let openingTagEnd: number = next.value[1];
+            let element: any = originalContent.substring(index + 1, openingTagEnd -1);
 
             // identify the opening tag content
             element = element.split(" ");
@@ -234,13 +235,13 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             if(Object.keys(customInkElementDict).includes(elementName)) {
                 // some elements encapsulate text (e.g. <em>text</em>)
                 let endBracket = originalContent.indexOf("</" + elementName + ">", index);
-                if(endBracket >= 0) handleEncapsulatingTag(element, elementName, index, end, endBracket);
+                if(endBracket >= 0) handleEncapsulatingTag(element, elementName, index, openingTagEnd, endBracket);
 
                 // .. whilst others represent standalone effects (e.g. <br/> <Pause>)
                 else {
                     let contentFunction = customInkElementDict[elementName];
                     let contentParams = [...element];
-                    commitParsedContent(contentFunction, contentParams, index, end);
+                    commitParsedContent(contentFunction, contentParams, index, openingTagEnd);
                 }
             }
             else console.warn("parsed unknown element '" + elementName + "'");
