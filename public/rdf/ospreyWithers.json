@@ -1,0 +1,21 @@
+{
+    "@context": {
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "n": "http://www.w3.org/2006/vcard/ns#",
+        "mud": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mud#",
+        "mudchar": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mudchar.ttl#",
+        "mudcontent": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mudcontent.ttl#"
+    },
+    "n:fn": "Osprey Withers",
+    "n:hasGender": "n:Male",
+    "foaf:name": "Osprey Withers",
+    "foaf:depiction": "https://github.com/Multi-User-Domain/utopian-dialogue/raw/master/public/img/ospreyWithers.webp",
+    "mud:species": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mudfantasy.ttl#Vampire",
+    "mudcontent:hasSense": {
+        "@id": "_VampiricSight",
+        "@type": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mudcontent.ttl#Sight",
+        "mudcontent:senseStrength": 10
+    },
+    "@type": "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/mudchar.ttl#Character",
+    "@id": "https://github.com/Multi-User-Domain/utopian-dialogue/raw/master/public/rdf/ospreyWithers.json"
+}
