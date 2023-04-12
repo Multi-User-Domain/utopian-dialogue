@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { css } from "@emotion/css";
 
@@ -41,6 +41,11 @@ interface IDialogueResponsePrompt {
 export function DialogueResponsePrompt({message}: IDialogueResponsePrompt): React.ReactElement {
 
     const { getResponse } = useDialogue();
+    const [ responses, setResponses ] = useState<IMessage[]>([]);
+
+    useEffect(() => {
+        if(message.getResponses) message.getResponses().then((res) => setResponses(res));
+    }, []);
 
     const renderResponseOptions = (responses) => {
         let responseDisplay = [];
@@ -56,8 +61,6 @@ export function DialogueResponsePrompt({message}: IDialogueResponsePrompt): Reac
 
         return responseDisplay;
     }
-
-    let responses = message.getResponses ? message.getResponses() : [];
 
     let responseDisplay = renderResponseOptions(responses);
 

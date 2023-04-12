@@ -10,7 +10,7 @@ import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 
-import { performers, PerformerNames } from "../../lib/performers";
+import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
 import { SLOW_PACE } from "../../lib/constants";
 
@@ -73,7 +73,38 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         "FadeOutAll": fadeOutTransition
     }
 
-    const getPerformerFromContent = (content: string) => {
+    const resolveNameFromJsonLD = (data) => {
+        //TODO: reading different name properties and syntaxes using a JSON-LD parser
+        return "n:fn" in data ? data["n:fn"] : ("foaf:name" in data ? data["foaf:name"] : "[Unknown]")
+    }
+
+    const getPerformerRemote = async (url: string) => {
+        return new Promise<IPerformer>((resolve, reject) => {
+            // TODO: corsanywhere is not a production solution for CORS errors
+            axios.get("https://cors-anywhere.herokuapp.com/" + url).then(res => {
+                let content_type = res.headers["content-type"]
+                // can be json-ld
+                // TODO: remove text/plain when not using static GitHub resources for testing
+                if(content_type.includes("application/json") || content_type.includes("application/ld+json") ||
+                    content_type.includes("text/plain")) {
+
+                    return resolve({
+                        name: resolveNameFromJsonLD(res.data),
+                        imgSrc: "https://cors-anywhere.herokuapp.com/" + res.data["foaf:depiction"]
+                    });
+                }
+                // can be just an image directly
+                else if(content_type.includes("image/")) {
+                    return resolve({
+                        name: "[Unknown]",
+                        imgSrc: "https://cors-anywhere.herokuapp.com/" + url
+                    });
+                }
+            });
+        });
+    }
+
+    const getPerformerFromContent = async (content: string) => { 
         if(content.startsWith("<") && content.indexOf(":>") > 0) {
             let i = content.indexOf(":>");
             let name = content.substring(1,i);
@@ -81,14 +112,10 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             if(name == "Player") return playerPerformer;
             else if (name in performers) return performers[name];
             // read remote performer
-            else if (name.startsWith("http"))
-                return {
-                    name: "[Unknown]",
-                    imgSrc: "https://cors-anywhere.herokuapp.com/" + name
-                }
+            else if (name.startsWith("http")) return await getPerformerRemote(name);
         }
 
-        return performers[PerformerNames.NULL_PERFORMER]
+        return performers[PerformerNames.NULL_PERFORMER];
     }
 
     const stripPerformerFromContent: (content: string) => string = (content) => {
@@ -150,7 +177,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return s;
     }
 
-    const getResponses = (choices) => {
+    const getResponses = async (choices) => {
         let responses: IMessage[] = [];
 
         for(let i = 0; i < choices.length; i++) {
@@ -160,7 +187,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             responses.push({
                 shorthandContent: <p>{stripAllDirectivesFromContent(choiceText)}</p>,
                 content: <p>{choiceText}</p>,
-                performer: getPerformerFromContent(choice.text),
+                performer: await getPerformerFromContent(choice.text),
                 selectFollowup: () => {
                     inkStory.ChooseChoiceIndex(i);
                     getNext(null, null, choice.text);
@@ -289,7 +316,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         return s.indexOf("<Continue>") > 0;
     }
 
-    const getNext: (s?: string, selectFollowup?: () => void, stripText?: string) => void = (s=null, selectFollowup=null, stripText=null) => {
+    const getNext: (s?: string, selectFollowup?: () => void, stripText?: string) => void = async (s=null, selectFollowup=null, stripText=null) => {
         if(s == null) s = inkStory.Continue();
         if(stripText != null) {
             let index = s.indexOf(stripText);
@@ -298,7 +325,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
 
         let isContinue = hasContinue(s);
         if(isContinue) s = s.substring(0, s.indexOf("<Continue>"));
-        let performer = getPerformerFromContent(s);
+        let performer = await getPerformerFromContent(s);
         let parsedCss = parseContainerCss(s);
         s = parsedCss[1];
         let content = <Text>{parseContent(s)}</Text>;
@@ -312,7 +339,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
             content: content,
             performer: performer,
             includeContinuePrompt: includeContinuePrompt,
-            getResponses: hasChoices ? () => getResponses(inkStory.currentChoices) : null,
+            getResponses: hasChoices ? async () => await getResponses(inkStory.currentChoices) : null,
             selectFollowup: selectFollowup,
             onRead: (!hasChoices && !includeContinuePrompt && inkStory.canContinue) ? () => getNext() : null
         });
