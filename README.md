@@ -42,7 +42,7 @@ To add a portrait to some text, to indicate who is saying it, start a new line l
 
 Here the words `<Craig:>` will be stripped from the story content and Craig's portrait will be displayed as the speaker. The built-in portraits are [defined in this list](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/components/lib/performers.ts#L3)
 
-It's also possible to define custom characters using URLs, which can either point to an image file on the web
+It's also possible to define custom characters using URLs, which can either point to an image file on the web or to a [character definition in Linked Data](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/public/rdf/ospreyWithers.json) (see linked text for an example). It's better if they're served in LinkedData because in the future we will be able to read more information from the character, make changes etc.
 
 ````
 VAR achilles_img = "http:\/\/images.fineartamerica.com/images-medium-large/achilles-arturas-slapsys.jpg"
