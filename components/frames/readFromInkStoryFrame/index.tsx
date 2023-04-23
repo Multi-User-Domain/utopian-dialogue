@@ -29,7 +29,7 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
     const [storyUrl, setStoryUrl] = useState(url);
-    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/achilles.ink.json");
+    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/ospreyWithersDialogue.json");
     const [inkStory, setInkStory] = useState(null);
 
     // CSS classes to apply to the story container
@@ -345,19 +345,57 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
         });
     }
 
+    /**
+     * @param res a response from a web request, including headers and JSON or Ink content for the story script
+     * @return compiled Story object (InkJS), which we can run
+     */
+    const compileStory = (res) => {
+        let story = null;
+
+        if(res.headers["content-type"].includes("application/json") || res.headers["content-type"].includes("text/plain"))
+            story = new InkJs.Story(res.data);
+        else if(res.headers["content-type"].includes("application/inkml+xml"))
+            story = new InkJs.Compiler(res.data).Compile();
+        else console.error("unrecognised content-type " + res.headers["content-type"]);
+        
+        return story;
+    }
+
+    /**
+     * parses a muddialogue:Interaction, setting the script and context accordingly
+     * @param data a muddialogue:Interaction object, in JSON-LD
+     */
+    const parseInteraction = (data) => {
+        return new Promise<any>((resolve, reject) => {
+            if("muddialogue:inkFile" in data) {
+                axios.get(data["muddialogue:inkFile"]).then((res) => {
+                    return resolve(compileStory(res));
+                });
+            }
+            else console.error("muddialogue:inkFile key must be included in Interaction JSON");
+        });
+    }
+
     useEffect(() => {
-        if(storyUrl != null) {
-            axios.get(storyUrl).then(res => {
-                // get the file type returned by the server
+        const parseFromResponse = async (res) => {
+            return new Promise<any>(async (resolve, reject) => {
                 let story = null;
 
-                if(res.headers["content-type"].includes("application/json") || res.headers["content-type"].includes("text/plain"))
-                    story = new InkJs.Story(res.data);
-                else if(res.headers["content-type"].includes("application/inkml+xml"))
-                    story = new InkJs.Compiler(res.data).Compile();
+                if("@type" in res.data && res.data["@type"] == "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#Interaction")
+                    story = await parseInteraction(res.data);
                 
-                if(story != null) setInkStory(story);
-                else console.error("unrecognised content-type " + res.headers["content-type"]);
+                // fallback case is to attempt to compile it as an ink story directly (for simple narratives)
+                else story = compileStory(res);
+                
+                return resolve(story);
+            });
+        }
+
+        if(storyUrl != null) {
+            axios.get(storyUrl).then(res => {
+                parseFromResponse(res).then((story) => {
+                    if(story != null) setInkStory(story);
+                });
             });
         }
     }, [storyUrl]);
