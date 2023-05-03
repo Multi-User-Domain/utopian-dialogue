@@ -50,6 +50,9 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
         {imgSrc: "../../../public/img/playerProfile/13.webp"},
         {imgSrc: "../../../public/img/playerProfile/14.webp"},
         {imgSrc: "../../../public/img/playerProfile/15.webp"},
+        {imgSrc: "../../../public/img/playerProfile/16.webp"},
+        {imgSrc: "../../../public/img/playerProfile/17.webp"},
+        {imgSrc: "../../../public/img/playerProfile/18.webp"},
     ];
 
     const submitName = () => {
