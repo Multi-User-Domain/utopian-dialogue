@@ -11,7 +11,7 @@ import GridSelect from "../../lib/gridSelect";
 export default function BrowseWorldsList(): React.ReactElement {
 
     const navigate = useNavigate();
-    const [stories, setStories] = useState(null);
+    const [stories, setStories] = useState([]);
 
     // TODO: belongs in a Federation provider
     //const storyEndpoint = "https://api.realm.games.coop/ud/stories/";
@@ -19,13 +19,18 @@ export default function BrowseWorldsList(): React.ReactElement {
 
     useEffect(() => {
         axios.get(storyEndpoint).then(res => {
-            setStories(res.data);
+            let arr = [];
+            for(let i = 0; i < res.data.length; i++) {
+                arr.push({
+                    "title": res.data[i]["n:fn"]
+                })
+            }
+            setStories(arr);
         });
     }, []);
 
     const selectStory = (i: number) => {
-        console.log(stories[i].url);
-        //navigate(stories[i].url);
+        navigate("/readFromInk", {state: { url: stories[i]["@id"]}});
     }
 
     return (
