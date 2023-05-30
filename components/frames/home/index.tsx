@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
     Button,
@@ -7,25 +8,26 @@ import {
 } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Effect, Pace } from "windups";
-import { IStoryFrame } from "../../lib/types";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
 import InvestigationFrame from "../../lib/investigationFrame";
 
 const SHAKE_TIMEOUT = 500;
 
-function ContinueB({followLink} : IStoryFrame): React.ReactElement {
+function ContinueB(): React.ReactElement {
+  const navigate = useNavigate();
+
   return (
     <InvestigationFrame title="Continue">
       <p>You don’t remember who you are.</p>
       <Pause ms={LONG_PAUSE} />
       <Center marginTop="20px">
-          <Button onClick={() => followLink("whoAmI")}>Who Am I?</Button>
+          <Button onClick={() => navigate("/whoAmI")}>Who Am I?</Button>
       </Center>
     </InvestigationFrame>
   );
 }
 
-function ContinueA({followLink} : IStoryFrame): React.ReactElement {
+function ContinueA(): React.ReactElement {
   return (
     <InvestigationFrame title="Continue">
       <p>You have woken up in a park. You're lying down.</p>
@@ -34,12 +36,12 @@ function ContinueA({followLink} : IStoryFrame): React.ReactElement {
       <p>The tree is covered in a crop of leaves but autumn is approaching.</p>
       <p>The sky above is clear, it's hot.</p>
       <Pause ms={SHORT_PAUSE} />
-      <ContinueB followLink={followLink} />
+      <ContinueB />
     </InvestigationFrame>
   );
 }
 
-function HomeContent({followLink} : IStoryFrame) : React.ReactElement {
+function HomeContent() : React.ReactElement {
   const [isShaking, setIsShaking] = useState(false);
 
   const shakeEffect = () => {
@@ -67,12 +69,12 @@ function HomeContent({followLink} : IStoryFrame) : React.ReactElement {
             <p>Your eyes open slowly. The light hurts.</p>
             <p>The whole world seems to flutter.</p>
             <Pause ms={SHORT_PAUSE} />
-            <ContinueA followLink={followLink} />
+            <ContinueA />
         </WindupChildren>
       </Container>
     );
 } 
 
-export default function HomeFrame({followLink} : IStoryFrame): React.ReactElement {
-  return <HomeContent followLink={followLink} />
+export default function HomeFrame(): React.ReactElement {
+  return <HomeContent />
 }

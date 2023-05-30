@@ -1,12 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Button,
-    Center,
-    Text
+    Center
 } from "@chakra-ui/react";
 
 import { WindupChildren, Pause } from "windups";
-import { IStoryFrame } from "../../lib/types";
 import InvestigationFrame from "../../lib/investigationFrame";
 import { LONG_PAUSE, SHORT_PAUSE } from "../../lib/constants";
 
@@ -29,29 +28,35 @@ function ContinueB(): React.ReactElement {
     );
 }
 
-function ContinueA({followLink} : IStoryFrame): React.ReactElement {
+function ContinueA(): React.ReactElement {
+    const navigate = useNavigate();
+
     return (
         <InvestigationFrame title="But I just slept?">
             <p>Indeed.</p>
             <p>Strange.</p>
             <ContinueB />
-            <Center marginTop="10px"><Button onClick={() => followLink("agora")}>Find the Exit</Button></Center>
+            <Center marginTop="10px">
+                <Button onClick={() => navigate("/readFromInk", { state: { url: encodeURI("https://raw.githubusercontent.com/Multi-User-Domain/utopian-dialogue/master/ink/agora.ink.json")}})}>
+                    Find the Exit
+                </Button>
+            </Center>
         </InvestigationFrame>
     );
 }
 
-function AttemptToGetUp({followLink}: IStoryFrame) : React.ReactElement {
+function AttemptToGetUp() : React.ReactElement {
     return (
         <WindupChildren>
             <p>Slowly, you struggle to your feet. Your legs are none too happy about it, and your back aches.</p>
             <p>You stretch.</p>
             <p>You feel tired.</p>
-            <ContinueA followLink={followLink} />
+            <ContinueA />
         </WindupChildren>
     );
 }
 
-export default function WhereAmIFrame({followLink} : IStoryFrame): React.ReactElement {
+export default function WhereAmIFrame(): React.ReactElement {
 
     return (
         <>
@@ -71,7 +76,7 @@ export default function WhereAmIFrame({followLink} : IStoryFrame): React.ReactEl
             <p>Beyond that, mountains.</p>
         </InvestigationFrame>
         <InvestigationFrame title="Attempt to get up">
-            <AttemptToGetUp followLink={followLink} />
+            <AttemptToGetUp />
         </InvestigationFrame>
         </>
     );

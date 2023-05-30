@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
     Container,
@@ -17,16 +18,22 @@ import {
     Input
 } from "@chakra-ui/react";
 
-import { FRAME_DICTIONARY } from "../../../context/narrativeContext";
-import useNarrative from "../../../hooks/useNarrative";
 import useBigCity from "../../../hooks/useBigCity";
 
+const FRAME_DICTIONARY = {
+    "start": "start",
+    "whoAmI": "whoAmI",
+    "whereAmI": "whereAmI",
+    "agora": "https://raw.githubusercontent.com/Multi-User-Domain/utopian-dialogue/master/ink/agora.ink.json"
+}
+
 export default function DevTools({isOpen, onClose=null} : {isOpen: boolean, onClose: () => void}): React.ReactElement {
-    const { setFrame } = useNarrative();
+    const navigate = useNavigate();
     const { world, setWorldItem } = useBigCity();
     
     const goToFrame = (idx: string) => {
-        setFrame(idx);
+        if(FRAME_DICTIONARY[idx].startsWith("http")) navigate("/readFromInk", {state: {url: encodeURI(FRAME_DICTIONARY[idx])}});
+        else navigate(idx);
         onClose();
     }
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import InkJs from 'inkjs';
 import axios from 'axios';
 import { Text, Container, Button, Center, Input } from "@chakra-ui/react";
 import { WindupChildren, Pause, Pace, Effect } from "windups";
 
-import { IStoryFrame } from "../../lib/types";
 import Dialogue from "../../../components/lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
@@ -17,7 +17,7 @@ import { SLOW_PACE } from "../../lib/constants";
 
 const SHAKE_TIMEOUT = 500;
 
-interface IReadFromInkDialogueFrame extends IStoryFrame {
+interface IReadFromInkDialogueFrame {
     url?: string;
 }
 
@@ -25,11 +25,11 @@ interface IReadFromInkDialogueFrame extends IStoryFrame {
 *   A component which renders a dialogue directly from an ink file
 */
 
-function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : React.ReactElement {
+function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactElement {
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
     const [storyUrl, setStoryUrl] = useState(url);
-    const [storyUrlInput, setStoryUrlInput] = useState("https://calum.inrupt.net/public/utopian-dialogue/ospreyWithersDialogue.json");
+    const [storyUrlInput, setStoryUrlInput] = useState("https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/examples/dialogueInteraction.json");
     const [inkStory, setInkStory] = useState(null);
 
     // CSS classes to apply to the story container
@@ -432,11 +432,13 @@ function ReadFromInkDialogue({followLink, url} : IReadFromInkDialogueFrame) : Re
     
 }
 
-export default function ReadFromInkStoryFrame({followLink, url} : IReadFromInkDialogueFrame): React.ReactElement {
+export default function ReadFromInkStoryFrame(): React.ReactElement {
+
+    const location = useLocation();
 
     return (
         <DialogueProvider>
-            <ReadFromInkDialogue followLink={followLink} url={url}/>
+            <ReadFromInkDialogue url={location.state.url}/>
         </DialogueProvider>
     );
 }

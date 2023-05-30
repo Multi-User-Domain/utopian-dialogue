@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Button,
     Center,
@@ -9,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 
 import { WindupChildren, Pause, Effect, Pace } from "windups";
-import { IStoryFrame } from "../../lib/types";
 import InvestigationFrame from "../../lib/investigationFrame";
 import GameFeedback from "../../lib/gameFeedback";
 import { LONG_PAUSE, SHORT_PAUSE, SLOW_PACE } from "../../lib/constants";
@@ -20,7 +20,7 @@ function PinAttempt({pace, midPause}: {pace: number, midPause: number}) : React.
     const [pinFin, setPinFin] = useState(false);
 
     return (
-        <Container textWeight={pinFin ? "bold" : null} color={pinFin ? "red" : null}>
+        <Container color={pinFin ? "red" : null}>
             <Center>
                 <WindupChildren>
                     <Pace ms={pace}><Text>* * <Pause ms={midPause}/>* *</Text></Pace>
@@ -108,11 +108,12 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
     );
 }
 
-function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
+function WhoAmIOptions() : React.ReactElement {
 
+    const navigate = useNavigate();
     const [walletDone, setWalletDone] = useState(false);
 
-    let continueContent = walletDone ? <Center marginTop="10px"><Button onClick={() => followLink("whereAmI")}>Where Am I?</Button></Center> : null;
+    let continueContent = walletDone ? <Center marginTop="10px"><Button onClick={() => navigate("/whereAmI")}>Where Am I?</Button></Center> : null;
 
     return (
         <Container>
@@ -147,7 +148,7 @@ function WhoAmIOptions({followLink} : IStoryFrame) : React.ReactElement {
     );
 }
 
-export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElement {
+export default function WhoAmIFrame(): React.ReactElement {
 
     return (
         <WindupChildren>
@@ -158,7 +159,7 @@ export default function WhoAmIFrame({followLink} : IStoryFrame): React.ReactElem
             <InvestigationFrame title="Continue">
                 <p>You are lying on the grass.</p>
                 <p>In your lap there is a mobile phone. Beside you there is a thin leather wallet.</p>
-                <WhoAmIOptions followLink={followLink}/>
+                <WhoAmIOptions />
             </InvestigationFrame>
         </WindupChildren>
     );

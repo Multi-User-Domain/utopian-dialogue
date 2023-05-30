@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Container, Button, Center, Text, Heading } from "@chakra-ui/react";
 
-import { IStoryFrame } from "../../lib/types";
+import { useNavigate } from "react-router-dom";
 
 /*
 *   A component which renders a dialogue directly from an ink file
 */
 
-export default function MainMenu({followLink} : IStoryFrame): React.ReactElement {
+export default function MainMenu(): React.ReactElement {
+
+    const navigate = useNavigate();
 
     return (
         <Container>
@@ -15,10 +17,13 @@ export default function MainMenu({followLink} : IStoryFrame): React.ReactElement
                 <Heading size='2xl'>Big City Agora</Heading>
             </Center>
             <Center marginTop={20} fontSize={14}>
-                <Button onClick={() => followLink("home")}><Text>New Game</Text></Button>
+                <Button onClick={() => navigate("/start")}><Text>New Game</Text></Button>
             </Center>
             <Center marginTop={20} fontSize={14}>
-                <Button onClick={() => followLink("readFromInkStoryFrame")}><Text>Load a Custom Narrative</Text></Button>
+                <Button onClick={() => navigate("/browseWorlds")}><Text>Browse Worlds (Beta)</Text></Button>
+            </Center>
+            <Center marginTop={20} fontSize={14}>
+                <Button onClick={() => navigate("/readFromInk", {state: {url: null}})}><Text>Load a Custom Narrative</Text></Button>
             </Center>
         </Container>
     );
