@@ -7,10 +7,12 @@ import {
 
 export function useMudAccount(): IMudAccountContext {
   const {
-    webId
+    webId,
+    login
   } = useContext(MudAccountContext);
 
   return {
-    webId
+    webId,
+    login
   };
 }

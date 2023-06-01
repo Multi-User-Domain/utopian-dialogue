@@ -12,6 +12,7 @@ import React, {
 
 export interface IMudAccountContext {
   webId?: string;
+  login?: (un: string) => boolean;
 }
 
 export const MudAccountContext = createContext<IMudAccountContext>({
@@ -27,7 +28,13 @@ export const MudAccountProvider = ({
 }: IMudAccountProvider): ReactElement => {
   //const { session, fetch } = useSession();
   //const [webId, setWebId] = useState(session.info.webId);
-  const [webId, setWebId] = useState("https://calum.inrupt.net/#me");
+  const [webId, setWebId] = useState(null);
+
+  // TODO: authentication
+  const login = (un: string) => {
+    setWebId(un);
+    return true;
+  }
 
   /*useEffect(() => {
     let workingWebId: string = session.info.webId;
@@ -52,7 +59,8 @@ export const MudAccountProvider = ({
   return (
     <MudAccountContext.Provider
       value={{
-        webId
+        webId,
+        login
       }}
     >
       {children}
