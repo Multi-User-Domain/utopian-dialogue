@@ -5,6 +5,9 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import axios from "axios";
+import { API_URL } from "../../components/lib/constants";
+import { IPerformer } from "../../components/lib/performers";
   
 /**
  * The source of truth for the player data. Authentication provider
@@ -13,6 +16,7 @@ import React, {
 export interface IMudAccountContext {
   webId?: string;
   login?: (un: string) => boolean;
+  characters?: IPerformer[];
 }
 
 export const MudAccountContext = createContext<IMudAccountContext>({
@@ -29,6 +33,10 @@ export const MudAccountProvider = ({
   //const { session, fetch } = useSession();
   //const [webId, setWebId] = useState(session.info.webId);
   const [webId, setWebId] = useState(null);
+  const [characters, setCharacters] = useState<IPerformer[]>([]);
+
+  // TODO: this shouldn't be explicit - use a content negotiation
+  const charactersEndpoint = API_URL + "characters/by/";
 
   // TODO: authentication
   const login = (un: string) => {
@@ -56,11 +64,27 @@ export const MudAccountProvider = ({
     });
   }, [session]);*/
 
+  useEffect(() => {
+    if(webId == null || webId.length == 0) return;
+
+    axios.get(charactersEndpoint + webId + "/").then(res => {
+      let arr = [];
+      for(let i = 0; i < res.data.length; i++) {
+          arr.push({
+            name: res.data[i]["n:fn"],
+            imgSrc: res.data[i]["foaf:depiction"]
+          })
+      }
+      setCharacters(arr);
+    });
+  }, [webId]);
+
   return (
     <MudAccountContext.Provider
       value={{
         webId,
-        login
+        login,
+        characters
       }}
     >
       {children}

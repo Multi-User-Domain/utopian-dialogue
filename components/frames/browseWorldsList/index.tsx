@@ -9,6 +9,7 @@ import {
 import { useMudAccount } from "../../../hooks/useMudAccount";
 import LoginForm from "../../lib/loginForm";
 import GridSelect from "../../lib/gridSelect";
+import { API_URL } from "../../lib/constants";
 
 export default function BrowseWorldsList(): React.ReactElement {
 
@@ -16,9 +17,8 @@ export default function BrowseWorldsList(): React.ReactElement {
     const navigate = useNavigate();
     const [stories, setStories] = useState([]);
 
-    // TODO: belongs in a Federation provider
-    //const storyEndpoint = "https://api.realm.games.coop/ud/stories/";
-    const storyEndpoint = "http://localhost:5001/ud/stories/";
+    // TODO: this shouldn't be explicit - use a content negotiation
+    const storyEndpoint = API_URL + "ud/stories/";
 
     useEffect(() => {
         axios.get(storyEndpoint).then(res => {

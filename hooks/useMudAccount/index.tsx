@@ -8,11 +8,13 @@ import {
 export function useMudAccount(): IMudAccountContext {
   const {
     webId,
-    login
+    login,
+    characters
   } = useContext(MudAccountContext);
 
   return {
     webId,
-    login
+    login,
+    characters
   };
 }
