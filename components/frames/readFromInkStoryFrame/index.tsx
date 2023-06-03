@@ -383,10 +383,18 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
             if("muddialogue:generateNarrativeContextEndpoint" in data) {
                 let characterJsonLd = [];
                 for(let i = 0; i < characters.length; i++) characterJsonLd.push(characters[i].jsonld);
-                generatedContext = await axios.post(data["muddialogue:generateNarrativeContextEndpoint"], {
-                    "givenInteraction": data,
-                    "givenWorld": characterJsonLd
-                });
+                try {
+                    generatedContext = await axios.post(data["muddialogue:generateNarrativeContextEndpoint"], {
+                        "givenInteraction": data,
+                        "givenWorld": characterJsonLd
+                    });
+                }
+                catch (error) {
+                    // TODO: go back to browseWorldList if indeed I came from there
+                    setStoryUrl(null);
+                    return reject(null);
+                }
+                
                 generatedContext = generatedContext.data;
             }
 
@@ -411,8 +419,14 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
             return new Promise<any>(async (resolve, reject) => {
                 let story = null;
 
-                if("@type" in res.data && res.data["@type"] == "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#Interaction")
-                    story = await parseInteraction(res.data);
+                if("@type" in res.data && res.data["@type"] == "https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/muddialogue.ttl#Interaction") {
+                    try {
+                        story = await parseInteraction(res.data);
+                    }
+                    catch (error) {
+                        return resolve(null);
+                    }
+                }
                 
                 // fallback case is to attempt to compile it as an ink story directly (for simple narratives)
                 else story = compileStory(res);
