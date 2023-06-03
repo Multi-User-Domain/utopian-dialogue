@@ -68,11 +68,17 @@ export const MudAccountProvider = ({
     if(webId == null || webId.length == 0) return;
 
     axios.get(charactersEndpoint + webId + "/").then(res => {
+      const getProperty = (data, property) => {
+        if(property in data) return data[property];
+        return null;
+      }
+
       let arr = [];
       for(let i = 0; i < res.data.length; i++) {
           arr.push({
-            name: res.data[i]["n:fn"],
-            imgSrc: res.data[i]["foaf:depiction"]
+            name: getProperty(res.data[i], "n:fn"),
+            imgSrc: getProperty(res.data[i], "foaf:depiction"),
+            jsonld: res.data[i]
           })
       }
       setCharacters(arr);

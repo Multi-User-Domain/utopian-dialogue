@@ -32,6 +32,7 @@ export enum PerformerNames {
 export interface IPerformer {
     name: string;
     imgSrc: string;
+    jsonld?: any;
 }
 
 export const performers: {[key: string]: IPerformer} = {
