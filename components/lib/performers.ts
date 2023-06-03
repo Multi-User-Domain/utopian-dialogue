@@ -30,6 +30,7 @@ export enum PerformerNames {
 }
 
 export interface IPerformer {
+    urlid?: string;
     name: string;
     imgSrc: string;
     jsonld?: any;

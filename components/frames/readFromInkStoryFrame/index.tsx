@@ -13,6 +13,7 @@ import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
 import { SLOW_PACE } from "../../lib/constants";
+import { useMudAccount } from "../../../hooks/useMudAccount";
 
 
 const SHAKE_TIMEOUT = 500;
@@ -28,6 +29,7 @@ interface IReadFromInkDialogueFrame {
 function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactElement {
     const { addMessage } = useDialogue();
     const { playerPerformer } = usePlayer();
+    const { characters } = useMudAccount();
     const [storyUrl, setStoryUrl] = useState(url);
     const [storyUrlInput, setStoryUrlInput] = useState("https://raw.githubusercontent.com/Multi-User-Domain/vocab/main/examples/dialogueInteraction.json");
     const [inkStory, setInkStory] = useState(null);
@@ -104,15 +106,24 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
         });
     }
 
-    const getPerformerFromContent = async (content: string) => { 
+    const getPerformerFromContent = async (content: string) => {
+        const getCharacterWithUrlid = (urlid: string) => {
+            for(let i = 0; i < characters.length; i++) if(characters[i].urlid == urlid) return characters[i];
+            return null;
+        }
+        
         if(content.startsWith("<") && content.indexOf(":>") > 0) {
             let i = content.indexOf(":>");
             let name = content.substring(1,i);
             
             if(name == "Player") return playerPerformer;
             else if (name in performers) return performers[name];
-            // read remote performer
-            else if (name.startsWith("http")) return await getPerformerRemote(name);
+            // remote performer
+            else {
+                let c = getCharacterWithUrlid(name)
+                if (c != null) return c;
+                else if (name.startsWith("http")) return await getPerformerRemote(name);
+            }
         }
 
         return performers[PerformerNames.NULL_PERFORMER];
@@ -366,10 +377,27 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
      * @param data a muddialogue:Interaction object, in JSON-LD
      */
     const parseInteraction = (data) => {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<any>(async (resolve, reject) => {
+            let generatedContext = null;
+            // check shape of the story is valid
+            if("muddialogue:generateNarrativeContextEndpoint" in data) {
+                generatedContext = await axios.post(data["muddialogue:generateNarrativeContextEndpoint"], {
+                    "givenInteraction": data,
+                    "givenWorld": characters
+                });
+                generatedContext = generatedContext.data;
+            }
+
             if("muddialogue:inkFile" in data) {
                 axios.get(data["muddialogue:inkFile"]).then((res) => {
-                    return resolve(compileStory(res));
+                    // bind parameters to story
+                    let story = compileStory(res);
+                    for(let i = 0; i < generatedContext["givenInteraction"]["muddialogue:hasBindings"].length; i++) {
+                        let binding = generatedContext["givenInteraction"]["muddialogue:hasBindings"][i];
+                        // TODO: I guess there are situations where we want to bind it onto a specific property?
+                        story.variablesState[binding["muddialogue:inkVariableName"]] = binding["muddialogue:boundTo"]["urlid"];
+                    }
+                    return resolve(story);
                 });
             }
             else console.error("muddialogue:inkFile key must be included in Interaction JSON");

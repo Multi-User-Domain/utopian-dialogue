@@ -76,6 +76,7 @@ export const MudAccountProvider = ({
       let arr = [];
       for(let i = 0; i < res.data.length; i++) {
           arr.push({
+            urlid: getProperty(res.data[i], "@id"),
             name: getProperty(res.data[i], "n:fn"),
             imgSrc: getProperty(res.data[i], "foaf:depiction"),
             jsonld: res.data[i]

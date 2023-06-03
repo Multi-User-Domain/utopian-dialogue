@@ -18,6 +18,7 @@ export default function LoginForm(): React.ReactElement {
         <Container>
             <Input
                 label="Username"
+                placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)} />
             <Center>

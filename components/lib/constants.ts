@@ -6,5 +6,5 @@ export const FAST_PACE = 40;
 export const INTUITION_COLOUR = "#9246d9"
 
 // TODO: this should be handled by a FederationContext
-//export const API_URL = "https://api.realm.games.coop/";
-export const API_URL = "http://localhost:5001/";
+export const API_URL = "https://api.realm.games.coop/";
+//export const API_URL = "http://localhost:5001/";
