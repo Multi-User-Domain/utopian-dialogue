@@ -397,7 +397,7 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
                     for(let i = 0; i < generatedContext["givenInteraction"]["muddialogue:hasBindings"].length; i++) {
                         let binding = generatedContext["givenInteraction"]["muddialogue:hasBindings"][i];
                         // TODO: I guess there are situations where we want to bind it onto a specific property?
-                        story.variablesState[binding["muddialogue:inkVariableName"]] = binding["muddialogue:boundTo"]["urlid"];
+                        story.variablesState[binding["muddialogue:inkVariableName"]] = binding["muddialogue:boundTo"]["@id"];
                     }
                     return resolve(story);
                 });
