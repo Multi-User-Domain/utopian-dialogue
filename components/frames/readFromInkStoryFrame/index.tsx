@@ -381,9 +381,11 @@ function ReadFromInkDialogue({url} : IReadFromInkDialogueFrame) : React.ReactEle
             let generatedContext = null;
             // check shape of the story is valid
             if("muddialogue:generateNarrativeContextEndpoint" in data) {
+                let characterJsonLd = [];
+                for(let i = 0; i < characters.length; i++) characterJsonLd.push(characters[i].jsonld);
                 generatedContext = await axios.post(data["muddialogue:generateNarrativeContextEndpoint"], {
                     "givenInteraction": data,
-                    "givenWorld": characters
+                    "givenWorld": characterJsonLd
                 });
                 generatedContext = generatedContext.data;
             }
