@@ -9,7 +9,6 @@ import {
 
 export default function usePlayer() : IPlayerContext {
     const {
-        webId,
         playerPerformer,
         setName,
         setImage,
@@ -20,11 +19,11 @@ export default function usePlayer() : IPlayerContext {
         hasRelationshipStrongerThan,
         hasRelationshipWeakerThan,
         getRelationshipPair,
-        buildRelationshipObject
+        buildRelationshipObject,
+        createCharacter
     } = useContext(PlayerContext);
 
     return {
-        webId,
         playerPerformer,
         setName,
         setImage,
@@ -35,7 +34,8 @@ export default function usePlayer() : IPlayerContext {
         hasRelationshipStrongerThan,
         hasRelationshipWeakerThan,
         getRelationshipPair,
-        buildRelationshipObject
+        buildRelationshipObject,
+        createCharacter
     };
 }
   
