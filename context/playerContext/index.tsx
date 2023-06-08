@@ -36,7 +36,7 @@ export const PlayerProvider = ({
 
     const [playerPerformer, setPlayerPerformer] = useState<IPerformer>({
         name: "",
-        imgSrc: "../../../public/img/playerProfile/7.webp"
+        imgSrc: "../../../public/img/playerProfile/7.png"
     });
     const [relationships, setRelationships] = useState<{[object: string]: IRelationship[]}>({});
 

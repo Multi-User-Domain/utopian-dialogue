@@ -37,22 +37,22 @@ function LibraryCard({callback}: {callback: () => void}) : React.ReactElement {
     const [ displayContinue, setDisplayContinue ] = useState([true, true]);
 
     const faceChoices = [
-        {imgSrc: "../../../public/img/playerProfile/3.webp"},
-        {imgSrc: "../../../public/img/playerProfile/4.webp"},
-        {imgSrc: "../../../public/img/playerProfile/5.webp"},
-        {imgSrc: "../../../public/img/playerProfile/6.webp"},
-        {imgSrc: "../../../public/img/playerProfile/7.webp"},
-        {imgSrc: "../../../public/img/playerProfile/8.webp"},
-        {imgSrc: "../../../public/img/playerProfile/9.webp"},
-        {imgSrc: "../../../public/img/playerProfile/10.webp"},
-        {imgSrc: "../../../public/img/playerProfile/11.webp"},
-        {imgSrc: "../../../public/img/playerProfile/12.webp"},
-        {imgSrc: "../../../public/img/playerProfile/13.webp"},
-        {imgSrc: "../../../public/img/playerProfile/14.webp"},
-        {imgSrc: "../../../public/img/playerProfile/15.webp"},
-        {imgSrc: "../../../public/img/playerProfile/16.webp"},
-        {imgSrc: "../../../public/img/playerProfile/17.webp"},
-        {imgSrc: "../../../public/img/playerProfile/18.webp"},
+        {imgSrc: "../../../public/img/playerProfile/3.png"},
+        {imgSrc: "../../../public/img/playerProfile/4.png"},
+        {imgSrc: "../../../public/img/playerProfile/5.png"},
+        {imgSrc: "../../../public/img/playerProfile/6.png"},
+        {imgSrc: "../../../public/img/playerProfile/7.png"},
+        {imgSrc: "../../../public/img/playerProfile/8.png"},
+        {imgSrc: "../../../public/img/playerProfile/9.png"},
+        {imgSrc: "../../../public/img/playerProfile/10.png"},
+        {imgSrc: "../../../public/img/playerProfile/11.png"},
+        {imgSrc: "../../../public/img/playerProfile/12.png"},
+        {imgSrc: "../../../public/img/playerProfile/13.png"},
+        {imgSrc: "../../../public/img/playerProfile/14.png"},
+        {imgSrc: "../../../public/img/playerProfile/15.png"},
+        {imgSrc: "../../../public/img/playerProfile/16.png"},
+        {imgSrc: "../../../public/img/playerProfile/17.png"},
+        {imgSrc: "../../../public/img/playerProfile/18.png"},
     ];
 
     const submitName = () => {
