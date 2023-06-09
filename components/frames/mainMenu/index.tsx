@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Container, Button, Center, Text, Heading } from "@chakra-ui/react";
 
 import { useNavigate } from "react-router-dom";
+import { useMudAccount } from "../../../hooks/useMudAccount";
+
+import LoginForm from "../../lib/loginForm";
 
 /*
 *   A component which renders a dialogue directly from an ink file
@@ -10,6 +13,15 @@ import { useNavigate } from "react-router-dom";
 export default function MainMenu(): React.ReactElement {
 
     const navigate = useNavigate();
+    const { webId } = useMudAccount();
+
+    if(webId == null) {
+        return (
+            <Container>
+                <LoginForm />
+            </Container>
+        );
+    }
 
     return (
         <Container>

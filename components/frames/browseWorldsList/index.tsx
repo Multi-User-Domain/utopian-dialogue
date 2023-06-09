@@ -6,14 +6,11 @@ import {
     Container
 } from "@chakra-ui/react";
 
-import { useMudAccount } from "../../../hooks/useMudAccount";
-import LoginForm from "../../lib/loginForm";
 import GridSelect from "../../lib/gridSelect";
 import { API_URL } from "../../lib/constants";
 
 export default function BrowseWorldsList(): React.ReactElement {
 
-    const { webId } = useMudAccount();
     const navigate = useNavigate();
     const [stories, setStories] = useState([]);
 
@@ -34,14 +31,6 @@ export default function BrowseWorldsList(): React.ReactElement {
 
     const selectStory = (i: number) => {
         navigate("/readFromInk", {state: { url: stories[i]["@id"]}});
-    }
-
-    if(webId == null) {
-        return (
-            <Container>
-                <LoginForm />
-            </Container>
-        );
     }
 
     return (
