@@ -23,7 +23,8 @@ export default function BrowseStoryList(): React.ReactElement {
             let arr = [];
             for(let i = 0; i < res.data.length; i++) {
                 arr.push({
-                    "title": res.data[i]["n:fn"]
+                    "title": res.data[i]["n:fn"],
+                    "imgSrc": Object.keys(res.data[i]).includes("foaf:depiction") ? res.data[i]["foaf:depiction"] : null
                 })
             }
             setStoriesDisplay(arr);
