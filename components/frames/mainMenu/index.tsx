@@ -35,6 +35,9 @@ export default function MainMenu(): React.ReactElement {
                 <Button onClick={() => navigate("/browseWorlds")}><Text>Browse Worlds (Beta)</Text></Button>
             </Center>
             <Center marginTop={20} fontSize={14}>
+                <Button onClick={() => navigate("/browseStories")}><Text>Browse Stories (Beta)</Text></Button>
+            </Center>
+            <Center marginTop={20} fontSize={14}>
                 <Button onClick={() => navigate("/readFromInk", {state: {url: null}})}><Text>Load a Custom Narrative</Text></Button>
             </Center>
         </Container>

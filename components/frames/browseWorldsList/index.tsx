@@ -12,32 +12,33 @@ import { API_URL } from "../../lib/constants";
 export default function BrowseWorldsList(): React.ReactElement {
 
     const navigate = useNavigate();
-    const [stories, setStories] = useState([]); // the raw JSON-LD data of the stories
-    const [storiesDisplay, setStoriesDisplay] = useState([]); // treated JSON objects for the GridSelectComponent
+    const [worlds, setWorlds] = useState([]); // the raw JSON-LD data of the worlds
+    const [worldDisplay, setWorldsDisplay] = useState([]); // treated JSON objects for the GridSelectComponent
 
     // TODO: this shouldn't be explicit - use a content negotiation
-    const storyEndpoint = API_URL + "ud/stories/";
+    const worldEndpoint = API_URL + "ud/worlds/";
 
     useEffect(() => {
-        axios.get(storyEndpoint).then(res => {
+        axios.get(worldEndpoint).then(res => {
             let arr = [];
             for(let i = 0; i < res.data.length; i++) {
                 arr.push({
                     "title": res.data[i]["n:fn"]
                 })
             }
-            setStoriesDisplay(arr);
-            setStories(res.data);
+            setWorldsDisplay(arr);
+            setWorlds(res.data);
         });
     }, []);
 
-    const selectStory = (i: number) => {
-        navigate("/readFromInk", {state: { url: stories[i]["@id"]}});
+    const selectWorld = (i: number) => {
+        //navigate("/readFromInk", {state: { url: worlds[i]["@id"]}});
+        console.log("TODO: do something here");
     }
 
     return (
         <Container>
-            <GridSelect gridComponents={storiesDisplay} onSelect={selectStory} itemsPerRow={3} gap={5}/>
+            <GridSelect gridComponents={worldDisplay} onSelect={selectWorld} itemsPerRow={3} gap={5}/>
         </Container>
     );
 }

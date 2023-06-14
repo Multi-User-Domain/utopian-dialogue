@@ -22,6 +22,7 @@ import WhoAmI from "../components/frames/whoAmI";
 import WhereAmI from "../components/frames/whereAmI";
 import ReadFromInkStoryFrame from "../components/frames/readFromInkStoryFrame";
 import BrowseWorldsList from "../components/frames/browseWorldsList";
+import BrowseStoryList from "../components/frames/browseStoryList";
 
 import DevTools from "../components/lib/devTools";
 
@@ -79,6 +80,7 @@ export default function Home(): React.ReactElement {
                     <Route path="whereAmI" element={<WhereAmI />} />
                     <Route path="readFromInk" element={<ReadFromInkStoryFrame />} />
                     <Route path="browseWorlds" element={<BrowseWorldsList />} />
+                    <Route path="browseStories" element={<BrowseStoryList />} />
                 </Route>
                 </Routes>
               </BrowserRouter>
