@@ -12,7 +12,8 @@ import { API_URL } from "../../lib/constants";
 export default function BrowseWorldsList(): React.ReactElement {
 
     const navigate = useNavigate();
-    const [stories, setStories] = useState([]);
+    const [stories, setStories] = useState([]); // the raw JSON-LD data of the stories
+    const [storiesDisplay, setStoriesDisplay] = useState([]); // treated JSON objects for the GridSelectComponent
 
     // TODO: this shouldn't be explicit - use a content negotiation
     const storyEndpoint = API_URL + "ud/stories/";
@@ -25,7 +26,8 @@ export default function BrowseWorldsList(): React.ReactElement {
                     "title": res.data[i]["n:fn"]
                 })
             }
-            setStories(arr);
+            setStoriesDisplay(arr);
+            setStories(res.data);
         });
     }, []);
 
@@ -35,7 +37,7 @@ export default function BrowseWorldsList(): React.ReactElement {
 
     return (
         <Container>
-            <GridSelect gridComponents={stories} onSelect={selectStory} itemsPerRow={3} gap={5}/>
+            <GridSelect gridComponents={storiesDisplay} onSelect={selectStory} itemsPerRow={3} gap={5}/>
         </Container>
     );
 }
