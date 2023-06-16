@@ -3,25 +3,25 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import {
-    Container,
-    Button,
-    Text
+    Container
 } from "@chakra-ui/react";
 
 import GridSelect from "../../lib/gridSelect";
 import { API_URL } from "../../lib/constants";
+import { useRemoteWorld } from "../../../hooks/useRemoteWorld";
 
-export default function BrowseWorldsList(): React.ReactElement {
+export default function CreateNewWorld(): React.ReactElement {
 
     const navigate = useNavigate();
     const [worlds, setWorlds] = useState([]); // the raw JSON-LD data of the worlds
     const [worldDisplay, setWorldsDisplay] = useState([]); // treated JSON objects for the GridSelectComponent
+    const { setWorld } = useRemoteWorld();
 
     // TODO: this shouldn't be explicit - use a content negotiation
-    const worldEndpoint = API_URL + "worlds/";
+    const worldTemplateEndpoint = API_URL + "worlds/templates/";
 
     useEffect(() => {
-        axios.get(worldEndpoint).then(res => {
+        axios.get(worldTemplateEndpoint).then(res => {
             let arr = [];
             for(let i = 0; i < res.data.length; i++) {
                 arr.push({
@@ -35,13 +35,16 @@ export default function BrowseWorldsList(): React.ReactElement {
     }, []);
 
     const selectWorld = (i: number) => {
+        let selectedWorld = worlds[i];
+
+        setWorld(selectedWorld);
+
+        // TODO: navigate to a world viewer
         //navigate("/readFromInk", {state: { url: worlds[i]["@id"]}});
-        console.log("TODO: do something here");
     }
 
     return (
         <Container>
-            <Button onClick={() => navigate("createNewWorld")}><Text>Create New World</Text></Button>
             <GridSelect gridComponents={worldDisplay} onSelect={selectWorld} itemsPerRow={3} gap={5}/>
         </Container>
     );
