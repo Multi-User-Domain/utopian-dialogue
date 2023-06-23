@@ -36,11 +36,11 @@ export default function CreateNewWorld(): React.ReactElement {
 
     const selectWorld = (i: number) => {
         let selectedWorld = worlds[i];
-
         setWorld(selectedWorld);
 
-        // TODO: navigate to a world viewer
-        //navigate("/readFromInk", {state: { url: worlds[i]["@id"]}});
+        // TODO: post world to server
+
+        navigate("/wander");
     }
 
     return (
