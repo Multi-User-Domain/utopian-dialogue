@@ -15,6 +15,7 @@ import { PlayerProvider } from "../context/playerContext";
 import Fonts from "../components/lib/fonts";
 import { BigCityProvider } from "../context/bigCityContext";
 import { MudAccountProvider } from "../context/mudAccountContext";
+import { RemoteWorldProvider } from "../context/remoteWorldContext";
 
 import MainMenu from "../components/frames/mainMenu";
 import HomeFrame from "../components/frames/home";
@@ -24,6 +25,7 @@ import ReadFromInkStoryFrame from "../components/frames/readFromInkStoryFrame";
 import BrowseWorldsList from "../components/frames/browseWorldsList";
 import BrowseStoryList from "../components/frames/browseStoryList";
 import CreateNewWorld from "../components/frames/createNewWorld";
+import Wander from "../components/frames/wander";
 
 import DevTools from "../components/lib/devTools";
 
@@ -69,25 +71,28 @@ export default function Home(): React.ReactElement {
       <Fonts />
       <Container marginTop="20px">
         <MudAccountProvider>
-          <BigCityProvider>
-            <PlayerProvider>
-              <BrowserRouter>
-                <Heading />
-                <Routes>
-                <Route path="/">
-                    <Route index element={<MainMenu />} />
-                    <Route path="start" element={<HomeFrame />} />
-                    <Route path="whoAmI" element={<WhoAmI />} />
-                    <Route path="whereAmI" element={<WhereAmI />} />
-                    <Route path="readFromInk" element={<ReadFromInkStoryFrame />} />
-                    <Route path="browseWorlds" element={<BrowseWorldsList />} />
-                    <Route path="browseStories" element={<BrowseStoryList />} />
-                    <Route path="createNewWorld" element={<CreateNewWorld />} />
-                </Route>
-                </Routes>
-              </BrowserRouter>
-            </PlayerProvider>
-          </BigCityProvider>
+          <RemoteWorldProvider>
+            <BigCityProvider>
+              <PlayerProvider>
+                <BrowserRouter>
+                  <Heading />
+                  <Routes>
+                  <Route path="/">
+                      <Route index element={<MainMenu />} />
+                      <Route path="start" element={<HomeFrame />} />
+                      <Route path="whoAmI" element={<WhoAmI />} />
+                      <Route path="whereAmI" element={<WhereAmI />} />
+                      <Route path="readFromInk" element={<ReadFromInkStoryFrame />} />
+                      <Route path="browseWorlds" element={<BrowseWorldsList />} />
+                      <Route path="browseStories" element={<BrowseStoryList />} />
+                      <Route path="createNewWorld" element={<CreateNewWorld />} />
+                      <Route path="wander" element={<Wander />} />
+                  </Route>
+                  </Routes>
+                </BrowserRouter>
+              </PlayerProvider>
+            </BigCityProvider>
+          </RemoteWorldProvider>
         </MudAccountProvider>
       </Container>
     </ChakraProvider>
