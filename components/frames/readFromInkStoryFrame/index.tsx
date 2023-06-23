@@ -5,14 +5,14 @@ import axios from 'axios';
 import { Text, Container, Button, Center, Input } from "@chakra-ui/react";
 import { WindupChildren, Pause, Pace, Effect } from "windups";
 
-import Dialogue from "../../../components/lib/dialogue";
 import useDialogue from "../../../hooks/useDialogue";
 import usePlayer from "../../../hooks/usePlayer";
 import { IMessage, DialogueProvider } from "../../../context/dialogueContext";
 
+import Dialogue from "../../lib/dialogue";
 import { performers, PerformerNames, IPerformer } from "../../lib/performers";
 import { colourFadeAnimationCss, fadeOutTransition, fadeInTransition } from "../../lib/animations";
-import { SLOW_PACE } from "../../lib/constants";
+//import { SLOW_PACE } from "../../lib/constants";
 import { useMudAccount } from "../../../hooks/useMudAccount";
 
 
