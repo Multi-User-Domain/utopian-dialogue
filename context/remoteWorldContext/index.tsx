@@ -73,7 +73,7 @@ export const RemoteWorldProvider = ({children,}: IMudAccountProvider): ReactElem
 
                 // process response into an IMessage
                 return resolve({
-                  content: <Text>{jsonld["mudcontent:hasText"]}</Text>,
+                  content: <Text>{jsonld[targetProperty]["mudcontent:hasText"]}</Text>,
                   performer: performers[PerformerNames.NULL_PERFORMER]
                   // TODO: server might allow for certain responses - e.g. to elaborate on the content
                   // getResponses: response.getResponses

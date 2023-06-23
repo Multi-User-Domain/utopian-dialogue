@@ -51,7 +51,6 @@ function WanderDialogue() : React.ReactElement {
 
         // describe the region stumbled upon
         describeObject(activeScene).then((response) => {
-            console.log(response);
             addMessage(response);
         })
         .catch((err) => {
