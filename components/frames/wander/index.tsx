@@ -43,7 +43,7 @@ function WanderDialogue() : React.ReactElement {
 
                 return responses;
             }
-        })
+        });
     }
 
     useEffect(() => {
@@ -52,18 +52,18 @@ function WanderDialogue() : React.ReactElement {
         // describe the region stumbled upon
         describeObject(activeScene).then((response) => {
             addMessage(response);
+
+            // TODO: consider whether to find and run a story
+
+            // display the next choice any sub-regions that might be contained
+            if(Object.keys(activeScene).includes("mudworld:hasSubRegions")) 
+            addMessageWithTravelChoice(activeScene["mudworld:hasSubRegions"]);
+
+            // TODO: no regions, no stories. What to do next?
         })
         .catch((err) => {
             console.error(err);
         });
-
-        // TODO: consider whether to find and run a story
-
-        // display the next choice any sub-regions that might be contained
-        if(Object.keys(activeScene).includes("mudworld:hasSubRegions")) 
-            addMessageWithTravelChoice(world["mudworld:hasSubRegions"]);
-
-        // TODO: no regions, no stories. What to do next?
     
     }, [activeScene]);
 
