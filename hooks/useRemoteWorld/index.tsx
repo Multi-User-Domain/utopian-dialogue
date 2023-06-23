@@ -8,11 +8,13 @@ import {
 export function useRemoteWorld(): IRemoteWorldContext {
   const {
     world,
-    setWorld
+    setWorld,
+    describeObject
   } = useContext(RemoteWorldContext);
 
   return {
     world,
-    setWorld
+    setWorld,
+    describeObject
   };
 }
