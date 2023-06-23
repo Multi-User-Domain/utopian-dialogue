@@ -46,6 +46,11 @@ function WanderDialogue() : React.ReactElement {
         });
     }
 
+    const displaySubRegionsTravelChoice = () => {
+        if(Object.keys(activeScene).includes("mudworld:hasSubRegions")) 
+            addMessageWithTravelChoice(activeScene["mudworld:hasSubRegions"]);
+    }
+
     useEffect(() => {
         if(activeScene == null) return;
 
@@ -56,13 +61,13 @@ function WanderDialogue() : React.ReactElement {
             // TODO: consider whether to find and run a story
 
             // display the next choice any sub-regions that might be contained
-            if(Object.keys(activeScene).includes("mudworld:hasSubRegions")) 
-            addMessageWithTravelChoice(activeScene["mudworld:hasSubRegions"]);
+            displaySubRegionsTravelChoice();
 
             // TODO: no regions, no stories. What to do next?
         })
         .catch((err) => {
             console.error(err);
+            displaySubRegionsTravelChoice();
         });
     
     }, [activeScene]);
