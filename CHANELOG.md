@@ -1,4 +1,11 @@
 
+## 0.5.0
+
+* Sign up and login
+* Main storyline submits character to server on creation
+* World browsing and creation
+* Ability to wander online worlds and discover stories
+
 ## 0.4.0
 
 * Identity supported by single server (username only, temporary solution)
