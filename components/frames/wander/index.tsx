@@ -47,8 +47,8 @@ function WanderDialogue() : React.ReactElement {
     }
 
     const displaySubRegionsTravelChoice = () => {
-        if(Object.keys(activeScene).includes("mudworld:hasSubRegions")) 
-            addMessageWithTravelChoice(activeScene["mudworld:hasSubRegions"]);
+        if(Object.keys(activeScene).includes("mudworld:hasRegions")) 
+            addMessageWithTravelChoice(activeScene["mudworld:hasRegions"]);
     }
 
     useEffect(() => {
