@@ -33,7 +33,7 @@ See the [Ink docs](https://github.com/inkle/ink/blob/master/Documentation/Writin
 
 To add a portrait to some text, to indicate who is saying it, start a new line like so:
 
-```
+```ink
 === introduce_achilles ===
     <Craig:> "Greetings! I am Achilles, Champion of all the Greeks! And who are <em>you</em>, strange humanoid?"
     
@@ -44,7 +44,7 @@ Here the words `<Craig:>` will be stripped from the story content and Craig's po
 
 It's also possible to define custom characters using URLs, which can either point to an image file on the web or to a [character definition in Linked Data](https://github.com/Multi-User-Domain/utopian-dialogue/blob/master/public/rdf/ospreyWithers.json) (see linked text for an example). It's better if they're served in LinkedData because in the future we will be able to read more information from the character, make changes etc.
 
-````
+```
 VAR achilles_img = "http:\/\/images.fineartamerica.com/images-medium-large/achilles-arturas-slapsys.jpg"
 VAR character_jsonld = "" // TODO
 
@@ -56,7 +56,7 @@ VAR character_jsonld = "" // TODO
     <{character_jsonld}:> "And <em>I</em>... am King Rupert"
 ```
 
-Note that in Ink it's necessary to escape `//` or it will be treated as a comment
+Note that in Ink it's necessary to escape `//` or it will be treated as a comment.
 
 #### Continue Prompts
 
